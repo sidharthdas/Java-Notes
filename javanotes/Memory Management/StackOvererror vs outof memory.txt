@@ -1,0 +1,23 @@
+Short answer:
+
+OutOfMemoryError is related to Heap.
+StackOverflowError is related to stack
+
+Long answer:
+
+When you start JVM you define how much RAM it can use for processing. 
+JVM divides this into certain memory locations for its processing purpose, two of those are Stack & Heap
+
+If you have large objects (or) referenced objects in memory, then you will see OutofMemoryError. 
+If you have strong references to objects, then GC can't clean the memory space allocated for that object. 
+When JVM tries to allocate memory for new object and not enough space available it throws OutofMemoryError 
+because it can't allocate the required amount of memory.
+
+How to avoid: Make sure un-necessary objects are available for GC
+
+All your local variables and methods calls related data will be on the stack. For every method call, one stack frame will be 
+created and local as well as method call related data will be placed inside the stack frame. Once method execution is completed, 
+the stack frame will be removed. ONE WAY to reproduce this is, have an infinite loop for method call, you will see stackoverflow error, 
+because stack frame will be populated with method data for every call but it won't be freed (removed).
+
+How to avoid: Make sure method calls are ending (not in an infinite loop)

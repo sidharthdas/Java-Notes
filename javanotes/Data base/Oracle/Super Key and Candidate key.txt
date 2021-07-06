@@ -1,0 +1,50 @@
+Super Key
+---------------
+It is an attribute (or a set of attributes) that uniquely identify a tuple i.e. an entity in entity set.
+
+It is a superset of Candidate Key, since Candidate Keys are selected from super key.
+
+Example
+Let us see an example −
+
+<Student>
+
+Student_ID   Student_Enroll  Student_Name  Student_Email
+S02				4545			Dave		ddd@gmail.com
+S34				4541			Jack		jjj@gmail.com
+S22				4555			Mark		mmm@gmail.com
+
+The following are the super keys for the above table −
+
+{Student_ID}
+{Student_Enroll}
+{Student_Email}
+{Student_ID, Student_Enroll}
+{Studet_ID, Student_Name}
+{Student_ID, Student_Email}
+{Student_Name, Student_Enroll}
+{Student_ID, Student_Enroll, Student_Name}
+{Student_ID, Student_Enroll, Student_Email}
+{Student_ID, Student_Enroll, Student_Name, Student_Email}
+The following would be the candidate key from the above −
+
+{Student_ID}
+{Student_Enroll}
+{Student_Email}
+
+
+Both Super Key and Candidate key are used to get records from tables. These keys are also used to 
+create relationship between tables. Super Key and Candidate key both are used to identify records uniquely in a table. 
+Both keys can have null values.
+
+Following are the important differences between Super Key and Candidate key.
+
+Sr. No.	Key	Super Key	Candidate key
+1	Definition	Super Key is used to identify all the records in a relation.	
+    Candidate key is a subset of Super Key.
+2	Use	All super keys can't be candidate keys.	
+    All candidate keys are super keys.
+3	Super keys are combined together to create a candidate key.	
+    Candidate keys are combined together to create a primary key.
+4	Count Wise	Super keys are more than Candidate keys.	
+    Candidate keys are less than Super Keys.

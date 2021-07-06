@@ -1,0 +1,252 @@
+
+HOW TO SPLIT A FILE USING JAVA
+==================================
+I have large files that need to pass through an API. To do this, I split the files into smaller sections. 
+In this post, I’m going to share my process with you.
+
+The first thing I do is calculate the amount of parts or pieces that I need to create. I base this on the maximum allowed file size.
+
+So, I have two parameters, the original file and the maximum size of each piece. It’s quite simple, merely divide the original file size 
+by the maximum allowed size. Pretty straightforward, right?
+
+But it's actually a little more difficult. I have to load the file content in a byte array and then track an index pointing to the array 
+being processed so that in the first run I copy the first bytes of information to a new file, then I move that index to the next byte after 
+the last I one copied, copy more chunks, and repeat until I have read the entire file and divided it into smaller sections.
+
+So, after checking some examples, I end up with something like this:
+
+// Version 1.0
+private static final String dir = "/tmp/";
+private static final String suffix = ".splitPart";
+
+private static byte[] convertFileToBytes(String location) throws IOException {
+    RandomAccessFile f = new RandomAccessFile(location, "r");
+    byte[] b = new byte[(int) f.length()];
+    f.readFully(b);
+    f.close();
+    return b;
+}
+
+private static void writeBufferToFiles(byte[] buffer, String fileName) throws IOException {
+    BufferedOutputStream bw = new BufferedOutputStream(new FileOutputStream(fileName));
+    bw.write(buffer);
+    bw.close();
+}
+
+private static void copyBytesToPartFile(byte[] originalBytes, List partFiles, int partNum, int bytesPerSplit, int bufferSize) throws IOException {
+    String partFileName = dir + "part" + partNum + suffix;
+    byte[] b = new byte[bufferSize];
+    System.arraycopy(originalBytes, (partNum * bytesPerSplit), b, 0, bufferSize);
+    writeBufferToFiles(b, partFileName);
+    partFiles.add(partFileName);
+}
+
+/**
+ *
+ * @param fileName name of file to be split.
+ * @param mBperSplit number of MB per file.
+ * @return Return a list of files.
+ * @throws IOException
+ */
+public static List splitFile(String fileName, int mBperSplit) throws IOException {
+
+    if (mBperSplit <= 0) {
+        throw new IllegalArgumentException("mBperSplit must be more than zero");
+    }
+
+    List partFiles = new ArrayList();
+    final long sourceSize = new File(fileName).length();
+    int bytesPerSplit = 1024 * 1024 * mBperSplit;
+    long numSplits = sourceSize / bytesPerSplit;
+    int remainingBytes = (int) sourceSize % bytesPerSplit;
+
+    /// Copy arrays
+    byte[] originalBytes = convertFileToBytes(fileName);
+    int partNum = 0;
+    while (partNum < numSplits) {
+        //write bytes to a part file.
+        copyBytesToPartFile(originalBytes, partFiles, partNum, bytesPerSplit, bytesPerSplit);
+        ++partNum;
+    }
+
+    if (remainingBytes > 0) {
+        copyBytesToPartFile(originalBytes, partFiles, partNum, bytesPerSplit, remainingBytes);
+    }
+
+    return partFiles;
+}
+The problem with this approach is that we end up loading the entire file into the JVM. If I try to split a 2GB file, it will load in the JVM completely.
+ This is ok for small files, in fact, this will work in all Java Versions JDK1.0 and above. This is my first attempt and it is compiled with Java 1.0. 
+ This should not use any dependencies or third party libraries.
+
+But, memory is a big concern since the only reason to split a file is its size. Looking for another approach, I found many examples, some using 
+BufferedOutputStream and FileOutputStream, and then some versions that only work on Java 5 others Java 7.
+
+To show how Java has evolved from Java 1.2 to 1.7, I will make a second version that is compatible with Java 1.4 (note that Version 1.0 of the splitter 
+above is compatible with Java 1.2).
+
+For these examples (Version 1 and 2) were made using Java 1.4.
+
+For this second version, I didn't load the entire file - a small part is just saved in a buffer, writes it in a new file, and then moves to the next file. 
+The key is that the 'maxReadBufferSize' should be small. It will take more time, but the application will use less memory.
+
+int maxReadBufferSize = 8 * 1024; //8KB
+This is my second version. It’s more memory efficient and runs on Java 1.4:
+
+//version 2.0
+private static final String dir = "/tmp/";
+private static final String suffix = ".splitPart";
+
+/**
+ *
+ * @param fileName name of file to be splited.
+ * @param mBperSplit number of MB per file.
+ * @return Return a list of files.
+ * @throws IOException
+ */
+public static List splitFile(String fileName, int mBperSplit) throws IOException {
+
+    if (mBperSplit <= 0) {
+        throw new IllegalArgumentException("mBperSplit must be more than zero");
+    }
+
+    List partFiles = new ArrayList();
+    final long sourceSize = new File(fileName).length();
+    final long bytesPerSplit = 1024L * 1024L * mBperSplit;
+    final long numSplits = sourceSize / bytesPerSplit;
+    long remainingBytes = sourceSize % bytesPerSplit;
+    RandomAccessFile raf = new RandomAccessFile(fileName, "r");
+    int maxReadBufferSize = 8 * 1024; //8KB
+
+    int partNum = 0;
+    for (; partNum < numSplits; partNum++) {
+        BufferedOutputStream bw = newWriteBuffer(partNum, partFiles);
+        if (bytesPerSplit > maxReadBufferSize) {
+            long numReads = bytesPerSplit / maxReadBufferSize;
+            long numRemainingRead = bytesPerSplit % maxReadBufferSize;
+            for (int i = 0; i < numReads; i++) {
+                readWrite(raf, bw, maxReadBufferSize);
+            }
+            if (numRemainingRead > 0) {
+                readWrite(raf, bw, numRemainingRead);
+            }
+        } else {
+            readWrite(raf, bw, bytesPerSplit);
+        }
+        bw.close();
+    }
+    if (remainingBytes > 0) {
+        BufferedOutputStream bw = newWriteBuffer(partNum, partFiles);
+        readWrite(raf, bw, remainingBytes);
+        bw.close();
+    }
+    raf.close();
+    return partFiles;
+}
+
+private static BufferedOutputStream newWriteBuffer(int partNum, List partFiles) throws IOException{
+    String partFileName = dir + "part" + partNum + suffix;
+    partFiles.add(partFileName);
+    return new BufferedOutputStream(new FileOutputStream(partFileName));
+}
+
+private static void readWrite(RandomAccessFile raf, BufferedOutputStream bw, long numBytes) throws IOException {
+    byte[] buf = new byte[(int) numBytes];
+    int val = raf.read(buf);
+    if (val != -1) {
+        bw.write(buf);
+    }
+}
+Java 7 comes with a cool package java.nio.file.* that has a better way to read and write files in a simpler way. Also, I used channels, 
+to replace the use of BufferedOutputStream. All of this also comes with a more efficient use of memory.
+
+CHANNELS
+Instead of using InputStreams and OutputStream, we will use channels. Imagine a channel is like a file pointer. We set the pointer to the 
+beginning of where we want to read or write, in this case, we start to read from the original file. Channels are not new in the Java SDK. 
+It’s been there since Java 1.4, but it gets used more since Java 7.
+
+Check out the official Java documentation referring to Channels.
+
+Using the same RandomAccessFile we get the file channel and set the starting position to zero in the first run.
+
+RandomAccessFile sourceFile = new RandomAccessFile("OriginalFile.txt", "r");
+FileChannel sourceChannel = sourceFile.getChannel();
+sourceChannel.position(Integer <position to start to read>);
+I am using the same logic to calculate the size of the parts that is shown in Version 1. The difference is that now we don't load any of the 
+file to the JVM, we just use the underline host system.
+
+And for the output file we do this:
+
+RandomAccessFile toFile = new RandomAccessFile(Path tempName, "rw");
+FileChannel      toChannel = toFile.getChannel();
+Ok, everything is ready and set to go. Now, we just need to copy the bytes we want using transferFrom();
+
+toChannel.transferFrom(sourceChannel, 0, bytesPerSplit);
+This just says copy from Channel, put it on 'position' with a size of 'count'.
+
+And that's it. Files are created.
+
+// version 3.0
+private static final String dir = "/tmp/";
+private static final String suffix = ".splitPart";
+
+/**
+ * Split a file into multiples files.
+ *
+ * @param fileName   Name of file to be split.
+ * @param mBperSplit maximum number of MB per file.
+ * @throws IOException
+ */
+public static List<Path> splitFile(final String fileName, final int mBperSplit) throws IOException {
+
+    if (mBperSplit <= 0) {
+        throw new IllegalArgumentException("mBperSplit must be more than zero");
+    }
+
+    List<Path> partFiles = new ArrayList<>();
+    final long sourceSize = Files.size(Paths.get(fileName));
+    final long bytesPerSplit = 1024L * 1024L * mBperSplit;
+    final long numSplits = sourceSize / bytesPerSplit;
+    final long remainingBytes = sourceSize % bytesPerSplit;
+    int position = 0;
+
+    try (RandomAccessFile sourceFile = new RandomAccessFile(fileName, "r");
+         FileChannel sourceChannel = sourceFile.getChannel()) {
+
+        for (; position < numSplits; position++) {
+            //write multipart files.
+            writePartToFile(bytesPerSplit, position * bytesPerSplit, sourceChannel, partFiles);
+        }
+
+        if (remainingBytes > 0) {
+            writePartToFile(remainingBytes, position * bytesPerSplit, sourceChannel, partFiles);
+        }
+    }
+    return partFiles;
+}
+
+private static void writePartToFile(long byteSize, long position, FileChannel sourceChannel, List<Path> partFiles) throws IOException {
+    Path fileName = Paths.get(dir + UUID.randomUUID() + suffix);
+    try (RandomAccessFile toFile = new RandomAccessFile(fileName.toFile(), "rw");
+         FileChannel toChannel = toFile.getChannel()) {
+        sourceChannel.position(position);
+        toChannel.transferFrom(sourceChannel, 0, byteSize);
+    }
+    partFiles.add(fileName);
+}
+Java 7 gives some useful methods in java.nio.file.Files and java.nio.file.Paths like Files.size() and Paths.get(fileName) making the entire 
+code more readable.
+
+BENCHMARKS
+For the test, we used two files, a small 5,376,008 bytes (5.4 MB) file, and a 1,077,622,793 bytes (1.09 GB) file. We ran each version twice 
+with the files. The following charts are presented in logarithmic scale (time is displayed in seconds and memory is displayed in megabytes).
+
+in 3 steps less memory will be used/
+CONCLUSIONS
+As we can see, the memory consumption is greatly reduced. As for time, it is almost the same for every version. For small files, the time increases, 
+but this should not concern us because it is very unlikely that we would need to divide a small 10 or 20 MB file.
+
+In case we need to do maintenance or implement this into an old system, Java 1.4  is a good option since channels have been available since then 
+(only java.nio.file.Files and java.nio.file.Paths are from Java 7 and you can probably implement a similar solution for an old legacy system).
+
+I hope these examples help you split your own files or to just copy and use.

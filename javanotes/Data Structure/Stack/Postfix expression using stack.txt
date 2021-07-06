@@ -1,0 +1,56 @@
+import java.util.Stack;
+
+class Postfix
+{
+	// Function to evaluate given postfix expression
+	public static int postfixEval(String exp)
+	{
+		// create an empty stack
+		Stack<Integer> stack = new Stack<>();
+
+		// traverse the given expression
+		for (int i = 0; i < exp.length(); i++)
+		{
+			// if current char is an operand, push it to the stack
+			if (Character.isDigit(exp.charAt(i))) {
+				stack.push(exp.charAt(i) - '0');
+			}
+			// if current char is an operator
+			else
+			{
+				// pop top two elements from the stack
+				int x = stack.pop();
+
+				// if (stack.empty())
+				// error
+
+				int y = stack.pop();
+
+				// evaluate the expression x op y, and push the
+				// result back to the stack
+				if(exp.charAt(i) == '+') {
+					stack.push(y + x);
+				}
+				else if(exp.charAt(i) == '-') {
+					stack.push(y - x);
+				}
+				else if(exp.charAt(i) == '*') {
+					stack.push(y * x);
+				}
+				else if(exp.charAt(i) == '/') {
+					stack.push(y / x);
+				}
+			}
+		}
+
+		// At this point, the stack is left with only one element i.e.
+		// expression result
+		return stack.pop();
+	}
+
+	public static void main(String[] args)
+	{
+		String exp = "138*+";
+		System.out.println(postfixEval(exp));
+	}
+}

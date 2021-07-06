@@ -1,0 +1,128 @@
+Traversal- DFS (Level order travesal)
+
+
+package com.manoj;
+
+public class BinaryTreeNode {
+
+	BinaryTreeNode left;
+	BinaryTreeNode right;
+	int data;
+	
+	public BinaryTreeNode(int data) {
+		this.data=data;
+		left=null;
+		right=null;
+	}
+	public BinaryTreeNode getLeft() {
+		return left;
+	}
+	public void setLeft(BinaryTreeNode left) {
+		this.left = left;
+	}
+	public BinaryTreeNode getRight() {
+		return right;
+	}
+	public void setRight(BinaryTreeNode right) {
+		this.right = right;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	
+}
+
+
+
+------------------------------------------------------
+
+package com.manoj;
+
+public class LevelOrderTraversal {
+
+	BinaryTreeNode root;
+	public void insert(int data) {
+		
+		root=insert(root,data);
+	}
+	
+	private BinaryTreeNode insert(BinaryTreeNode node,int data) {
+		if(node==null) {
+			node=new BinaryTreeNode(data);
+		}else {
+			if(node.getRight()==null) {
+				node.right=insert(node.right,data);
+			}else {
+				node.left=insert(node.left,data);
+			}
+		}
+		return node;
+	}
+	
+	public void printLevelOrderNode() {
+		
+		int height=heightOfTree(root);
+		
+		for(int h=1;h<=height;h++) {
+			printLevelOrderNode(h,root);
+			System.out.println();
+		}
+	}
+	
+	private void printLevelOrderNode(int height, BinaryTreeNode node) {
+		
+		if(node==null)
+			return;
+		if(height==1) {
+			System.out.print(" "+node.data);
+		}else {
+			printLevelOrderNode(height-1,node.left);
+			printLevelOrderNode(height-1,node.right);
+		}
+		
+	}
+	
+	private int heightOfTree(BinaryTreeNode node) {
+		
+		if(node==null)
+			return 0;
+		else {
+			int leftCount=heightOfTree(node.left);
+			int rightCount=heightOfTree(node.right);
+			if(leftCount>rightCount) {
+				return leftCount+1;
+			}else {
+				return rightCount+1;
+			}
+			
+		}
+		
+		
+	}
+}
+
+
+-------------------------------------------------------------------------------
+
+package com.manoj;
+
+public class LevelOrderTraversalMain {
+
+	public static void main(String[] args) {
+		
+		LevelOrderTraversal lot=new LevelOrderTraversal();
+	
+		lot.insert(10);
+		lot.insert(20);
+		lot.insert(30);
+		lot.insert(40);
+		lot.insert(50);
+		
+		lot.printLevelOrderNode();
+
+	}
+
+}

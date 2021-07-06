@@ -1,0 +1,150 @@
+Directory availablity check:
+
+package com.manoj;
+
+import java.util.List;
+
+public class DirectoryNode {
+	
+	String directoryName;
+	public String getDirectoryName() {
+		return directoryName;
+	}
+	public void setDirectoryName(String directoryName) {
+		this.directoryName = directoryName;
+	}
+	List<DirectoryNode> directoryNodeList;
+	List<String> listOfFile;
+	
+	public List<DirectoryNode> getDirectoryNodeList() {
+		return directoryNodeList;
+	}
+	public void setDirectoryNodeList(List<DirectoryNode> directoryNodeList) {
+		this.directoryNodeList = directoryNodeList;
+	}
+	public List<String> getListOfFile() {
+		return listOfFile;
+	}
+	public void setListOfFile(List<String> listOfFile) {
+		this.listOfFile = listOfFile;
+	}
+	
+}
+
+------------------------------------------------
+
+package com.manoj;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
+public class DirectoryPathFinding {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		
+		DirectoryNode d1 = new DirectoryNode();
+		d1.directoryName="d1";
+		List<DirectoryNode> directoryNodeList_d1 = new ArrayList<DirectoryNode>();
+		List<String> listOfFile_d1 = new ArrayList<String>();
+		listOfFile_d1.add("File_1");
+		listOfFile_d1.add("File_2");
+		
+		DirectoryNode d2 = new DirectoryNode();
+		d2.directoryName="d2";
+		List<String> listOfFile_d2 = new ArrayList<String>();
+		listOfFile_d2.add("File_3");
+		d2.setListOfFile(listOfFile_d2);
+		
+		DirectoryNode d3 = new DirectoryNode();
+		d3.directoryName="d3";
+		List<DirectoryNode> directoryNodeList_d3 = new ArrayList<DirectoryNode>();
+		DirectoryNode d4 = new DirectoryNode();
+		d4.directoryName="d4";
+		directoryNodeList_d3.add(d4);
+		List<String> listOfFile_d3 = new ArrayList<String>();
+		listOfFile_d3.add("File_4");
+		d3.setDirectoryNodeList(directoryNodeList_d3);
+		d3.setListOfFile(listOfFile_d3);
+		directoryNodeList_d1.add(d2);
+		directoryNodeList_d1.add(d3);
+		d1.setDirectoryNodeList(directoryNodeList_d1);
+		d1.setListOfFile(listOfFile_d1);
+		System.out.println("Enter the directory name you want to find its path");
+		String directoryName=sc.next();
+		boolean result=search(d1,directoryName);
+		System.out.println(result);
+
+		printPath(d1,directoryName);
+	}
+	
+	static boolean search(DirectoryNode dn,String directoryName) {
+		
+		if(dn!=null) {
+				if(dn.directoryName.equalsIgnoreCase(directoryName))
+					return true;
+				else if(dn.directoryNodeList!=null && dn.directoryNodeList.size()>0) {
+					Iterator<DirectoryNode> itr=dn.directoryNodeList.iterator();
+					while(itr.hasNext()) {
+				
+						if(search(itr.next(),directoryName))
+							return true;
+						
+					}
+				}
+	
+
+				}
+	
+		return false;
+	}
+
+	
+	public static void printPath(DirectoryNode root, String directoryName)
+	{
+	   
+	     ArrayList<DirectoryNode> path = new ArrayList<DirectoryNode>();
+	     boolean result = printPath(root, directoryName, path);
+	 
+	     if(result)
+	     {
+	    	 Iterator<DirectoryNode> itr=path.iterator();
+	    	 while(itr.hasNext()) {
+	    		 System.out.println(itr.next().directoryName+" -> ");
+	    	 }
+	        
+	      }
+	 }   
+	   
+	static boolean printPath(DirectoryNode dn, String directoryName, ArrayList<DirectoryNode> path)
+	{
+	       boolean result = false;
+	       boolean flag = false;
+	      	   	if(dn!=null) {
+			if(dn.directoryName.equalsIgnoreCase(directoryName)) {
+				path.add(dn);
+				return true;
+			}
+			else if(dn.directoryNodeList!=null && dn.directoryNodeList.size()>0) {
+				Iterator<DirectoryNode> itr=dn.directoryNodeList.iterator();
+				while(itr.hasNext()) {
+			
+					if(search(itr.next(),directoryName)) {
+						path.add(dn);
+						return true;
+					}
+				}
+			}
+
+
+			} 
+	       
+	       return result;
+
+}
+}
+
+---------------------------------------------
+

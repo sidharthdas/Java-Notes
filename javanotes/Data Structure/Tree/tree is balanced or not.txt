@@ -1,0 +1,118 @@
+
+To check a tree is balanced or not
+
+package com.manoj;
+
+public class BinaryTreeNode {
+
+	BinaryTreeNode left;
+	BinaryTreeNode right;
+	int data;
+	
+	public BinaryTreeNode(int data) {
+		this.data=data;
+		left=null;
+		right=null;
+	}
+	public BinaryTreeNode getLeft() {
+		return left;
+	}
+	public void setLeft(BinaryTreeNode left) {
+		this.left = left;
+	}
+	public BinaryTreeNode getRight() {
+		return right;
+	}
+	public void setRight(BinaryTreeNode right) {
+		this.right = right;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	
+}
+
+
+-----------------------------------------
+package com.manoj;
+
+public class BalancedTreeCheck {
+	
+	
+	BinaryTreeNode root;
+	
+	public boolean isBalancedTree() {
+		return isBalancedTree( root);
+	}
+
+	public boolean isBalancedTree(BinaryTreeNode node) {
+		
+		if(node==null)
+			return true;
+		else {
+			int heightDifference=heightOfTree(node.left)-heightOfTree(node.right);
+			if(Math.abs(heightDifference)>1) {
+				return false;
+			}else {
+				return true;
+			}
+		}
+		
+		
+	}
+	
+	private int heightOfTree(BinaryTreeNode node) {
+	
+		if(node==null)
+			return 0;
+		else {
+			int leftCount=heightOfTree(node.left);
+			int rightCount=heightOfTree(node.right);
+			if(leftCount>rightCount) {
+				return 1+leftCount;
+			}else {
+				return 1+rightCount;
+			}
+		}
+	}
+	
+	public void insert(int data) {
+		root=insert(root,data);
+	}
+	
+	private BinaryTreeNode insert(BinaryTreeNode node,int data) {
+		
+		if(node==null) {
+			node=new BinaryTreeNode(data);		
+		}else {
+			node=insert(node.left,data);
+			node=insert(node.right,data);
+		}
+		return node;
+	}
+}
+
+
+-----------------------------------------------
+
+package com.manoj;
+
+public class BalancedTreeCheckMain {
+
+	public static void main(String[] args) {
+		BalancedTreeCheck btc=new BalancedTreeCheck();
+		
+		btc.insert(10);
+		btc.insert(20);
+		btc.insert(30);
+		btc.insert(40);
+		btc.insert(50);
+		
+		System.out.println(btc.isBalancedTree());
+
+	}
+
+}

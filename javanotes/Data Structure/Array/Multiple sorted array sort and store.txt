@@ -1,0 +1,62 @@
+import java.util.*; 
+
+// Java program to merge three sorted arrays 
+// by merging two at a time. 
+class GFG 
+{ 
+
+static void printVector(Vector<Integer> a) 
+{ 
+	System.out.print("["); 
+	for (Integer e : a) 
+		System.out.print(e + " "); 
+	System.out.println("]"); 
+} 
+
+static Vector<Integer> mergeTwo(Vector<Integer> A, 
+								Vector<Integer> B) 
+{ 
+	// Get sizes of vectors 
+	int m = A.size(); 
+	int n = B.size(); 
+
+	// Vector for storing Result 
+	Vector<Integer> D = new Vector<Integer>(m+n); 
+
+	int i = 0, j = 0; 
+	while (i < m && j < n) 
+	{ 
+
+		if (A.get(i) <= B.get(j)) 
+			D.add(A.get(i++)); 
+		else
+			D.add(B.get(i++)); 
+	} 
+
+	// B has exhausted 
+	while (i < m) 
+		D.add(A.get(i++)); 
+	
+	// A has exhausted 
+	while (j < n) 
+		D.add(B.get(j++)); 
+
+	return D; 
+} 
+
+// Driver code 
+public static void main(String[] args) 
+{ 
+	Integer []a = { 1, 2, 3, 5 }; 
+	Integer []b = { 6, 7, 8, 9 }; 
+	Integer []c = { 10, 11, 12 }; 
+	Vector<Integer> A = new Vector<Integer>(Arrays.asList(a)); 
+	Vector<Integer> B = new Vector<Integer>(Arrays.asList(b)); 
+	Vector<Integer> C = new Vector<Integer>(Arrays.asList(c)); 
+	// First Merge A and B 
+	Vector T = mergeTwo(A, B); 
+
+	// Print Result after merging T with C 
+	printVector(mergeTwo(T, C)); 
+} 
+} 

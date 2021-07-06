@@ -1,0 +1,174 @@
+Custom Binary Search Tree
+
+
+package com.manoj;
+
+public class BinarySearchTreeNode {
+
+	BinarySearchTreeNode left;
+	BinarySearchTreeNode right;
+	int data;
+	public BinarySearchTreeNode getLeft() {
+		return left;
+	}
+	public void setLeft(BinarySearchTreeNode left) {
+		this.left = left;
+	}
+	public BinarySearchTreeNode getRight() {
+		return right;
+	}
+	public void setRight(BinarySearchTreeNode right) {
+		this.right = right;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	public BinarySearchTreeNode(int data) {
+		left = left;
+		right = null;
+		this.data = data;
+	}
+}
+
+
+--------------------------------------
+
+package com.manoj;
+
+public class BinarySearchTreeNodeImplementation {
+
+	BinarySearchTreeNode root;
+	
+	public void insert(int data) {
+		root=insert(root,data);
+	}
+	
+	private BinarySearchTreeNode insert(BinarySearchTreeNode node,int data) {
+		
+		if(node==null) {
+			node=new BinarySearchTreeNode(data);
+		}
+		else {
+			if(data<node.data) {
+				node.left=insert(node.left,data);
+			}else {
+				node.right=insert(node.right,data);	
+			}
+		}
+		return node;
+	}
+	
+	 public boolean isEmpty()
+     {
+         return root == null;
+     }
+	 
+	 public void preOrder() {
+		 System.out.println("preOder.......");
+		 preOrder(root);
+	 }
+	 private void preOrder(BinarySearchTreeNode node) {
+		
+		 if(node!=null) {
+			 System.out.print(node.data+" ");
+			 preOrder(node.left);
+			 preOrder(node.right);
+		 }
+	 }
+	 
+	 public void inOrder() {
+		 System.out.println("inOrder.......");
+		 inOrder(root);
+	 }
+	 
+	 private void inOrder(BinarySearchTreeNode node) {
+		 if(node!=null) {
+			 inOrder(node.left);
+			 System.out.print(node.data+" ");
+			 inOrder(node.right);
+		 }
+	 }
+	 
+	 void postOrder() {
+		 System.out.println("postOrder......");
+		 postOrder(root);
+	 }
+	 private void postOrder(BinarySearchTreeNode node) {
+		 if(node!=null) {
+			 postOrder(node.left);
+			 postOrder(node.right);
+		 System.out.print(node.data+" ");
+		 }
+	 }
+	 
+	 public int totalNumberOfNodes() {
+		 int count=totalNumberOfNodes(root);
+		 return count;
+	 }
+
+	 private int totalNumberOfNodes(BinarySearchTreeNode node) {
+		 
+		 if(node==null) {
+			 return 0;
+		 }else {
+			 int count=1;
+			 count=count+totalNumberOfNodes(node.left);
+			 count=count+totalNumberOfNodes(node.right);
+			 return count;
+		 }
+	 }
+	 
+	 public boolean search(int data) {
+		 boolean result=search(root,data);
+		 return result;
+	 }
+
+	 private boolean search(BinarySearchTreeNode node,int data) {
+		 
+		boolean result=Boolean.FALSE;
+		
+		while(node!= null) {
+			if(node.data<data) {
+				node=node.right;
+			}else if(node.data>data) {
+				node=node.left;
+			}else {
+				result=Boolean.TRUE;
+				break;
+			}
+			search(node,data);
+		}
+		return result;
+	 }
+}
+
+
+--------------------------------------------------------------------
+
+package com.manoj;
+
+public class BinarySearchTreeMain {
+
+	public static void main(String[] args) {
+		BinarySearchTreeNodeImplementation btn=new BinarySearchTreeNodeImplementation();
+		System.out.println(btn.isEmpty());
+		btn.insert(10);
+		btn.insert(20);
+		btn.insert(30);
+		btn.insert(40);
+		btn.insert(50);
+		//System.out.println(btn.search(40));
+		System.out.println(btn.totalNumberOfNodes());
+		System.out.println(btn.isEmpty());
+		System.out.println(btn.search(70));
+		btn.preOrder();
+		btn.inOrder();
+		btn.postOrder();
+		
+
+	}
+
+}

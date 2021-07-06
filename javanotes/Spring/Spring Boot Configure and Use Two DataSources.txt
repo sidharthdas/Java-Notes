@@ -1,0 +1,58 @@
+Spring Boot Configure and Use Two DataSources
+-----------------------------------------------------
+
+#Database
+database1.datasource.url=jdbc:mysql://localhost/testdb
+database1.datasource.username=root
+database1.datasource.password=root
+database1.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+database2.datasource.url=jdbc:mysql://localhost/testdb2
+database2.datasource.username=root
+database2.datasource.password=root
+database2.datasource.driver-class-name=com.mysql.jdbc.Driver
+Then define them as providers (@Bean) like this:
+
+@Bean(name = "datasource1")
+@ConfigurationProperties("database1.datasource")
+@Primary
+public DataSource dataSource(){
+    return DataSourceBuilder.create().build();
+}
+
+@Bean(name = "datasource2")
+@ConfigurationProperties("database2.datasource")
+public DataSource dataSource2(){
+    return DataSourceBuilder.create().build();
+}
+Note that I have @Bean(name="datasource1") and @Bean(name="datasource2"), then you can use it when we need datasource as 
+@Qualifier("datasource1") and @Qualifier("datasource2") , for example
+
+@Qualifier("datasource1")
+@Autowired
+private DataSource dataSource;
+
+---------------------------------------------------------------------------------------------------------------------
+If you do care about transaction, you have to define DataSourceTransactionManager for both of them, like this:
+
+@Bean(name="tm1")
+@Autowired
+@Primary
+DataSourceTransactionManager tm1(@Qualifier ("datasource1") DataSource datasource) {
+    DataSourceTransactionManager txm  = new DataSourceTransactionManager(datasource);
+    return txm;
+}
+
+@Bean(name="tm2")
+@Autowired
+DataSourceTransactionManager tm2(@Qualifier ("datasource2") DataSource datasource) {
+    DataSourceTransactionManager txm  = new DataSourceTransactionManager(datasource);
+    return txm;
+}
+Then you can use it like
+
+@Transactional //this will use the first datasource because it is @primary
+or
+
+@Transactional("tm2")
+This should be enough. See example and detail in the link above.

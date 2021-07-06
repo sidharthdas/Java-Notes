@@ -1,0 +1,181 @@
+Advantages over mutable objects
+=================================================
+There are multiple advantages of using immutable instead of mutable objects.
+
+Thread-safety
+----------------------
+As the state of the object cannot be changed, it can be freely shared between threads. 
+thread-safety is all about managing concurrency on mutable resources. As there is no mutability, 
+there is no need for synchronization. Threads can concurrently access immutable objects without 
+bothering with possible race conditions.
+
+Immutable objects are always thread-safe. The Java Memory Model offers a special guarantee of 
+initialization safety. In other words, a reference to an immutable object can be freely shared 
+between as many threads as you want without synchronization.
+
+No initialization hell
+Suppose you have the following code:
+
+public class TruckService {
+
+ public void createRenaultTruck() {
+   final Truck truck = new Truck();
+
+   truck.setBrand("Renault");
+   truck.setModel("K380");
+   truck.putKeyInContact();
+   truck.start();
+
+   return truck;
+ }
+  ...
+}
+In the code above, the Truck class is mutable, thus anyone can modify the Truck instance. 
+The biggest issue with this code is that the truck instance can be modified after construction 
+by some wild code. This leads to bugs and maintainability issues.
+
+Further code using the Truck may encounter unproper initialized Truck. It becomes very difficult 
+to find which code should have initialized the truck properly, or if someone has modified it after construction.
+
+It requires a lot of effort and research to find who initializes or modifies a mutable instance 
+improperly. This complexity completely vanishes with Immutable objects: if the object is not 
+properly initialized, it happened during construction. Find who constructs the object and you’re done.
+
+Safe use in all cases
+===========================
+Very strange bugs can happen when it comes to mutability. Let’s take the following code as an example:
+
+public class TruckService {
+
+ public void doSomething() {
+   final Truck truck = new Truck();
+   truck.setBrand("Renault");
+   truck.setModel("K380");
+
+   final Map<Truck, String> map = new HashMap<>();
+   map.put(truck, "Hello world");
+
+   truck.setModel("K520");
+
+   assert map.containsKey(truck); // returns false
+ }
+  ...
+}
+In the following example, the developer expect the map to contain the truck instance as key, 
+as he put it in the map just before mutating it. The issue is subtle: when the truck is put 
+as key in the map, it associates the truck hashcode (which depends on the truck fields) to 
+the Hello World string. When changing the truck model, this changes the truck hashcode too. 
+This is why the map cannot find the truck as key in the map anymore.
+
+No need to copy or clone
+As Immutable objects cannot be modified, there is no need to copy or clone its instance if 
+you want to share it. Java Serializable and Cloneable contracts are known to be hard to understand.
+
+Preconditions
+===================
+Mutable objects can be partially or improperly initialized. This leads to cumbersome 
+self-defending code like this to appear everywhere in the application:
+
+public class TruckService {
+
+ public void doSomething(final Truck truck) {
+   if(truck.getBrand() != null) {
+     if(truck.getModel() != null) {
+       // I can finally focus on business code
+     } else {
+     	// still no clue what to do...
+     }
+   } else {
+     // what to do if not initialized correctly ?
+   }
+ }
+  ...
+}
+Developers start to check every field if it’s properly initialized instead of fixing the 
+improper initialization. This known as Defensive Programming. Developers must defend their 
+code from being defeated by invalid objects and check everything. This is exhausting. No 
+one should need to defend itself from anyone else inside the same company. There are enough 
+competitors outside the company to defend from.
+
+This is completely against the Fail fast rule. In the example above, the code could also 
+have failed due to a NullPointer when trying to manipulate the brand. In a Fail fast system, 
+the issue would have been raised much earlier during object instantiation.
+
+Bugs in software with mutable objects are harder to track and fix due to issues happening often 
+way later than when it really happened. It leads to an insane number of If conditional checks 
+on every field to protect the code from failing, instead of fixing the improper object construction.
+
+On the other side, immutable objects can take advantage of Preconditions to protect from improper constructions:
+
+public final class Truck {
+ private final String brand;
+ private final String model;
+
+ public Truck(final String brand, final String model) {
+   this.brand = Preconditions.checkNotNull(brand);
+   this.model = Preconditions.checkNotNull(model);
+ }
+  ...
+}
+This way, everyone knows that Trucks have all a non-null brand and model. This makes 
+all the if not null checks on the field unnecessary. The code can now focus on the business.
+
+Invariants
+-----------------
+Class invariants are the properties that an instance has during its entire lifetime even in
+ case of mutating operations. For example, a collection size always reflects the number of 
+ elements inside the collection. If an element is added, the size is incremented.
+
+Mutable objects can encounter Atomicity failure. For example, the following code can leave 
+the mutable in an inconsistent state:
+
+public class TruckService {
+
+ public void doSomething(final Truck truck) {
+   truck.setModel("");
+   if(!truck.getBrand().isEmpty()) {
+     throw new IllegalStateException("Truck brand already set");
+   }
+   truck.setBrand("");
+ }
+  ...
+}
+In this case, the truck model is reset to empty, but the truck is supposed to have an 
+already empty brand. In this case, the truck is left modified with an empty model.
+
+Better Performances
+----------------------------
+It shouldn’t be the reason to adopt immutable objects, but it’s something to know. 
+The Garbage Collector (GC) can take advantage of unmodifiable objects since they don’t 
+need to be analyzed twice. The trickiest part in the Garbage Collector is to know 
+whether an object has been modified or not. Since immutable objects can’t be modified, 
+the answer is obvious.
+
+The GC is not the only one to have performance advantages when it comes to immutability. 
+Jackson, a Json serializer, is several times faster serializing and deserializing immutable 
+objects compared to mutable objects. Jackson heavily relies on Reflection to instantiate objects. 
+Immutable objects can be instantiated in a single reflection call to the constructor.
+
+@Value
+@Builder
+public final class DelayAction implements Action {
+  @Wither
+  String id;
+  Thinktime thinkTime;
+  boolean isEnabled;
+
+  @JsonCreator
+  DelayAction(
+      @JsonProperty("id") final String id,
+      @JsonProperty("thinkTime") final Thinktime thinkTime,
+      @JsonProperty("enabled") final boolean isEnabled) {
+    super();
+    this.id = checkNotNull(id);
+    this.thinkTime = checkNotNull(thinkTime);
+    this.isEnabled = checkNotNull(isEnabled);
+  }
+}
+Immutable class with Jackson constructor annotations
+
+On the other side, Jackson needs to call each setter of a mutable instance to set all the fields. 
+The more fields the object have, the more time it takes to Jackson to initialize the object.

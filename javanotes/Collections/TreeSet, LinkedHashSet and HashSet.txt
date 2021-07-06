@@ -1,0 +1,185 @@
+
+
+Difference between TreeSet, LinkedHashSet and HashSet in Java
+
+TreeSet vs HashSet vs LinkedHashSet in Java with ExampleTreeSet, LinkedHashSet and HashSet in Java are three Set 
+implementation in collection framework and like many others they are also used to store objects. 
+Main feature of TreeSet is sorting,  LinkedHashSet is insertion order and HashSet is just general purpose collection for 
+storing object. HashSet is implemented using HashMap in Java while TreeSet is implemented using TreeMap.  
+TreeSet is a SortedSet implementation which allows it to keep elements in the sorted order defined by either 
+Comparable or Comparator interface. Comparable is used for natural order sorting and Comparator for custom order sorting of objects,
+ which can be provided while creating instance of TreeSet. Anyway before seeing difference between TreeSet, LinkedHashSet and HashSet, 
+let's see some similarities between them:
+
+
+ 
+1) Duplicates : All three implements Set interface means they are not allowed to store duplicates.
+
+2) Thread safety : HashSet, TreeSet and LinkedHashSet are not thread-safe, if you use them in multi-threading environment where at least 
+one Thread  modifies Set you need to externally synchronize them.
+
+3) Fail-Fast Iterator : Iterator returned by TreeSet, LinkedHashSet and HashSet are fail-fast Iterator. i.e. If Iterator is modified after 
+its creation by any way other than Iterators remove() method, it will throw ConcurrentModificationException with best of effort. 
+read more about fail-fast vs fail-safe Iterator here
+
+Now let’s see difference between HashSet, LinkedHashSet and TreeSet in Java :
+
+Performance and Speed : First difference between them comes in terms of  speed.  HashSet is fastest, LinkedHashSet is second on 
+performance or almost similar to HashSet but TreeSet is bit slower because of sorting operation it needs to perform on each insertion. 
+TreeSet provides guaranteed O(log(n)) time for common operations like add, remove and contains, while HashSet and LinkedHashSet offer 
+constant time performance e.g. O(1) for add, contains and remove given hash function uniformly distribute elements in bucket.
+
+Ordering : HashSet does not maintain any order while LinkedHashSet maintains insertion order of elements much like List interface and 
+TreeSet maintains sorting order or elements.
+
+Internal Implementation : HashSet is backed by an HashMap instance, LinkedHashSet is implemented using HashSet and LinkedList while 
+TreeSet is backed up by NavigableMap in Java and by default it uses TreeMap.
+
+null : Both HashSet and LinkedHashSet allows null but TreeSet doesn't allow null but TreeSet doesn't allow null and throw 
+java.lang.NullPointerException when you will insert null into TreeSet. Since TreeSet uses compareTo() method of respective elements
+ to compare them  which throws NullPointerException while comparing with null, here is an example:
+
+TreeSet cities
+Exception in thread "main" java.lang.NullPointerException
+        at java.lang.String.compareTo(String.java:1167)
+        at java.lang.String.compareTo(String.java:92)
+        at java.util.TreeMap.put(TreeMap.java:545)
+        at java.util.TreeSet.add(TreeSet.java:238)
+
+Comparison : HashSet and LinkedHashSet uses equals() method in Java for comparison but TreeSet uses compareTo() method for maintaining ordering. That's why compareTo() should be consistent to equals in Java. failing to do so break general contact of Set interface i.e. it can permit duplicates.
+
+TreeSet vs HashSet vs LinkedHashSet - Example
+Let’s compare all these Set implementation on some points by writing Java program. In this example we are demonstrating difference in ordering, time taking while inserting 1M records among TreeSet, HashSet and LinkedHashSet in Java. This will help to solidify some points which discussed in earlier section and help to decide when to use HashSet, LinkedHashSet or TreeSet in Java.
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * Java program to demonstrate difference between TreeSet, HashSet and LinkedHashSet
+ * in Java Collection.
+ * @author
+ */
+public class SetComparision {
+  
+    public static void main(String args[]){             
+        HashSet<String> fruitsStore = new HashSet<String>();
+        LinkedHashSet<String> fruitMarket = new LinkedHashSet<String>();
+        TreeSet<String> fruitBuzz = new TreeSet<String>();
+      
+        for(String fruit: Arrays.asList("mango", "apple", "banana")){
+            fruitsStore.add(fruit);
+            fruitMarket.add(fruit);
+            fruitBuzz.add(fruit);
+        }
+       
+        //no ordering in HashSet – elements stored in random order
+        System.out.println("Ordering in HashSet :" + fruitsStore);
+
+        //insertion order or elements – LinkedHashSet storeds elements as insertion
+        System.err.println("Order of element in LinkedHashSet :" + fruitMarket);
+
+        //should be sorted order – TreeSet stores element in sorted order 
+        System.out.println("Order of objects in TreeSet :" + fruitBuzz); 
+     
+
+        //Performance test to insert 10M elements in HashSet, LinkedHashSet and TreeSet
+        Set<Integer> numbers = new HashSet<Integer>();
+        long startTime = System.nanoTime();
+        for(int i =0; i<10000000; i++){
+            numbers.add(i);
+        }
+
+        long endTime = System.nanoTime();
+        System.out.println("Total time to insert 10M elements in HashSet in sec : "
+                            + (endTime - startTime));
+      
+      
+        // LinkedHashSet performance Test – inserting 10M objects
+        numbers = new LinkedHashSet<Integer>();
+        startTime = System.nanoTime();
+        for(int i =0; i<10000000; i++){
+            numbers.add(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("Total time to insert 10M elements in LinkedHashSet in sec : "
+                            + (endTime - startTime));
+       
+        // TreeSet performance Test – inserting 10M objects
+        numbers = new TreeSet<Integer>();
+        startTime = System.nanoTime();
+        for(int i =0; i<10000000; i++){
+            numbers.add(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("Total time to insert 10M elements in TreeSet in sec : "
+                            + (endTime - startTime));
+    }
+}
+
+Output
+Ordering in HashSet :[banana, apple, mango]
+Order of element in LinkedHashSet :[mango, apple, banana]
+Order of objects in TreeSet :[apple, banana, mango]
+Total time to insert 10M elements in HashSet in sec : 3564570637
+Total time to insert 10M elements in LinkedHashSet in sec : 3511277551
+Total time to insert 10M elements in TreeSet in sec : 10968043705
+
+
+
+When to use HashSet, TreeSet and LinkedHashSet in Java
+Since all three implements Set interface they can be used for common Set operations like not allowing duplicates but since HashSet, 
+TreeSet and LinkedHashSet has there special feature which makes them appropriate in certain scenario. 
+Because of sorting order provided by TreeSet, use TreeSet when you need a collection where elements are sorted without duplicates.
+ HashSet are rather general purpose Set implementation, Use it as default Set implementation if you need a fast, duplicate free collection. 
+LinkedHashSet is extension of HashSet and its more suitable where you need to maintain insertion order of elements, similar to List
+ without compromising performance for costly TreeSet. Another use of LinkedHashSet is for creating copies of existing Set, 
+Since LinkedHashSet preservers insertion order, it returns Set which contains same elements in same order like exact copy. 
+In short,  although all three are Set interface implementation they offer distinctive feature, HashSet is a general purpose
+ Set while LinkedHashSet provides insertion order guarantee and TreeSet is a SortedSet which stores elements in sorted order specified
+ by Comparator or Comparable in Java.
+
+
+How to copy object from one Set to other
+Here is code example of LinkedHashSet which demonstrate How LinkedHashSet can be used to copy objects from one Set to another without losing order.
+ You will get exact replica of source Set, in terms of contents and order. Here static method copy(Set source) is written using Generics, 
+This kind of parameterized method provides type-safety and help to avoid ClassCastException at runtime.
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/**
+ * Java program to copy object from one HashSet to another using LinkedHashSet.
+ * LinkedHashSet preserves order of element while copying elements.
+ * 
+ * @author Javin
+ */
+public class SetUtils{
+    
+    public static void main(String args[]) {
+        
+        HashSet<String> source = new HashSet<String>(Arrays.asList("Set, List, Map"));
+        System.out.println("source : " + source);
+        Set<String> copy = SetUtils.copy(source);
+        System.out.println("copy of HashSet using LinkedHashSet: " + copy);
+    }
+    
+    /*
+     * Static utility method to copy Set in Java
+     */
+    public static <T> Set<T> copy(Set<T> source){
+           return new LinkedHashSet<T>(source);
+    }
+}
+Output:
+source : [Set, List, Map]
+copy of HashSet using LinkedHashSet: [Set, List, Map]
+
+
+Always code for interface than implementation so that you can replace HashSet to LinkedHashSet or TreeSet when your requirement changes. 
+That’s all on difference between HashSet, LinkedHashSet and TreeSet in Java.  If you know any other significant difference between TreeSet, 
+LinkedHashSet and HashSet which is worth remembering than please add as comment.

@@ -1,0 +1,152 @@
+I am not able to autowire a bean while passing values in paramterized constructor.
+
+How to call the parameterized constructor using SpringBoot?
+
+@Component
+public class MainClass {
+
+    public void someTask() {
+        AnotherClass obj = new AnotherClass(1, 2);
+    }
+
+}
+//Replace the new AnotherClass(1, 2) using Autowire?
+
+@Component
+public class AnotherClass {
+    private int number,age;
+
+    public AnotherClass(int number, int age) {
+        super();
+        this.number = number;
+        this.age = age;
+    }
+}
+
+=========================
+Answer:
+===========================
+
+You need to specify this bean in the constructor:
+
+@Component
+public class MainClass {
+
+    private final AnotherClass anotherClass;
+
+    // this annotation is NOT required if there is only 1 constructor, shown for clarity.
+    @Autowired
+    MainClass(AnotherClass anotherClass) {
+        this.anotherClass = anotherClass;
+    }
+    public void someTask() {
+        // anotherClass is already instantiated by the time you get here.
+    }
+
+}
+Option 1: Directly allow AnotherClass to be created with a component scan.
+
+Now, in order for Spring to be able to construct AnotherClass as a bean, you need to tell it in a 'Spring way' about where it gets it's values from:
+
+@Component
+public class AnotherClass {
+    private final int number,age;
+
+    // also not needed if this is the only constructor.
+    @Autowired
+    public AnotherClass(
+// @Value is a spring annotation to provide spring the value it needs for this parameter.
+                        @Value("${property.number:0}") int number, 
+                        @Value("${property.age:0}") int age) {
+        this.number = number;
+        this.age = age;
+    }
+}
+What this is doing, is pulling 2 properties, property.number and property.age from application.properties
+|application.yml for the value(s) of those integers.
+
+You will need to ensure both of these classes are on the component scan path, or else spring boot won't 
+attempt to make beans of these classes.
+
+Option 2: Use a Configuration Class to make the AnotherClass bean
+
+@Configuration
+public class MyConfigurationClass {
+
+    @Bean
+    public AnotherClass anotherClass {
+        return new AnotherClass(1,2)
+    }
+}
+In this example, you would not annotate AnotherClass with @Component.
+
+Option 3: Use a custom factory method as found in this blog.
+
+Again, with this strategy, do not annotate AnotherClass with @Component
+
+@Configuration
+public class MyConfigurationClass {
+
+    @Bean
+    public BiFunction<Integer, Integer, MyPrototype> myPrototypeFactory() {
+        return start, age -> anotherClass(start, age);
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public AnotherClass anotherClass(Integer start, Integer age) {
+        if (start == null || age == null) {
+            throw new IllegalArgumentException("start was: " + start + ", age was: " + age + ". Neither can be null!");
+        }
+        return new AnotherClass(start,age);
+    }
+}
+Usage:
+
+@Component
+public class MainClass {
+
+    private final BiFunction<Integer, Integer, AnotherClass> anotherClassFactory;
+
+    // this annotation is NOT required if there is only 1 constructor, shown for clarity.
+    @Autowired
+    MainClass(BiFunction<Integer, Integer, AnotherClass> anotherClassFactory) {
+        this.anotherClassFactory = anotherClassFactory;
+    }
+    public void someTask() {
+        AnotherClass ac = anotherClassFactory.apply(1,2);
+        // do something with your new AnotherClass
+    }
+
+}
+Option 4: Use ObjectProvider (Since Spring 4.3) as found in this blog post.
+
+Again, with this strategy, do not annotate AnotherClass with @Component
+
+@Configuration
+public class MyConfiguration {
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public AnotherClass createAnotherClass(Integer start, Integer age) {
+        return new AnotherClass(start, age);
+    }
+}
+Usage:
+
+@Component
+public class MainClass {
+
+    private final ObjectProvider<AnotherClass> anotherClassProvider;
+
+    // this annotation is NOT required if there is only 1 constructor, shown for clarity.
+    @Autowired
+    MainClass(ObjectProvider<AnotherClass> anotherClassProvider) {
+        this.anotherClassProvider = anotherClassProvider;
+    }
+    public void someTask() {
+        // may need to cast the result of '.getObject()'
+        AnotherClass ac = anotherClassProvider.getObject(/*start*/ 1, /*age*/ 2);
+        // do something with your new AnotherClass
+    }
+
+}

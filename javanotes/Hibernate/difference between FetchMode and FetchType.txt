@@ -1,0 +1,40 @@
+difference between FetchMode and FetchType
+
+FetchType:
+--------------
+This is the case because whenever you define a relationship in Hibernate, you'll also need to define the fetch type. 
+The fetch type essentially decides whether or not to load all of the relationships of a particular object/table as 
+soon as the object/table is initially fetched
+
+Let's say we have entities like this:
+
+@Entity
+@Table
+public class Parent {
+    @Id
+    private Long id;
+
+    @OneToMany(mappedBy="parent", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    private List<Child> child;    
+    //getter setters
+}
+
+
+@Entity
+@Table
+public class Child {    
+    @Id
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Parent parent;
+
+    //getter setter
+}
+In above example, when getting Parent entity, hibernate will automaticly load all child entities eagerly using join. 
+On the other hand, when you fetch Child, Parent entity won't be selected unless you call it explicity in your code child.getParent().
+
+FetchType (Lazy/Eager) tells whether we want entity to be loaded eagerly or lazy, when there's call in code.
+
+FetchMode (Select/Join) tells whether we want our entity to be loaded with additional select or in one query with join or subselect.

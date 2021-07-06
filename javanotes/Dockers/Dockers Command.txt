@@ -1,0 +1,12 @@
+Docker:
+
+docker ps -> to check the running container
+docker ps -a -> to check all the container available
+docker images -> to see all the images
+docker run -it -d image name -> to run the images in interactive way[-it] in background [-d]
+docker commit container-id imagesname ->To save the changes in container
+docker run container-id -
+docker rm container-id -> To remove conatiner
+docker login--> login to ur docker hub
+docker push image name
+docker  volume create volume-name

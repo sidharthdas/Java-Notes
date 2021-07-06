@@ -1,0 +1,20 @@
+
+
+Child c = new parent() java
+Java, Child c = new parent(); gives compile time error? java inheritance polymorphism oops.
+Child c = new Child(); Object 'c' has access to child's properties as well as its parent class properties. 
+Hence accessing c.name and c.age was possible. By using child reference we can call both parent and 
+child class (state)Fields and (behavior)methods. And when you assign like this: Parent p = new Child(); 
+It is called as up-casting.
+
+Difference between Parent p = new Child(); and Child c = new Child , At runtime there is no difference. 
+There is a difference only for the Java compiler (​and type checker). In the first case you are declaring 
+that the  new Child() becomes new Nephew() The second effect is a consequence of the fact that, if the 
+code compiles and c is declared as a Parent , this implies that you are not using any feature which is 
+not already declared in Parent , so every other class which extends from Parent is a valid substitute .
+
+Child c = new parent(); gives compile time error?, In Java, methods are virtual by default (See this for details). 
+A Java program to demonstrate that non-method Note that doing "Parent par = new Child()". A child inherits its 
+characteristics from its parents but it doesn’t work the other around. Also, similar to the parent-child relationship 
+of living beings, a child can have its own properties too in addition to inherited ones. In the programming context, 
+the class that derives from other classes is known as derived or sub or child class

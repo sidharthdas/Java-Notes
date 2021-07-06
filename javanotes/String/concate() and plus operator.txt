@@ -1,0 +1,46 @@
+Difference b/w concate() and + operator
+
+POINTS	CONCAT() METHOD	+ OPERATOR
+Definition	A concat() method is method to combine two strings .	
++ operator used to concatenate any number of strings.
+
+Number of arguments	
+In concat() method, takes only one argument of string and concatenate it with another string.	
+In + operatortakes any number of arguments and combines all strings.
+
+Type of arguments	
+concat() method takes arguments of string type only.	
++ operator takes any type of argument and converts it to string type and then combine them.
+
+Creates new string
+concat() takes concatenates two strings and return new string object only string length is greater than 0, otherwise it returns same object..	
++ operatorcreates a new string object every time irrespective of length of string.
+
+public class GFG { 
+    public static void main(String[] args) 
+    { 
+  
+        String s = "Geeks", g = ""; 
+        String f = s.concat(g); 
+        if (f == s) 
+            System.out.println("Both are same"); 
+        else
+            System.out.println("not same"); 
+        String e = s + g; 
+        if (e == s) 
+            System.out.println("Both are same"); 
+        else
+            System.out.println("not same"); 
+    } 
+} 
+Output:
+Both are same
+not same
+
+NullPointer Exception	
+In concat() method raises NullPointer Exception when string is concatenated with null .	
++ operator concatenates string with without any error.
+
+Performance
+concat() method is better than + operator because it creates a new object only when the string length is greater than zero(0), so it uses less amount of memory.	
++ operator always a creates a new string irrespective of length of string therefore it takes more memory.

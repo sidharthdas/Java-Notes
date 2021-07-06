@@ -1,0 +1,52 @@
+Difference between Stateless and Stateful Protocol
+---------------------------------------------------
+Network Protocols for web browser and servers are categorized into two types: Stateless Protocol, and Stateful protocol.
+
+These two protocols are differentiated on the basis of the requirement of server or server-side software to save status or session information.
+
+1. Stateless Protocol:
+Stateless Protocols are the type of network protocols in which Client send request to the server and server response back according to current state. 
+It does not require the server to retain session information or a status about each communicating partner for multiple request.
+
+HTTP (Hypertext Transfer Protocol), UDP (User Datagram Protocol), DNS (Domain Name System) are the example of Stateless Protocol.
+
+Silent features of Stateless Protocols:
+
+Stateless Protocol simplify the design of Server.
+The stateless protocol requires less resources because system do not need to keep track of the multiple link communications and the session details.
+In Stateless Protocol each information packet travel own it’s own without reference to any other packet.
+Each communication in Stateless Protocol is discrete and unrelated to those that precedes or follow.
+
+2. Stateful Protocol:
+In Stateful Protocol If client send a request to the server then it expects some kind of response, if it does not get any response then it resend the request. 
+FTP (File Transfer Protocol), Telnet are the example of Stateful Protocol.
+Silent features of Stateful Protocol:
+
+Stateful Protocols provide better performance to the client by keeping track of the connection information.
+Stateful Application require Backing storage.
+Stateful request are always dependent on the server-side state.
+TCP session follow stateful protocol because both systems maintain information about the session itself during its life.
+
+
+Comparisons between Stateless and Stateful Protocol:
+
+STATELESS PROTOCOL	STATEFUL PROTOCOL
+Stateless Protocol does not require the server to retain the server information or session details.	
+Stateful Protocol require server to save the status and session information.
+
+In Stateless Protocol, there is no tight dependency between server and client.	
+In Stateful protocol, there is tight dependency between server and client
+
+The Stateless protocol design simplify the server design.	
+The Stateful protocol design makes the design of server very complex and heavy.
+
+Stateless Protocols works better at the time of crash because there is no state that must be restored, 
+a failed server can simply restart after a crash.	
+Stateful Protocol does not work better at the time of crash because stateful server have to keep the 
+information of the status and session details of the internal states.
+
+Stateless Protocols handle the transaction very fastly.	
+Stateful Protocols handle the transaction very slowly.
+
+Stateless Protocols are easy to implement in Internet.	
+Stateful protocols are logically heavy to implement in Internet.

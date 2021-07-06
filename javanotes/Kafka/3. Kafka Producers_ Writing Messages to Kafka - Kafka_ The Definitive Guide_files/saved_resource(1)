@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#B9002D"/>
+    
+
+    
+        <link rel="preload"
+          href="/member/dist/orm.291629479afe76ffed43.css"
+          as="style" />
+        <link rel="preload"
+          href="/member/dist/main.291629479afe76ffed43.css"
+          as="style" />
+        <link rel="preload"
+          href="https://cdn.oreillystatic.com/fonts/GuardianText/GuardianTextSans-Medium-Web.woff2"
+          as="font"
+          type="font/woff2"
+          crossorigin=&#34;anonymous&#34; />
+        <link rel="preload"
+          href="https://cdn.oreillystatic.com/fonts/GuardianText/GuardianTextSans-Regular-Web.woff2"
+          as="font"
+          type="font/woff2"
+          crossorigin=&#34;anonymous&#34; />
+    
+
+    <link rel="shortcut icon" href="//www.oreilly.com/favicon.ico" />
+
+      <title>Sign In to O&#39;Reilly</title>
+
+    
+        <link rel="stylesheet" href="/member/dist/orm.291629479afe76ffed43.css" />
+        <link rel="stylesheet" href="/member/dist/main.291629479afe76ffed43.css" />
+    
+    
+    
+
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=i2etGXHuZeIMEu24Eu6pevIpEwXKCJ2RC4qqdWgsbcQNFvSjUomi-6OwU6T-_Rd-iMtChCWTm7TTiU5q6JNL_Po2nXLHkKeLe_mxXI4gbd4MhmPhRdM5z4aGZ-hRXmv-ofo2q7y6pJdyvbNeYwudYsV4ToFqdyJnPS6E2zV1jLYpnw4S1WFUakCZpBtFhlWUoXE2c22JeIF8wz1XIQDGkk8Kswtz-aazt_f8VFoTedacfyOQx7xuqvQOZrldV-3ABr2fN0dwNSpAK_jM15918EimYx3tD7SQcrV10H1vN6WL8ezweY_IHVh3dUNmLPfjGyx8oqnfXiPMH2xR5h3qKS2-5AMx56VMZtpucV1IdcXRpRVcuhDZDumbHNFCWZPMnAeKeqAOtTb77mz-iHWbIG0Ftddjg5SVGBVdT0b-FXE" charset="UTF-8"></script><script type="text/javascript">
+      window.initialStoreData = {"environment":{"origin":"https://ingress.platform.gcp.oreilly.com","GOOGLE_TAG_MANAGER_ACCOUNT":"GTM-5P4V6Z","API_ORIGIN":"https://api.oreilly.com","ENV":"production","ingressedPaths":["/member"],"basePath":"/member","publicPath":"/member/dist/","routerBasePath":"/member"},"ldFeatureFlags":{"andrewTest":false,"androidEnableMarketingCloudSdk":false,"askForReviewsIos":true,"asyncSalesforce":false,"attendDetailPage":false,"betaSegmentNote":false,"boostForAuthorAndPublisherQueries":false,"cacheSearchResultsInSessionStorage":false,"certificationsHidePracticeExams":false,"certificationsPartnerOutage":false,"certificationsShowPeLink":false,"chassisHelloToggle":false,"conferencesDroid":true,"contentPlaygroundPrototype":false,"contentSearchExperiment":false,"disableIngestionPortal":{"disable_portal":false,"disable_ftp_processing":false},"disableLocalTrainingNotificationsIos":false,"disableViewNotebook":false,"displayJalapenoPoppers":true,"displayVerticalFilters":false,"eisDisableSampleUploads":true,"enableFsOnSearch":false,"enableMagpieImagesOnCerts":true,"enableNewRegisterPage":true,"enableNewSignupPage":false,"enableNewSubscribePage":false,"enableOptimizeMultiselect":true,"enablePauseSubscriptionPage":false,"enablePayPalChoiceButtonInNewPaymentsClient":true,"enablePaymentsPriceTiers":false,"enablePdsV1AlphaProductIngestionMessages":false,"enableRatePlanCallouts":true,"enableSemiAnnualPlan":false,"enableSpeedReaderInSearch":false,"enableSuperstreamRefreshAppcuesFlow":false,"enableTeamSetupPage":false,"enableThreeMonthPlan":true,"enableYourAccountLink":true,"enabledThirdPartyAuthProviders":["facebook","corporate","twitter","google-oauth2","linkedin-oauth2","apple-id"],"falconCisUrls":false,"falconCisUrlsForLp":false,"falconLpRefidUrl":true,"feChassisHelloEnableConfirm":false,"feldtest":false,"focusSearchBarShortcut":false,"grootAuth0Client":false,"grootOnboarding":false,"heronReaderIgnoreUsageIsComplete":false,"homeEnableAnswersAnimation":false,"homeEnableAnswersModule":true,"homepageNewContentService":true,"homepageTrendingWorksService":true,"interactiveContent":true,"jupyterNotebookInSearch":false,"jupyterV1Web":true,"launchLotsInMobileSafari":true,"learningPathsDroid":true,"listenForSubscriptionRenewalMessages":true,"logLowRecaptchaScores":0.5,"lpwebLandingpageV2":true,"misoAnswersPrototype":true,"moreSearchResultTypes":false,"multilateralFederatedAuthIntegrationAnybird":true,"multilateralFederatedAuthIntegrationFe":false,"newLotExperience":true,"oreillyLabs":false,"paymentsClientShowComparePlansLink":false,"paymentsClientShowYourDevicesLink":false,"playlistAccountSharing":true,"preferencesPage":true,"preventUsernameLogin":true,"publicPlaylistsAndroid":true,"redirectResultsWithWebUrl":true,"registeredLotsAndroidUpdated":true,"salesforceServiceEnableGrootConsumers":false,"salesforceServiceEnableMessengerConsumers":true,"sandboxScenariosInSearch":true,"searchBarVariation":"{\"experiment\": \"None\", \"variation\": \"None\"}","searchJudgement":false,"searchRelevanceTuning":{"collapse":true,"highlight":false,"pqf":{"topic_names":1000,"chapter_title_unstemmed":2000,"content_unstemmed":2000,"title_unstemmed":900,"topic_keywords":600},"qf":{"chapter_title_unstemmed":100,"content":100,"title":50,"topic_keywords":50,"topic_names":50,"chapter_title":100},"tie":0.6,"boost":"if(termfreq(content_type,'chapter'),1.5,1)"},"seatCountMismatchThresholds":{"seat_capacity_percentage":0.95,"difference_percentage":0.05},"sendCanonProductMessage":false,"sendDeviceTokensToMarketingCloud":false,"sendMessagesToMeds":false,"sendTransactionalEmails":true,"shouldCauseCrashIos":false,"shouldUseUnifiedHistoryIos":false,"showInternalToolsIos":false,"showLinkAppleIcon":true,"showPaymentsNotificationAlert":false,"showReminderBarPerLd":false,"showScenariosInSearch":true,"showSearchResultTopic":true,"showUserDetails":true,"solrFieldAlias":false,"strataLandingPage":true,"syncGrootPasswords":true,"teachBeta":true,"themeVariation":{"brand":"ormProduct","mode":"light"},"tokenAuthService":true,"topicsV2ViewContentCounts":false,"useGrootFrontendDs":false,"useJsonFacetsInSerp":true,"useMultiselectFacetsInSerp":false,"useNewBranding":false,"useUserAgentWorkaroundForLotsIos":true,"whatIsJupyterNotebookLink":true},"jwt":{"_loadingState":"SUCCESS"},"navigationAndAnnouncements":{"announcements":[],"links":{"header":[{"name":"Enterprise","link":"/enterprise/","icon":"","groups":["header"],"children":[]},{"name":"Pricing","link":"/pricing/","icon":"","groups":["header"],"children":[]}],"footer":[{"name":"About O’Reilly","link":"/about/","icon":"","groups":["footer"],"children":[]},{"name":"Teach/write/train","link":"/work-with-us.html","icon":"","groups":["footer"],"children":[]},{"name":"Careers","link":"/careers/","icon":"","groups":["footer"],"children":[]},{"name":"Community partners","link":"/partner/signup.csp","icon":"","groups":["footer"],"children":[]},{"name":"Affiliate program","link":"/affiliates/","icon":"","groups":["footer"],"children":[]},{"name":"Diversity","link":"/diversity/","icon":"","groups":["footer"],"children":[]},{"name":"Support","link":"/online-learning/support/","icon":"","groups":["footer"],"children":[]},{"name":"Contact us","link":"/about/contact.html","icon":"","groups":["footer"],"children":[]},{"name":"Newsletters","link":"https://www.oreilly.com/emails/newsletters/","icon":"","groups":["footer"],"children":[]}],"fineprint":[{"name":"Terms of Service","link":"https://www.oreilly.com/terms/","icon":"","groups":["fineprint"],"children":[]},{"name":"Privacy Policy","link":"/privacy","icon":"","groups":["fineprint"],"children":[]},{"name":"Editorial Independence","link":"/about/editorial_independence.html","icon":"","groups":["fineprint"],"children":[]}],"social":[{"name":"Twitter","link":"https://twitter.com/oreillymedia","icon":"twitter","groups":["social"],"children":[]},{"name":"Facebook","link":"https://www.facebook.com/OReilly","icon":"facebook","groups":["social"],"children":[]},{"name":"LinkedIn","link":"https://www.linkedin.com/company/oreilly-media","icon":"linkedin","groups":["social"],"children":[]},{"name":"YouTube","link":"https://www.youtube.com/user/OreillyMedia","icon":"youtube","groups":["social"],"children":[]}]}},"oauth":{"passwordAllowed":false,"sso":{},"configuration":{"origin":"https://ingress.platform.gcp.oreilly.com","GOOGLE_TAG_MANAGER_ACCOUNT":"GTM-5P4V6Z","API_ORIGIN":"https://api.oreilly.com","ENV":"production","ingressedPaths":["/member"],"basePath":"/member","publicPath":"/member/dist/","routerBasePath":"/member"}},"user":{"error":"User is not authenticated"},"userInfo":{"meta":{"error":"User is not authenticated"},"profile":{"error":null},"usageStatus":{"error":null}},"userProfile":{"_loadingState":"INITIAL"},"appState":{"apiOrigin":"https://api.oreilly.com","nextParam":null,"errorParam":null,"onlineLearningLink":"https://learning.oreilly.com/profile/","academicPageLink":"https://www.oreilly.com/online-learning/signout.html","googleAnalyticsTrackingId":"UA-39299553-7","googleRecaptchaSiteKey":"6LfJ-98UAAAAANRSwoSszSzFovQdvxx_NK7X2HPn","profile":{"_loadingState":"INITIAL","error":null}}};
+    </script>
+    <script type="text/javascript">
+      window.orm = window.orm || {};
+      window.orm.redirect = function redirect(url) {
+        window.location.assign(url);
+      };
+      window.orm.logger = console;
+    </script>
+      <script type="text/javascript" src="https://www.datadoghq-browser-agent.com/datadog-logs-us.js"></script>
+      <script type="text/javascript">
+        if (window.DD_LOGS) {
+          DD_LOGS.init({ clientToken: 'pub8399c9005ebe7454be1698e2aee94fba' });
+          DD_LOGS.logger.addContext('service', 'groot_frontend_ds-browser');
+          DD_LOGS.logger.addContext('env', 'production');
+          DD_LOGS.logger.setLevel('error' || 'error');
+          window.orm.logger = DD_LOGS.logger;
+        }
+      </script>
+
+    <script data-react-helmet="true" src="https://www.google.com/recaptcha/api.js?render=6LfJ-98UAAAAANRSwoSszSzFovQdvxx_NK7X2HPn" type="text/javascript" async="true"></script>
+
+
+      <script>
+        // Disable analytics when hit from DD synthetics browser
+        if (window._DATADOG_SYNTHETICS_BROWSER === undefined) {
+          if (window.initialStoreData && window.initialStoreData.userInfo.meta
+            && window.initialStoreData.userInfo.meta.user_identifier) {
+            var user = window.initialStoreData.userInfo.meta;
+            var dataLayer = window.dataLayer || [];
+
+            // Set user/session info
+            window.medalliaDsUserIdentifier = user.user_identifier;
+            window.medalliaDsSessionIdentifier = user.sessionid;
+            dataLayer.push({ userIdentifier: user.user_identifier });
+            dataLayer.push({ loggedIn: 'yes' });
+
+            // Set account/org info
+            window.medalliaDsAccountIdentifier = user.primary_account;
+            if (!user.individual) {
+              dataLayer.push({ orgID: user.primary_account });
+            }
+
+            // Set account type
+            window.medalliaDsIsIndividual = user.individual;
+            if (user.individual) {
+              if (user.subscription && user.subscription.active) {
+                dataLayer.push({learningAccountType: 'individual'});
+              } else if (user.is_trial) {
+                dataLayer.push({learningAccountType: 'free trial'});
+              }
+            } else {
+              if (user.academic_institution) {
+                dataLayer.push({learningAccountType: 'academic'});
+                window.medalliaDsIsAcademicInstitution = true;
+              } else {
+                dataLayer.push({learningAccountType: 'enterprise'});
+              }
+            }
+
+            // Set paid account
+            if (user.subscription && user.subscription.active) {
+              dataLayer.push({ learningPaidAccount: 'yes' });
+            }
+          }
+
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer', 'GTM-5P4V6Z');
+        }
+      </script>
+
+    
+      
+        <script src="/member/dist/orm.291629479afe76ffed43.js" defer></script>
+      
+      <script src="/member/dist/main.291629479afe76ffed43.js" defer></script>
+    
+
+    
+    
+  </head>
+  <body >
+      <noscript>
+        <iframe src='https://www.googletagmanager.com/ns.html?id=GTM-5P4V6Z'
+          height='0' width='0' style='display:none;visibility:hidden'></iframe>
+      </noscript>
+    <div id="root"><header class="header--QhHKK"><div class="logo--3ByLB"><a href="/home/" class="orm-Link-root"><img class="logo__img--1YRJB" src="/member/dist/oreilly-logo.facece5a81c4.svg"/></a></div></header><main id="main" tabindex="-1"><h2 class="orm-h2 orm-Heading-root">Sign In</h2><section class="root--3N0w9"><div class="panel--Kiacn"><form class="form--3RRAt" data-newrelic-id="authForm" data-testid="authForm" novalidate=""><div class="orm-Input-root"><label for="input-kl24k3fyse" class="orm-Input-inputLabel"><input type="email" aria-required="true" aria-invalid="false" autoComplete="off" class="orm-Input-input input--23vkR " id="input-kl24k3fyse" name="email" placeholder="Email Address" required="" value=""/><span class="orm-Input-labelTxt">Email Address</span></label></div><div class="ssoNote--2BSjQ"><b>Using Single Sign-on (SSO)?</b> Simply enter your company email address and click sign in.</div><div class="orm-Input-root"><label for="input-7mj4yals8f9" class="orm-Input-inputLabel"><input type="password" aria-required="true" aria-invalid="false" autoComplete="off" class="orm-Input-input input--23vkR " id="input-7mj4yals8f9" name="password" placeholder="Password" required="" value=""/><span class="orm-Input-labelTxt">Password</span></label></div><button class="linkButton--3E5EH orm-Link-root" type="button">Forgot Password?</button><button class="orm-Button-root margin-bottom--n9hde " disabled=""><span class="orm-Button-btnContentWrap">Sign In</span></button><div class="small--1GLRd">We will use your personal data in accordance with our <a href="https://www.oreilly.com/privacy.html" class="orm-Link-root">Privacy Policy</a>.</div><div class="signUp--m9ofA">Don&#x27;t have an account? <a href="https://learning.oreilly.com/register/" class="orm-Link-root">Start a free trial</a></div><hr class="altLoginSeparator--3aoG2"/><div class="small--1GLRd">Looking for Classic? <a href="https://www.oreilly.com/online-learning/switch-to-oreilly.html" class="orm-Link-root">Click here for more information</a>.</div><div class="small--1GLRd">Looking for the Member&#x27;s Library? <a href="https://members.oreilly.com" class="orm-Link-root">Sign in here</a> to access your ebook and video purchases.</div></form></div><div class="divider--3V8vm"><div class="dividerText--1tMjM">Or</div></div><div class="panel--Kiacn"><div class="list--mKw7s"><a href="#" class="authLink--3HZQ2 apple--2OVO1"><span class="authIcon--1nLi2"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill-rule="evenodd" id="a" d="M18.186 12.71c-.029-2.87 2.34-4.246 2.446-4.315-1.332-1.948-3.405-2.214-4.144-2.245-1.765-.179-3.443 1.039-4.339 1.039-.893 0-2.275-1.013-3.74-.986-1.923.028-3.697 1.118-4.687 2.841-1.998 3.468-.512 8.605 1.437 11.418.951 1.377 2.087 2.923 3.577 2.868 1.434-.058 1.978-.929 3.712-.929 1.734 0 2.222.929 3.741.9 1.544-.029 2.523-1.403 3.468-2.784 1.093-1.597 1.543-3.143 1.57-3.223-.034-.015-3.012-1.155-3.041-4.584zm-2.854-8.422c.791-.96 1.325-2.291 1.18-3.619-1.14.047-2.521.76-3.338 1.716-.734.85-1.376 2.205-1.203 3.506 1.271.1 2.57-.646 3.361-1.603z"></path></svg></span><span class="authLabel--1uvMm">Sign In with Apple</span></a><a href="#" class="authLink--3HZQ2 facebook--jtlMt"><span class="authIcon--1nLi2"><span class="orm-Icon-root" style="height:1.75rem" data-testid="icon"><span style="font-size:1.75rem;width:1.75rem;height:1.75rem" class="orm-Icon-icon orm-icon-facebook " aria-hidden="true"></span><span class="orm-Icon-title">facebook</span></span></span><span class="authLabel--1uvMm">Sign In with Facebook</span></a><a href="#" class="authLink--3HZQ2 google--1Id8K"><span class="authIcon--1nLi2"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 16 16"><path fill-rule="evenodd" id="a" d="M8.119 9.2h3.403c-.139.884-1.029 2.588-3.403 2.588-2.049 0-3.72-1.697-3.72-3.788 0-2.09 1.671-3.788 3.72-3.788 1.164 0 1.946.497 2.39.927l1.63-1.569C11.092 2.59 9.738 2 8.118 2c-3.316 0-6 2.684-6 6s2.684 6 6 6c3.462 0 5.762-2.435 5.762-5.861 0-.394-.043-.694-.094-.994l-5.668-.002V9.2z"></path></svg></span><span class="authLabel--1uvMm">Sign In with Google</span></a><a href="#" class="authLink--3HZQ2 linkedin--3jx6p"><span class="authIcon--1nLi2"><span class="orm-Icon-root" style="height:1.75rem" data-testid="icon"><span style="font-size:1.75rem;width:1.75rem;height:1.75rem" class="orm-Icon-icon orm-icon-linkedin " aria-hidden="true"></span><span class="orm-Icon-title">linkedin</span></span></span><span class="authLabel--1uvMm">Sign In with LinkedIn</span></a><a href="#" class="authLink--3HZQ2 twitter--1rEPV"><span class="authIcon--1nLi2"><span class="orm-Icon-root" style="height:1.75rem" data-testid="icon"><span style="font-size:1.75rem;width:1.75rem;height:1.75rem" class="orm-Icon-icon orm-icon-twitter " aria-hidden="true"></span><span class="orm-Icon-title">twitter</span></span></span><span class="authLabel--1uvMm">Sign In with Twitter</span></a></div></div></section></main><footer role="contentinfo" class="orm-ff-AnonymousFooter-root footer--_bQ-h "><div class="orm-Grid-root orm-container"><div class="orm-row  orm-Grid-root"><ul class="orm-Grid-root orm-ff-AnonymousFooter-textLinks orm-ff-AnonymousFooter-textLinksUl  orm-col-medium-8 orm-col-small-960-8 orm-col-small-8 orm-col-xsmall-600-8 orm-col-xsmall-4"><li><a href="/about">Our Company</a></li><li><a href="/work-with-us">Teach / Speak / Write</a></li><li><a href="/press">Press / Media Inquiries</a></li><li><a href="/careers">Careers</a></li><li><a href="/category/customer-service.do">Customer Service</a></li><li><a href="/about/contact.html">Contact</a></li></ul><div class="orm-Grid-root orm-ff-AnonymousFooter-iconLinks  orm-col-medium-4 orm-col-small-960-4 orm-col-small-4 orm-col-xsmall-600-8 orm-col-xsmall-4"><ul><li><a href="https://twitter.com/oreillymedia"><span class="orm-Icon-root" style="height:1.5rem" data-testid="icon"><span style="font-size:1.5rem;width:1.5rem;height:1.5rem" class="orm-Icon-icon orm-icon-twitter " aria-hidden="true"></span><span class="orm-Icon-title">twitter</span></span></a></li><li><a href="https://www.facebook.com/OReilly"><span class="orm-Icon-root" style="height:1.5rem" data-testid="icon"><span style="font-size:1.5rem;width:1.5rem;height:1.5rem" class="orm-Icon-icon orm-icon-facebook " aria-hidden="true"></span><span class="orm-Icon-title">facebook</span></span></a></li><li><a href="https://www.linkedin.com/company/oreilly-media"><span class="orm-Icon-root" style="height:1.5rem" data-testid="icon"><span style="font-size:1.5rem;width:1.5rem;height:1.5rem" class="orm-Icon-icon orm-icon-linkedin " aria-hidden="true"></span><span class="orm-Icon-title">linkedin</span></span></a></li><li><a href="https://www.youtube.com/user/OreillyMedia"><span class="orm-Icon-root" style="height:1.5rem" data-testid="icon"><span style="font-size:1.5rem;width:1.5rem;height:1.5rem" class="orm-Icon-icon orm-icon-youtube " aria-hidden="true"></span><span class="orm-Icon-title">youtube</span></span></a></li><li><a href="https://www.oreilly.com/emails/newsletters/"><span class="orm-Icon-root" style="height:1.5rem" data-testid="icon"><span style="font-size:1.5rem;width:1.5rem;height:1.5rem" class="orm-Icon-icon orm-icon-email " aria-hidden="true"></span><span class="orm-Icon-title">email</span></span></a></li></ul></div></div><div class="orm-row  orm-Grid-root"><div class="orm-Grid-root orm-col-medium-8 orm-col-small-960-8 orm-col-small-8 orm-col-xsmall-600-8 orm-col-xsmall-4"><div class="orm-ff-AnonymousFooter-copyright">© <!-- -->2020<!-- --> O’Reilly Media, Inc. All trademarks and registered trademarks appearing on oreilly.com are the property of their respective owners.</div><div class="orm-ff-AnonymousFooter-smallLinks"><ul><li><a href="https://www.oreilly.com/terms/">Terms of Service</a></li><li><a href="/privacy">Privacy Policy</a></li><li><a href="/about/editorial_independence.html">Editorial Independence</a></li></ul></div></div></div></div></footer></div>
+  </body>
+</html>

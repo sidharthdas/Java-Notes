@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  device-monitoring-mysql-db:
+    image: ${MYSQL_IMAGE_NAME}
+    container_name: mocana-tcdma-db
+    ports:
+    - "3306:3306"
+    volumes:
+    - type: volume
+      source: MYSQL_TCDMA_DATA_VOLUME_NAME
+      target: /var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: pass@123
+      MYSQL_DATABASE: tc-device-monitoring-db
+      MYSQL_USER: labuser
+      MYSQL_PASSWORD: mysqlpass@123
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+  device-monitoring-service:
+    image: ${JAVA_SERVICE_IMAGE_NAME}
+    container_name: mocana-tcdma-service
+    depends_on:
+    - device-monitoring-mysql-db
+    links:
+    - device-monitoring-mysql-db:mocana-tcdma-db
+    command: ["/opt/tcdma/wait-for-it.sh", "mocana-tcdma-db:3306","--timeout=20","--strict", "--", "java", "-jar", "./service/${SERVICE_JAR}"]          
+    ports:
+    - 8443:8443
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    volumes:
+    - type: volume
+      source: SERVICE_TCDMA_DATA_VOLUME_NAME
+      target: /var/logs/
+    depends_on:
+    - device-monitoring-mysql-db
+    environment:
+      SPRING.DATASOURCE.USERNAME: ${DB_USERNAME}
+      SPRING.DATASOURCE.PASSWORD: ${DB_PASSWORD}
+      SPRING.DATASOURCE.URL: ${DATASOURCE_URL}
+      SERVER.SSL.KEY-STORE: ${SPRING_SSL_CERTIFICATE}
+      SERVER.SSL.KEY-STORE-PASSWORD: ${SPRING_SSL_CERT_PASSPHRASE} 
+volumes:
+  MYSQL_TCDMA_DATA_VOLUME_NAME:
+    name: ${MYSQL_TCDMA_DATA_VOLUME_NAME}
+  SERVICE_TCDMA_DATA_VOLUME_NAME:
+    name: ${SERVICE_TCDMA_DATA_VOLUME_NAME}
+  CERTIFICATE_VOLUME_NAME:
+    name: ${CERTIFICATE_VOLUME_NAME}

@@ -1,0 +1,27 @@
+
+@Entity and @Table
+
+@Entity(name = "someThing")
+@Table(name = "someThing")
+and I can have different names as well for same class
+
+ @Entity(name = "someThing")
+ @Table(name = "otherThing")
+can anybody tell me what is the difference between these two and why we have same attribute in both ?
+
+
+@Entity is deprecated now.
+
+While Hibernate's \@Entity (i.e. org.hibernate.annotations.Entity) is deprecated, 
+JPA's \@Entity (i.e. javax.persistence.Entity) is alive and well. – 
+
+
+@Entity(name = "someThing") => this name will be used to name the Entity
+@Table(name = "someThing")  => this name will be used to name a table in DB
+So, in the first case your table and entity will have the same name, that will allow you to access 
+your table with the same name as the entity while writing HQL or JPQL.
+
+And in second case while writing queries you have to use the name given in @Entity and the name given in @Table will be used to name the table in the DB.
+
+So in HQL your someThing will refer to otherThing in the DB.
+

@@ -1,0 +1,103 @@
+
+String s = new String("xyz");
+
+The above line will create two object one is in heap and another is in String constant pool.
+
+now if we do this
+
+String s = new String("xyz");
+String s1 ="xyz";
+the above two statement will create two object. The first line String s = new String("xyz");will create two object 
+as mentioned in 1st line and , When String s = "xyz";executes it checks in string constant pool if there is same content 
+object is there or not, since the first line made an entry in string constant pool with "xyz" it returns the same
+ reference and does not create other object.
+
+What if we have these four line together as mentioned bellow.
+
+String s2 = new String("xyz");
+String s3 ="xyz";
+String s4 = new String("xyz");
+String s5 ="xyz";
+If we execute the above line we will have three object.
+
+The first and as mentioned will create two object one in heap and another in String constant poll.
+When the second line executes it checks in the string constant poll
+and find with "xyz" so it returns the same object, so till second line we have two objects.
+when the third line executes it will create a new object in the heap since new operator creates object in 
+the heap so till third line will have 3 objects.
+When the fourth line executes it checks in the string constant poll
+and find with "xyz" so it returns the same object, so fourth line we have three objects.
+Bonus about the intern() method
+
+When the intern() method is invoked on a String object it looks the string contained by this String object in the pool, 
+if the string is found there then the string from the pool is returned. Otherwise, this String object is added to the pool 
+and a reference to this String object is returned.
+
+public class TestString {
+
+    public static void main(String[] args) {
+        String s1 = "Test";
+        String s2 = "Test";
+        String s3 = new String("Test");
+        final String s4 = s3.intern();
+        1 System.out.println(s1 == s2);
+        2 System.out.println(s2 == s3);
+        3 System.out.println(s3 == s4);
+        4 System.out.println(s1 == s3);
+        5 System.out.println(s1 == s4);
+        6 System.out.println(s1.equals(s2));
+        7 System.out.println(s2.equals(s3));
+        8 System.out.println(s3.equals(s4));
+        9 System.out.println(s1.equals(s4));
+        10 System.out.println(s1.equals(s3));
+    }
+
+}
+ Run code snippetExpand snippet
+//Output
+1-true
+2-false
+3-false
+4-false
+5-true
+6-true
+7-true
+8-true
+9-true
+10-true
+
+See the magic of intern by applying intern method on new string object. intern is applied here so it will check if "Test" 
+is available in String Constant pool or not since "Test" is available in String constant pool and it will return the same 
+object so s3 has the same reference as s1 and s2 and will get all the result as true
+
+public class TestString {
+
+    public static void main(String[] args) {
+          String s1 = "Test";
+	        String s2 = "Test";
+	        String s3 = new String("Test").intern(); 
+	        final String s4 = s3.intern();
+	        System.out.println(s1 == s2);
+	        System.out.println(s2 == s3);
+	        System.out.println(s3 == s4);
+	        System.out.println(s1 == s3);
+	        System.out.println(s1 == s4);
+	        System.out.println(s1.equals(s2));
+	        System.out.println(s2.equals(s3));
+	        System.out.println(s3.equals(s4));
+	        System.out.println(s1.equals(s4));
+	        System.out.println(s1.equals(s3));
+    }
+
+}
+ Run code snippetExpand snippet
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true

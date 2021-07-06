@@ -1,0 +1,18 @@
+Thread vs Runnable in Java
+
+
+1) Java doesn't support multiple inheritance, which means you can only extend one class in Java so once you extended Thread class 
+you lost your chance and can not extend or inherit another class in Java.
+
+2) In Object oriented programming extending a class generally means adding new functionality, modifying or improving behaviors. 
+If we are not making any modification on Thread than use Runnable interface instead.
+ 
+3) Runnable interface represent a Task which can be executed by either plain Thread or Executors or any other means. 
+so logical separation of Task as Runnable than Thread is good design decision.
+
+4) Separating task as Runnable means we can reuse the task and also has liberty to execute it from different means. 
+since you can not restart a Thread once it completes. again Runnable vs Thread for task, Runnable is winner.
+
+5) Java designer recognizes this and that's why Executors accept Runnable as Task and they have worker thread which executes those task.
+
+6) Inheriting all Thread methods are additional overhead just for representing a Task which can can be done easily with Runnable.

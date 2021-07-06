@@ -1,0 +1,46 @@
+difference between Atomic and volatile keyword
+
+atomicity
+visibility
+
+Volatile eradicates visibility problem but it does not deal with atomicity. Volatile will prevent 
+compiler to reorder the instruction which involves write and subsequent read of a volatile variable.
+ e.g. k++ Here k++ is not a single machine instruction rather it is three machine instructions.
+
+copy the value to register
+increment it
+place it back
+So even though you declare variable to volatile it will not make this operation atomic, which means 
+another thread can see a intermediate result which is a stale or unwanted value for the other thread.
+
+But AtomicInteger, AtomicReference are based on the Compare and swap instruction. CAS has three operands: 
+a memory location V on which to operate, the expected old value A, and the new value B. CAS atomically updates
+ V to the new value B, but only if the value in V matches the expected old value A; otherwise it does nothing. 
+ In either case, it returns the value currently in V. This is used by JVM in AtomicInteger, 
+ AtomicReference and they call the function as compareAndSet(). If this functionality is not supported by 
+ underlying processor then JVM implements it by spin lock.
+ 
+ 
+ 
+ Java volatile keyword doesn't means atomic, its common misconception that after declaring volatile, 
+ ++ operation will be atomic, to make the operation atomic you still need to ensure exclusive access using 
+ synchronized method or block in Java. 
+ 
+ 
+When a multithreaded program is running, and there is some shared variable which isn't declared as volatile, 
+what these threads do is create a local copy of the variable, and work on the local copy instead. So the 
+changes on the variable aren't reflected. This local copy is created because cached memory access is much 
+faster compared to accessing variables from main memory.
+
+When you declare a variable as volatile, it tells the program NOT to create any local copy of the variable 
+and use the variable directly from the main memory.
+
+By declaring a variable as volatile, we are telling the system that its value can change unexpectedly from anywhere, 
+so always use the value which is kept in the main memory and always make changes to the value of the variable in 
+the main memory and not create any local copies of the variable.
+
+Note that volatile is not a substitute for synchronization, and when a field is declared volatile, the compiler 
+and runtime are put on notice that this variable is shared and that operations on it should not be reordered 
+with other memory operations. Volatile variables are not cached in registers or in caches where they are hidden
+from other processors, so a read of a volatile variable always 
+returns the most recent write by any thread.

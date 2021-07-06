@@ -1,0 +1,54 @@
+﻿Ways to create object 
+
+1. Using new keywords
+It is the most common and regular way to create an object and a very simple one also. By using this method we can call whichever constructor we want to call (no-arg constructor as well as parameterized).
+
+Employee emp1 = new Employee();
+ 0: new           #19          // class org/programming/mitra/exercises/Employee
+ 3: dup
+ 4: invokespecial #21          // Method org/programming/mitra/exercises/Employee."":()V
+
+
+2. Using newInstance() method of Class class 
+We can also use the newInstance() method of a Class class to create an object. This newInstance() method calls the no-arg constructor to create the object.
+
+We can create an object by newInstance() in the following way:
+
+Employee emp2 = (Employee) Class.forName("org.programming.mitra.exercises.Employee").newInstance();
+Or
+
+Employee emp2 = Employee.class.newInstance();
+51: invokevirtual    #70    // Method java/lang/Class.newInstance:()Ljava/lang/Object;
+
+
+3. Using newInstance() method of Constructor class 
+Similar to the newInstance() method of Class class, There is one newInstance() method in the java.lang.reflect.Constructor class which we can use to create objects. We can also call parameterized constructor, and private constructor by using this newInstance() method.
+
+Constructor<Employee> constructor = Employee.class.getConstructor();
+Employee emp3 = constructor.newInstance();
+111: invokevirtual  #80  // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+Both newInstance() methods are known as reflective ways to create objects. In fact newInstance() method of Class class internally uses newInstance() method of Constructor class. That's why the later one is preferred and also used by different frameworks like Spring, Hibernate, Struts etc. To know differences between both newInstance() methods read Creating objects through Reflection in Java with Example.
+
+4. Using clone() method: 
+Whenever we call clone() on any object, the JVM actually creates a new object for us and copies all content of the previous object into it. 
+Creating an object using the clone method does not invoke any constructor. 
+
+To use clone() method on an object we need to implement Cloneable and define the clone() method in it. 
+
+Employee emp4 = (Employee) emp3.clone();
+162: invokevirtual #87  // Method org/programming/mitra/exercises/Employee.clone ()Ljava/lang/Object;
+
+
+Java cloning is the most debatable topic in Java community and it surely does have its drawbacks but it is still the most popular and easy way of creating a copy of any object until that object is full filling mandatory conditions of Java cloning. I have covered cloning in details in a 3 article long Java Cloning Series which includes (Java Cloning And Types Of Cloning (Shallow And Deep) In Details With Example, Java Cloning - Copy Constructor Versus Cloning, Java Cloning - Even Copy Constructors Are Not Sufficient), go ahead and read them if you want to know more about cloning.
+
+5. Using deserialization: 
+Whenever we serialize and deserialize an object, the JVM creates a separate object for us. In deserialization, the JVM doesn’t use any constructor to create the object. 
+
+To deserialize an object we need to implement a Serializable interface in our class. 
+
+
+
+ObjectInputStream in = new ObjectInputStream(new FileInputStream("data.obj"));
+Employee emp5 = (Employee) in.readObject();
+261: invokevirtual  #118   // Method java/io/ObjectInputStream.readObject:()Ljava/lang/Object;
+As we can see in the above bytecode snippets, all 4 methods are called and get converted to invokevirtual (object creation is directly handled by these methods) except the first one, which got converted to two calls: one is new and other is invokespecial (call to constructor).

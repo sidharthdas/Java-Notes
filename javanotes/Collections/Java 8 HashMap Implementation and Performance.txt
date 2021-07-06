@@ -1,0 +1,82 @@
+Java 8 Map:
+
+public class HashMap<K,V> extends AbstractMap<K,V>
+    implements Map<K,V>, Cloneable, Serializable {
+
+Java 8 HashMap Implementation and Performance
+=====================================================
+Evaluating Java 8 HashMap performance
+
+Help us evaluate Java 8 HashMap implementations and performance!
+In this article, we are going to explore more about the implementation and performance of HashMap. Before we look into the performance of HashMap, 
+first we will understand its implementation. HashMap is one of the most frequently talked about features in Java 8.
+
+You may also like: HashMap Performance Improvements in Java 8
+
+In Java, the HashMap<K,V> class implements Map<K,V>. The main methods of this interface are:
+
+V put(K key, V value)
+V get(Object key)
+V remove(Object key)
+Boolean containsKey(Object key)
+
+HashMaps use an inner class Entry<K, V> to store the data in nodes. HashMap stores data into multiple singly-linked lists 
+of entries called buckets. This entry is a simple key-value pair with two extra data:
+
+A reference to another Entry so that a HashMap can store entries like singly-linked lists
+A hash value that represents the hash value of the key. This hash value is stored to avoid the computation of the hash every time the HashMap needs it.
+HashMap Internal Storage
+An instance of HashMap has two parameters that affect its performance: initial capacity and load factor. The capacity is the number of
+ buckets in the hash table, and the initial capacity is simply the capacity at the time the hash table is created.
+
+The load factor (default load factor .75) is a measure of how full the hash table is allowed to get before its capacity is automatically increased. 
+When the number of entries in the hash table exceeds the product of the load factor and the current capacity, the hash table is rehashed 
+(that is, internal data structures are rebuilt) so that the hash table has approximately twice the number of buckets.
+
+The Map usually acts as a bucket of bins, when the bins gets too large, they are transformed into bins of  TreeNodes similar to   java.util.TreeMap. 
+Tree bins are ordered primarily by hashcode, if two elements has same hashcode, then the  compareTo() method of  Comparable<C>    
+interface is used to ordering, Java 8 improvement.
+Java 8 Improvement
+HashMap implementation in Java provides constant-time performance O(1)  for get()and put() methods in the ideal case when the Hash function 
+distributes the objects evenly among the buckets. In Java 8, you still have an array, but it now stores Nodes that contain the exact same 
+information as Entries and, therefore, are also linked lists.
+
+Below is the Node implementation in Java 8:
+
+static class Node implements Map.Entry { 
+      final int hash; 
+      final K key; 
+      V value; 
+      Node next;
+}
+
+
+Well, Nodes can be extended to TreeNodes. A TreeNode is a balanced tree structure that maintains O(long(n)) complexity for add, delete, or get. 
+TreeNode also ensures that their length is always log(n) despite new adds or removes of nodes.
+
+Thus, the performance of HashMap degrades gracefully if hashCode() method is not used properly, where it returns values that are poorly distributed 
+or those in which many keys share a hashCode.
+
+To address this issue in Java 8 Map transforms it into bins of TreeNode, each structured similarly to those in java.util.TreeMap once the 
+threshold(TREEIFY_THRESHOLD) is reached. This means that HashMap starts with storing Entry objects in bins of the linked list but after the 
+number of items in a Map becomes larger than a certain threshold, it is transformed from bins of a linked list to TreeNode, this improves 
+the worst-case performance from O(n) to  O(log n). And when they become too small (due to removal or resizing), they are converted back to plain bins.
+
+HashMap Bucket Resizing Overhead
+If you need to store a huge amount of data (millions), you should create your HashMap with an initial capacity close to your expected volume.
+
+For default initial capacity, whenever bucket in HashMap reaches its load factor .75 i.e. (16 * .75) 12th element, it recreates a new inner 
+array with double its capacity, i.e. 32 in this case. And when it resizes itself, all the hash codes are, again, generated, which is called 
+rehashing. It's a very costly operation as every time it reaches its load factor it resizes itself.
+
+If we are using HashMap for storing small values, then we don’t have to worry. But if we are going to store a very large amount of data, 
+let's say 2 million records, then imagine how many times it has to rehash the whole structure. At low volume, the full recreation of the 
+inner array is fast, but at high volume, it can take seconds to minutes. By initially setting your expected size, you can avoid these 
+costly operations. Also should make sure to use full capacity else you will waste a lot of memory as unused blocks get allocated in memory.
+
+Conclusion
+For simple use cases, you don’t need to understand the internal working of HashMap as you won't see a difference between  O(1),  O(n), or  
+O(log (n)). But its always good to know the implementation details being Java developer. But at a high level, it becomes very important 
+to know how it works and to understand the importance of the hashcode() method.
+
+

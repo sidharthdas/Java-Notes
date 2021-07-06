@@ -1,0 +1,22 @@
+Content negotiation
+========================
+
+This a feature in which suppose client wants the request in xml and 
+the api is sending the response as json, so client is sending accept 
+header as application/xml and there will no produces mentioned in the api, 
+so by default it will json so just need to add jakson.dataformate dependency in pom file.
+
+Note it you want to restrict at api end, u need to mentioned produces.
+
+Accept - application/json ---- if client send this in header which mean browser 
+								or client wanted response as json format.
+								
+								406 is returned by the server when it can't respond based 
+								on accepting the request headers.
+								
+								
+Content-type - application/json ---- if client send this in header which mean browser 
+								or client sending request body as json format.
+								
+								415 is returned by the server when the entity sent in a request 
+								(content in a POST or PUT) has an unsupported mediatype (i.e. they sent XML)

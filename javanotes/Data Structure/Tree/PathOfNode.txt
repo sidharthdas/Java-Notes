@@ -1,0 +1,122 @@
+Path of a node:
+
+package com.manoj;
+
+public class BinarySearchTreeNode {
+
+	BinarySearchTreeNode left;
+	BinarySearchTreeNode right;
+	int data;
+	public BinarySearchTreeNode getLeft() {
+		return left;
+	}
+	public void setLeft(BinarySearchTreeNode left) {
+		this.left = left;
+	}
+	public BinarySearchTreeNode getRight() {
+		return right;
+	}
+	public void setRight(BinarySearchTreeNode right) {
+		this.right = right;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	public BinarySearchTreeNode(int data) {
+		left = left;
+		right = null;
+		this.data = data;
+	}
+}
+
+
+-------------------------------------
+
+package com.manoj;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+public class NodePathFinder {
+
+	BinaryTreeNode root;
+	List path=new ArrayList();
+	
+	public void insert(int data) {
+		root=add(root,data);
+	}
+	
+	public BinaryTreeNode add(BinaryTreeNode node,int data) {
+		
+		if(node==null) {
+			node=new BinaryTreeNode(data);
+			
+		}else {
+			if(node.getRight()==null) {
+				node.right=add(node.right,data);
+			}else {
+				node.left=add(node.left,data);
+			}
+		}
+		
+		return node;
+	}
+	
+	public void pathFinder(int nodeValue ) {
+		
+		pathFinder( root, nodeValue);
+		Iterator itr=path.iterator();
+		if(path.size()==0) {
+		System.out.println("Such node not available");
+		}else {
+		while(itr.hasNext()) {
+			System.out.print(itr.next()+"->");
+		}
+		}
+	}
+	
+	private boolean pathFinder(BinaryTreeNode root, int nodeValue){
+		if(root==null)
+			return false;
+		if(root.data==nodeValue||pathFinder(root.left,nodeValue)||pathFinder(root.right,nodeValue)){
+			path.add(root.data);
+			return true;
+		}
+		return false;
+	}
+}
+
+
+-------------------------------------------------------
+
+package com.manoj;
+
+import java.util.Scanner;
+
+public class NodePathFinderMain {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		
+		NodePathFinder npf=new NodePathFinder();
+		npf.insert(10);
+		npf.insert(20);
+		npf.insert(30);
+		npf.insert(40);
+		npf.insert(50);
+		npf.insert(60);
+		npf.insert(70);
+		npf.insert(80);
+		
+		System.out.println("Enter the node for which u want to find the the path");
+		int nodeValue=sc.nextInt();
+		npf.pathFinder(nodeValue);
+
+	}
+
+}

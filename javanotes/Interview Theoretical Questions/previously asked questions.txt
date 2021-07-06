@@ -1,0 +1,583 @@
+﻿
+==============================
+REST API
+==============================
+
+Q - how to design a rest services from scratch. What you required to build rest service from scratch.
+Q - when to choose soap when to choose rest..
+Q - how to give multiple types of out puts from a single resource.  
+Q - exceptions in rest service
+Q - how to produce xml out put
+Q - how to read file input in rest 
+Q - How would you design REST API
+Q - If we are creating new URI, how will ID will be generated e.g. will you use http//abc.com/apple or http://abc.com/createapple, if not createapple why not
+Ans - RESTful URI should refer to a resource that is a thing (noun) instead of referring to an action (verb) because nouns have properties which verbs do not have.
+Q - What is the port number of HTTPS requests . Ans. 8080
+Q - Given two URLs: Which is valid and why?
+i.	http:localhost:8080//user/login
+ii.	https:localhost:8080//user/login  
+Q - How Rest application starts and works internally ?
+Q - Internal structure of framework, when API call is initiated.
+Q - How Http requests are stateless? 
+Q - How the user login data is maintained in a stateless request like Http/rest
+Q - What is the difference between PUT and POST method of HTTP?
+Q - What are the disadvantages of PUT method due to which it is not normally used?
+Q - Web services architecture and about its background process
+Q - Why restful web services is so popular
+Q - Where does the http request go after getting hit by sso server?
+Q - Http Response Status codes
+Q - How you test your rest service
+Q - Assume I have some URI like "https://localhost:8080/hotels/bangalore?id=10". How do you extract Path Params and Query Params from the above URI?
+Ans .Query Parameter is basically used to filter or sort the resources. It is passed in the URL as query string in key-value form.
+URI Parameter is a variable element enclosed in curly braces {} inside relative URI of resources.the URL to get employee details on the basis of employeeID will be
+ GET /employees/{employeeID} where employees is resource and {employeeID} is URI parameter.
+Q - You are consuming some REST service, How do you handle if there is a change in the structure of the response?
+Q - What all web services will you design if say you want to develop an application to add and manage employees in the organisation, 
+	along with http methods needed for each service.
+Q - Difference between HTTP and HTTPS? How HTTPS is more secure than HTTP?
+Q - How mapping is done from request body to action class member fields?
+Q - What is idempotent. Which all http methods are idempotent.
+Q - What is patch.
+
+
+===========================================================
+Java
+===========================================================
+
+
+Q - How we can save a collection(suppose ArrayList) to access by multiple threads.
+Q - What is synchronization, what are ways to achieve synchronization
+Q - Multiple threads are running how to make sure one thread run after other.
+Q - How to make one variable  thread safe in a class.
+Q - Difference between call and run.
+Q - Benefits of runnable interface in thread
+Q - What is semaphore.
+Q - Race condition.
+Q - Executorservice /Thread pool
+Q - Where does the lock exists? How does locking works in java?
+Q - Which is preferable, method level Synchronization or Block level Synchronization and why.?
+Q - Synchronization, cases where we use Synchronization in banking application.
+Q - What is the difference between synchronized method and synchronized block?
+Q - What is the need of having Object class in Java when we ourselves can implement all of it's functionality?
+Q - If say whole of synchronized method body is made a synchronized block (i.e synchronized block starting from very first line 
+	of method body and going till end of method body),what advantage it will have over making the complete method synchronized?
+Q - What is class level lock & why it is needed?
+Q - What is volatile keyword, what happen if we declare an object as volatile, what if we are not declaring as volatile.
+Q - What is multithreading? Give me one real time example?
+Q - There are few threads, suppose T1, T2, T3, T4 …… T10, how do we achieve, like after T1, T2 and after T2 , T3 and so on, 
+	should run , also after T10, T1 should start again.
+Q - Write some sample code that can cause a dead lock?  
+Q - What are daemon threads ?
+Q - Use of volatile keywords
+Q - What is Runnable and Callable.
+Q - What is future object.
+Q - How many ways we can use synchronization? What is the use of volatile keyword over synchronization .
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+
+Q - Hash Map implementation
+Q - Concurrent hash map
+Q - Scenario where hashmap is faster than concurrent hashmap
+Q - Differences between hash map and concurrent hash map
+Q - How TreeSet/HashSet internally works?
+Q - What is rehashing in map?
+Ans. As the name suggests, rehashing means hashing again. Basically, when the load factor increases to more than 
+	its pre-defined value (default value of load factor is 0.75), the complexity increases. So to overcome this, 
+	the size of the array is increased (doubled) and all the values are hashed again and stored in the new double 
+	sized array to maintain a low load factor and low complexity.
+
+Q - When map resize happens?
+Q - difference between List and Set...  why Set does not allows the duplicate, how to verify the duplicate properties in case of custom Objects
+Q - Internal implementation of List and Set..
+Q - Fail safe/ fail fast.
+
+Q - ArrayList 1 - 10, sum all by using java 8 API.
+Ans. int sum=marks.stream().collect(Collectors.summingInt(Integer::intValue));
+
+Q - Arrays of int using java 8 stream api -int[] array
+Ans. for sum 	- Arrays.stream(array).average().orElse(Double.NaN);
+	for average - Arrays.stream(array).sum()
+
+Q -	Arrays of Integer using java 8 stream api - Integer[] array
+	Arrays.stream(array).mapToInt(Integer::intValue).sum();
+
+Q - What is the difference between arrays and arrayList?
+Q - Can we make ArrayList as homogeneous too?
+Q - We have inserted an entry with a key and value in a hash map with key being of type 'Student' class and hashCode returning id of student (as per my suggestion). 
+	Now after insertion if id of student is changed, how can I retrieve the existing Student object from map?
+Q - Two object for same class Employee e1 and e2, if we do list.add(e1) and list.add(e2) then how many object will be there in list.
+
+Q - What is load factor?
+Ans. Default initial capacity of the HashMap takes is 16 and load factor is 0.75f (i.e 75% of current map size). ... 
+	For example product of capacity and load factor as 16 * 0.75 = 12 .
+	This represents that after storing the 12th key – value pair into the HashMap , its capacity becomes 32
+
+Q- output
+import java.util.*;
+public class HelloWorld{
+
+     public static void main(String []args){
+        System.out.println("Hello World");
+        
+        List list=new ArrayList<Integer>();  it will work
+	//	 List<> list=new ArrayList<Integer>(); it will not work. it will throw illegal start of type
+		 
+	//	 ArrayList<Integer> list=new List<Integer>();it will not work. it will throw List is abstract; cannot be instantiated
+	
+        System.out.println(list.add(5)); // list.add() method will throw true
+     }
+}
+
+Ans.Hello World
+true
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+Q - Principle of oops.
+
+Q - What is method hiding.
+Ans - When super class and sub class contains same method including parameters and if they are static.
+	The method in the super class will be hidden by the one that is in the sub class. This mechanism is known as method hiding.
+	
+Q - Does abstract class have constructor n why
+Ans . abstract class has fields x and y, and that you always want them to be initialized in a certain way, Now, if you have 
+subclasse of your abstract class, when you instantiate them their constructors will be called, and then the parent constructor
+ will be called and the fields will be initialized.
+
+Q - What is super keyword, how it helpful in inheritance. What if we don’t had super.
+Ans. The super keyword in java is a reference variable that is used to refer immediate parent class object.
+Whenever you create the instance of subclass, an instance of parent class is created implicitly i.e. referred by super reference variable.
+super is used to refer immediate parent class instance variable.
+super() is used to invoke immediate parent class constructor.
+
+Q - What the use of final, why we make class as final. 
+Ans . To restrict inheritance.
+  
+Q - Using Interface design the flow of tax calculation country wise
+Q - Functional interface, where we use this interface.
+Q - What is an interface? What is the new feature introduced in Java 8 with respect to interface?
+	default method and static method : 
+Q - What do you prefer , to use Interface or Concrete Classes.	
+
+Q - Super class method with public, can we override this method as protected in child class and vice-versa.
+Ans. No, we can not reduce the visibility.
+
+Q - Super class method throws exception, the subclass same overridden method can throw IOException.
+Ans . No issue. compilation error will come if overridden method  throw IOException with no Exception thrown by Super class method .
+
+Q - what is Marker interface, give example.?
+Ans. Interface with no method. Serializable, Cloneable and Remote interface.Marker interface is a good way to classify code.
+marker interface in Java e.g. Serializable, Cloneable and Remote it looks they are used to indicate something to compiler or JVM. 
+So if JVM sees a Class is Serializable it done some special operation on it
+
+Q - What is encapsulation, why we use private variables with getter setter as public.
+Ans. 1. We can make sure that right value is being set by putting some validations in the setters and right 
+	value is being returned by putting some validations in getters.
+	2. We can provide only setter or only getter to make write only or read only.
+	3. Different access level can be given to setter and getter as per requirements.
+
+Q - What are the methods in Cloneable interface?
+Ans. It is marker Interface.
+
+Q - can we override main method, if no then why?
+Ans . No becasuse static method can not be overridden
+
+Q - what is ploymorphism , type of polymorphism?
+
+Q - Why Integer is created when we already have int?
+Ans . 1.Integer class also allows us to reverse our number or rotate it left or right using reverse(), rotateLeft() and rotateRight()
+	2. int, being a primitive data type has got less flexibility. We can only store the binary value of an integer in it.
+	3. Since Integer is a wrapper class for int data type, it gives us more flexibility in storing, converting and manipulating an int data.
+	
+Q - We have a class say 'Student', how will we create it's hashcode method such that it behaves as a good key for map.
+Q - What is the contract between hashcode() and equals()? What it will be the hashcode If I don't override it?
+Q - program on pollymorphism? give the output of given program...
+    
+		public class A{
+		
+		void print(){
+			sysout("A");
+		}
+
+		}
+
+	public class B extends A{
+		void print(){
+			sysout("B");
+		}
+
+	}
+
+	public class C{
+			void print(A a){
+				sysout("AA")
+					a.print()
+				}
+
+			void print(B b){
+					sysout("BB");
+					b.print();
+				}
+	}
+
+	public static void main(String args..){
+
+			A a = new B();
+			C c =new C();
+			c.print(a); // write the output at this line....
+	}
+Ans: Output:
+	 AA
+	 B
+
+Q - Can we do like this.
+ Interface A {
+   void m1(Object obj)
+}
+
+Class B implements A {
+   void m1(Integer obj) {
+           
+  }
+}
+ Or vice-versa.
+Can we do like this.
+ Interface A {
+   void m1(Object obj)
+}
+
+Class B implements A {
+   Object m1() {
+           
+  }
+}
+ Or vice-versa.
+ 
+Ans - Both not possible. compilation error will be raised. 
+Q - Output
+
+Class A {
+  	Public static void display() {
+		sop(“from A”)
+            }
+}
+
+Class B extends A {
+  	Public static void display() {
+		sop(“from B”)
+            }
+}
+
+In main
+    A a = new B();
+    a.display() ?????? 
+
+Ans. from A  ---> It will call Parent method as it is not overriden
+
+
+
+-----------------------------------------------------------------------------------------------------
+ 
+Q - use of serialization, what if i dnt want to serialize few properties
+Q - Serialization id why that is used?
+Q - what is seriallzation..,, how it behaves for different JVM.
+
+
+-------------------------------------------------------------------------------------------------------
+
+Q - JVM architecture. How the heap memory gets divided.
+Q - How many types of memory created by JVM.
+
+Q - Where the memory gets allocated for static block/static methods / static variable.
+Ans - When we create a static variable or method it is stored in the special area on heap: PermGen(Permanent Generation),
+ where it lays down with all the data applying to classes(non-instance data). Starting from Java 8 the PermGen became - Metaspace. 
+ The difference is that Metaspace is auto-growing space, while PermGen has a fixed Max size,
+
+Q - How to solve JVM memory utilization  --- https://stackify.com/java-memory-leaks-solutions/
+Q - How garbage collection works ?
+Q - When static and non static block gets executed.
+Ans. Whenever an object is created, a non-static block will be executed before the execution of the constructor.
+	 The Non-static blocks are automatically called by the JVM for every object creation in the java stack area
+	 A static block is a block of code which contains code that executes at class loading time
+
+Q - Difference b/w StackOverFlowError and OutOfMemoryError.
+Ans. OutOfMemoryError is related to Heap.
+	 StackOverflowError is related to stack
+
+Q - ClassNotFoundException and NoClassDefFoundError when it occurs.
+Scenario 
+Class A{
+ Public void display(){}
+}
+Class B{
+Protected void display(){}
+}	
+
+--------------------------------------------------------------------------------------------------------
+
+Q - Why did team do migration from Java 6 to Java 8
+Q - Why String is final.
+Q - How does Strings work internally? [Questions on String constant pool and Heap memory]?
+Q - What is reflection.
+Q - Remove LRU from cache, in given 100 elements.
+Q - How annotation works internally.
+Q -  How do you write your own annotation, How this annotation works internally when we use it, which design pattern it follows.
+Ans - https://dzone.com/articles/how-annotations-work-java
+Q - What data structure you will use for undo and redo.
+Q - what is the advantage of immutability?
+Q - What is generics? Wild card? Explain with example
+Q - What will happen when we use Break keyword without loop in a method. 
+Ans - Compilation error saying break should be use in loop or switch.
+Q - How do you handle if any exception occurs in catch block.
+ https://stackoverflow.com/questions/13598026/if-exception-occurs-in-catch-block-itself-then-how-to-handle-it-in-c
+Q - Difference between == operator and equals method?
+
+Q - Assume I have class like below 
+public final class Employee{
+private final int id;
+private final String name;
+private final Address address;
+} 
+Here Address is some third party class you are using, how can you make sure that the complete Employee class is Immutable?
+
+Q - How do you compress a file in java?
+Q - How does BufferedReader works internally?
+Q - Will finally be executed if I do System.exit() anywhere in try or in catch? 
+Ans - It will not execute finally block. The program will be terminated after System.exit() statement.
+Q - What would be returned in following code: 
+	when no exception occurs and when exception occurs 
+try{
+return 'a';}
+catch{
+return 'b';}
+finally{
+return 'c';}
+
+
+
+========================================
+Data structure and Algorithms : 
+========================================
+
+Q - we have a sequence of numbers written in sequence:
+   1,2,3,4,5..... 1million
+But one number is missing in between, how can we find the missing number
+missing no={(n(n+1))/2} - sum of digits
+-----------------------------------------------
+Q - Given string find whether string numeric or not ex- “ss1233” etc
+Ans. 
+		try {
+		        double d = Double.parseDouble(strNum);
+		    } catch (NumberFormatException nfe) {
+		       System.out.println(nfe);
+		    }
+Note: If these methods don't throw any NumberFormatException, then it means that the parsing was successful and the String is numeric
+
+Q - You have linked list [5,2,7,9,1,4,3,6]. Find all the combinations where sum of two nodes=11			
+Q - Given two different lists of integers , how can I found pairs whose sum is equal to 8 such that numbers in pair are from different lists.
+Q - Given two strings S1 =”apple”, S2 = “pplea”, find out whether S2 is rotated string of S1 or not.
+Q - What is the angle between hour hand and mint hand when the time is 03:15 ?
+Q -  stack all operation complexity ...
+Q - get Maximum element in stack in O(1);
+Q - what is BST, properties of BST
+Q - write a program On system for creating BST using given integer array , 
+   then find the path between two given node of that BST ...
+Q - why two way quick sort is better then normal quick sort.          
+Q - Find mirror of a tree.
+Q - stack implementation : custom implementation (time complexity)
+Q - max element from stack with o(n)	
+Q - Basic implementation of dijisktra's algorithm in real time
+Q - You have a  method which accepts LinkedList as a parameter, how do you find middle element in the linked list with less time complexity?
+Q - If you are given a singly linked list, write an algorithm to find whether the list has an end or it becomes circular at some point. 
+Here is an example: http://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
+Q - You have an array like [1,2,3,4,5,6,7,8,9]. How do you fetch nth element from the back with less time complexity? How do you do this problem if 
+it is a LinkedList? finds total no of nodes then reads till this condition from begining [array length - nth element +1]
+Q - Find a better way with less time complexity. The real challenge is at hand was to make Yatra services faster because customers 
+easily hop on to another sites due to poor speed.
+Q - There is an array, eg. -4, 6, 8, -7, 3. Find out the max contiguous array sum. Here is a link which explains it:
+ http://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
+Q - How will you implement queue using stack?
+Q - How will you find the minimum from queue?
+Q - In a sorted array which has rotated by k index in clockwise direction , find the minimum element. like  3 4 5 6 1 2  
+is rotated with 2 elements. then what is index of 1(minimum).
+Q - Find a triplet of numbers in array having sum =9;
+Q - which sorting algorithms you know and their complexities.
+Q - Given an array, How can you find maximum difference between two values in an array such that first value is always smaller than second value.
+Q - Binary tree -> in order predecessor (in case where a parent pointer is provided in the node)
+Q - given a preorder BST in an array , any BST is possible with the same pre-order
+ https://www.geeksforgeeks.org/check-if-a-given-array-can-represent-preorder-traversal-of-binary-search-tree/
+Q - Find the number of duplicates in given list
+Q - Given sorted array , need to square each number and return the sorted array
+Ex- input {-1,-2,-6,4,5,9}  
+Ans https://www.geeksforgeeks.org/sort-array-converting-elements-squares/
+Q - Given string contains (0 and 1) find the maximum substring where count(0)=count(1).
+https://www.geeksforgeeks.org/longest-subarray-count-1s-one-count-0s/
+Q - Check for balanced parentheses in an expression
+https://www.geeksforgeeks.org/check-for-balanced-parentheses-in-an-expression/
+Q -  Suppose for given two array, [1,3,4] and [4,7,1], find union and intersection of that.
+Q - Reverse word program
+IP: I AM HARDCORE TECHIE
+o/p: I MA EROCDRAH EIHCET
+
+Q - In a linked list i have 2 million records, how we can find it in efficient way.
+Q - Fibonacci Series using recursion and optimize it.
+Q -Biggest number from the given digits.
+	Ip: 54, 543, 546, 60
+	Op: 6054654354
+Q - Program for Anagram.
+Q - Worst time complexity while fetching data from map, and optimized time complexity in java 8.
+Q - https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-search-tree/
+Q - Write program for left view of a tree.
+Q - Right shift of an array by 2.
+	Ip: 1 2 3 4 5
+	Op: 4 5 1 2 3
+	https://www.geeksforgeeks.org/array-rotation/
+Q - In a given array find the 1st missing positive number.
+	Ex: 3, 5, -1, 8, 9, 4, 1, 13  ⇒ 2
+Q - Reverse a string using recursion.
+--------------------------------------------------------------------------------------------------------
+Q - Find Max and Avg value from the values of a MAP in  single loop. 
+	public static void main(String[] args) {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		map.put(1, 10);
+		map.put(2, 20);
+		map.put(3, 30);
+		map.put(4, 40);
+		int max = Collections.max(map.values());
+		int avg=0;
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			if(entry.getValue()==max) {
+				System.out.println("Maximun values - key"+entry.getKey());
+			}
+			avg=avg+entry.getValue();
+		}
+		avg=avg/map.keySet().size();
+		System.out.println(avg);
+	}
+
+-------------------------------------------------------------------------------------------------------
+Q - Write a java program to add 1 to a number represented in form of an array
+
+{1,2,8} + 1 === {1,2,9}
+{1,4,9} + 1 === {1,5,0}
+
+[HINT] : Start iterating from the end and keep track on carry if any
+
+	public static void main(String[] args) {
+		Vector<Integer> vector=new Vector<Integer>();
+		vector.add(9);
+		vector.add(9);
+		vector.add(9);
+		vector.add(9);
+		int n=vector.size();
+		vector.set(n-1, vector.get(n-1)+1);
+		int carry=vector.get(n-1)/10;
+		vector.set(n-1, vector.get(n-1)%10);
+		
+		for(int i=n-2;i>=0;i--) {
+			
+			if(carry==1) {
+				vector.set(i, vector.get(i)+1);
+				carry=vector.get(i)/10;
+				vector.set(i, vector.get(i)%10);
+			}
+		}
+		
+		if(carry==1) {
+			vector.add(0, 1);
+		}
+		System.out.println(vector);
+
+	}
+---------------------------------------------------------------------------------------------------------------------
+Q - Find the kth max in an array  
+Q - Find nth minimum element in array.
+
+[HINT] : [use sort + return the k-1th element]  Complexity [nlogn + o(1)]
+---------------------------------------------------------------------------------------------------------------------
+Q - Find the 3rd max in an array in single iteration assuming size of the array is > 3
+
+Pseudocode:
+
+int max = Integer.MIN_VALUE;
+int secMax = Integer.MIN_VALUE;
+int thirdMax = Integer.MIN_VALUE;
+
+for(int i = 0 ; i < a.length ; ++i){
+               if(max < a[i]){
+                              thirdMax = secMax;
+                              secMax = max;
+                              max = a[i];
+               }else if(secMax < a[i]){
+                              thirdMax = secMax;
+                              secMax = a[i];
+               }else if(thirdMax < a[i]){
+                              thirdMax = a[i];
+               }              
+}
+---------------------------------------------------------------------------------------------------------------------
+Q - consider a string, find the occurence of each character and print the character and number of occurence as per the following condition ->
+ the character should be printed as per the descending order of the value of occurence,
+  if the occurence has a collision then resolve the occurence by sorting them in descending order of alphabets
+		 ex- String s ="akkllnniiiimmm"
+		 output-> i-4
+				  m-3
+				  n-2
+				  l-2
+				  k-2
+				  a-1
+
+
+ public static LinkedHashMap<Character, Integer> SortByValueThenKey(Map<Character, Integer> map)
+	{
+		return map.entrySet().stream().sorted((Map.Entry.<Character,Integer>comparingByValue().thenComparing(Map.Entry.<Character,Integer>comparingByKey()).reversed())).
+				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(e1,e2)->e1,LinkedHashMap::new));
+	}
+	
+public static void findCharAsPerOccuranceUsingHashMap(String input) {
+		if(input == null && input.length()<= 0)
+			return;
+		Map<Character, Integer> map = new HashMap<>();
+		char[] ch = input.toCharArray();
+
+		for(int i= 0; i < ch.length ; i++) {
+			if(map.containsKey(ch[i])) {
+				map.put(ch[i], map.get(ch[i])+1);
+			}else {
+				map.put(ch[i], 1);
+			}
+		}
+
+
+		Map<Character,Integer> lm=SortByValueThenKey(map);	
+		lm.forEach((k,v)->System.out.println(k+"->"+v));
+}
+
+
+==================================
+Application Design:
+==================================
+
+Q - Design split wise.
+Q - There are a few sign boards where various information keeps on displaying (like current temperature), 
+How can I design my architecture so that whenever there is a change in one of the values , 
+my backend should push the updated information to those sign boards.
+Q - How do you expect facebook to expose API so that I may get all posts of all my friends posting with a particular hashtag like #holiday.
+Q - Design for Parking slots, Suppose there is parking space and we need to design for 2 wheeler and 4 wheeler parking facility, 
+like slots are there or not, particular vehicle is already parked etc. How do you design this.          
+Q - design the chat application... how would you deal in case of offline .
+Q - Design the phone book.... implement fastest search based on given input.
+Q - ATM problem,WAP  withdraw the many with minimum notes
+	Ex-1000, 500, 100
+Q - Design URL Shortening.
+Q - Design database for the bill you get from shopping mall which includes bill no, items, qty, rate, and total price.
+Q - A scenario of developing billing system for amusement park was shared, was asked to raise questions on requirement
+ understanding and later what would be logic to implement it. 
+
+

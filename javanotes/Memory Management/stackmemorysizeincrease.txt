@@ -1,0 +1,27 @@
+How to Increase the Stack Memory Size in Eclipse
+If you are using Eclipse for Java programming, there are two ways to set an increased stack
+memory size by passing '-Xss256M' (or any other size you want) argument to Java. One is to set
+it at the time of starting Eclipse, and the other is to set it after starting Eclipse.
+1. [When starting Eclipse]
+You can start Eclipse with an increased stack memory size. For that you need to start Eclipse
+from console or command prompt.
+Steps:
+1) Open your command prompt or console.
+2) Change the directory to where Eclipse is installed. You should be able to see eclipse or
+eclipse.exe file.
+3) Run the following command to start Eclipse with the stack size 256MB.
+eclipse -vmargs -Xss256M
+Here is a link that may be helpful.
+https://wiki.eclipse.org/FAQ_How_do_I_increase_the_heap_size_available_to_Eclipse%3F
+2. [After starting Eclipse]
+You can set the stack memory size after starting Eclipse.
+Steps:
+1) From Run Menu, select 'Run Configurations', or right-click in your editor and select 'Run
+As', 'Run Configurations'.
+2) In the left pane of the dialog box, select your Java application.
+3) List of tabs appears. Select 'Argument's tab.
+4) In the VM arguments text box, type or input the following arguments.
+-Xss256m
+5) Click Apply and then Run.
+Acknowledgment: Prajwal Shreshta, CS graduate student and teaching assistant, University of
+Vermont.

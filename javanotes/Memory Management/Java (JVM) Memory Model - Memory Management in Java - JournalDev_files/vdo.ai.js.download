@@ -1,0 +1,189 @@
+
+    /*21-Dec-2020 07:47:51*/
+    var vdo_analyticsID = 'UA-113932176-29';
+(function(v, d, o, ai) {
+    ai = d.createElement('script');
+    ai.async = true;
+    ai.src = o;
+    d.head.appendChild(ai);
+})(
+    window,
+    document,
+    'https://www.googletagmanager.com/gtag/js?id=' + vdo_analyticsID
+);
+
+function vdo_analytics() {
+    window.dataLayer.push(arguments);
+
+}
+(function () {
+  window.dataLayer = window.dataLayer || [];
+  vdo_analytics("js", new Date());
+})();
+vdo_analytics('event', 'loaded', { send_to: vdo_analyticsID, value:1, event_category: 'vdoaijs' });
+
+
+
+try {
+
+
+function insideSafeFrame() {
+  try {
+    if(top != self && window.innerWidth > 1 && window.innerHeight > 1) {
+      return true;
+    }
+    if(top.location.href) {
+      return false;
+    }
+  } catch (error) {
+    return true;
+  }
+}
+
+
+
+var w_vdo = (insideSafeFrame()) ? window : window.top,
+d_vdo = w_vdo.document;
+(function (window, document, deps, publisher) {
+  var protocol = window.location.protocol;
+
+  window.vdo_ai_stories = window.vdo_ai_stories || {};
+  window.vdo_ai_stories.cmd = window.vdo_ai_stories.cmd || [];
+
+  function loadStyleSheet(src, id) {
+    var s = document.createElement('link');
+    s.id = id;
+    s.rel = "stylesheet";
+    s.href = protocol + src;
+    document.head.appendChild(s);
+  }
+
+    function loadPlayerDiv(id,parentId,iframeBurst=false) {
+    if (!iframeBurst) {
+      if(document.getElementById(id) == null) {
+        var s = document.createElement('div');
+        s.id = id;
+      } else{
+        var s = document.getElementById(id);
+      }
+       if (parentId != '') {
+         var parentDiv = document.getElementById(parentId);
+         parentDiv.style.display = "block";
+         parentDiv.style.width = "100%";
+         if (document.getElementById(parentId).parentNode.offsetWidth < 350){
+           var margin = (352 - document.getElementById(parentId).parentNode.clientWidth )/2 ;
+           parentDiv.style.marginLeft = '-'+margin + 'px';
+         }
+         parentDiv.appendChild(s);
+       } else{
+         document.body.appendChild(s);
+       }
+
+    } else{
+
+      var parentIframes = top.document.querySelectorAll('iframe');
+      for (var i=0; i < parentIframes.length; i++) {
+        var el = parentIframes[i];
+        if (el.contentWindow === self) {
+            // here you can create an expandable ad
+            var s = document.createElement('div');
+            s.style.zIndex=111;
+            s.style.margin = "0 auto";
+            s.style.display = "block";
+            s.style.position = "relative";
+            s.width = 'fit-content';
+            s.id = id;
+            var googleDiv = el.parentNode;
+
+
+            if (parentId != '') {
+              var parentDiv = document.createElement('div');
+              parentDiv.id = parentId;
+              parentDiv.style.display = "block";
+              parentDiv.style.width = "100%";
+              parentDiv.appendChild(s);
+              googleDiv.insertBefore(parentDiv, el);
+            } else{
+              googleDiv.insertBefore(s, el);
+            }
+
+
+            googleDiv.style.width = "auto";
+            googleDiv.parentNode.style.width='auto';
+            googleDiv.parentNode.style.height='auto';
+        }
+      }
+    }
+  }
+
+  
+
+  var playerLoaded = false;
+
+  var checkTimer = setInterval(function() {
+      if(window.initVdoStories && typeof window.google != 'undefined' && window.google.ima) {
+       callAdframe();
+      }
+  }, 1000);
+
+
+  function callAdframe() {
+    if(!playerLoaded) {
+        playerLoaded = true;
+        clearInterval(checkTimer);
+        window.vdo_ai_stories.cmd.push(function() {
+          window.initVdoStories({"desktop":{"show":true,"muted":true,"autoResize":true,"width":640,"height":360,"bottomMargin":10,"topMargin":10,"unitType":"content","leftOrRight":{"position":"right","margin":10},"cancelTimeoutType":{"type":"timeout","eventtype":"readyforpreroll","cancelTimeout":60000},"passback":{"allow":false,"src":"","string":"","timeout":15000},"smallWidth":498,"smallHeight":280,"crossSize":17,"dispose_off":false,"bannerOff":false,"companionOff":false},"mobile":{"dispose_off":false,"show":true,"muted":true,"autoResize":false,"width":333,"height":250,"bottomMargin":10,"topMargin":10,"unitType":"content","leftOrRight":{"position":"right","margin":10},"cancelTimeoutType":{"type":"timeout","eventtype":"readyforpreroll","cancelTimeout":60000},"passback":{"allow":false,"src":"","string":"","timeout":15000},"smallWidth":333,"smallHeight":250,"crossSize":17,"bannerOff":false,"companionOff":false},"bottomMargin":10,"showOnlyFirst":false,"cancelTimeout":10000,"id":"vdo_ai_2862","muted":true,"playsinline":true,"autoplay":true,"preload":true,"video_clickthrough_url":"","content_sources":["videos\/categories\/edu2.m3u8","videos\/categories\/edu1.m3u8","videos\/categories\/edu4.m3u8","videos\/categories\/edu3.m3u8","videos\/categories\/edu5.m3u8"],"pubId":"1414","brandLogo":{"img":"","url":""},"coppa":false,"add_on_page_ready":"no","showLogo":true,"adbreak_offsets":[0,5,10],"show_on_ad":false,"close_after_first_ad_timer":0,"domain":"journaldev.com","path":"\/\/a.vdo.ai\/core\/s-journaldev\/adframe.js","unitId":"_vdo_ads_player_ai_3432","tag_type":"other","parent_div":"s-journaldev","hls":false,"media_url":"https:\/\/h.vdo.ai\/","show_on":"ads-ad-started","canAutoplayCheck":true,"bidders":{"0":{"banner":{"prebid":[{"bidder":"appnexus","params":{"placementId":20118331,"floor":0.5}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"gumgum","params":{"inSlot":"68465","floor":0}},{"bidder":"onetag","params":{"pubId":"62e564782c44a66"}},{"bidder":"onetag","params":{"pubId":"62e564782c44a66"}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577392","floor":"0.5"}},{"bidder":"sovrn","params":{"tagid":"691696","floor":0.5}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1}}]},"bids":[{"bidder":"appnexus","params":{"placementId":20118334,"floor":0.5,"video":{"skippable":true,"playback_method":null}}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577395","floor":"0.5"}},{"bidder":"spotx","params":{"channel_id":"284336","ad_unit":"instream","floor":0}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1,"video":{"minduration":15,"maxduration":60,"startdelay":1,"linearity":1}}}]},"5":{"banner":{"prebid":[{"bidder":"appnexus","params":{"placementId":20118332,"floor":0.5}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"gumgum","params":{"inSlot":"68466","floor":0}},{"bidder":"onetag","params":{"pubId":"62e564782c44a66"}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577393","floor":"0.5"}},{"bidder":"sovrn","params":{"tagid":"779001","floor":0.5}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1}}]},"bids":[{"bidder":"appnexus","params":{"placementId":20118335,"floor":0.5,"video":{"skippable":true,"playback_method":null}}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577396","floor":"0.5"}},{"bidder":"spotx","params":{"channel_id":"284337","ad_unit":"instream","floor":0}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1,"video":{"minduration":15,"maxduration":60,"startdelay":1,"linearity":1}}}]},"10":{"banner":{"prebid":[{"bidder":"appnexus","params":{"placementId":20118333,"floor":0.5}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"eplanning","params":{"ci":"30135"}},{"bidder":"gumgum","params":{"inSlot":"68467","floor":0}},{"bidder":"onetag","params":{"pubId":"62e564782c44a66"}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577394","floor":"0.5"}},{"bidder":"sovrn","params":{"tagid":"711913","floor":0.5}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1}}]},"bids":[{"bidder":"appnexus","params":{"placementId":20118336,"floor":0.5,"video":{"skippable":true,"playback_method":null}}},{"bidder":"openx","params":{"delDomain":"vdoai-d.openx.net","unit":"541577397","floor":"0.5"}},{"bidder":"spotx","params":{"channel_id":"302458","ad_unit":"instream"}},{"bidder":"synacormedia","params":{"seatId":"zero1","placementId":"91244","pos":1,"video":{"minduration":15,"maxduration":60,"startdelay":1,"linearity":1}}}]}},"waterfallTags":[],"adx":[],"s2s":false,"overflow_size":false,"handle_url_change":true,"style":"","storiesData":{"items":[{"title":"Regression v\/s Classification in Machine Learning","url":"https:\/\/www.journaldev.com\/47462\/regression-vs-classification-algorithms","description":"Hey, readers! In this article, we will be focusing on an IMP metric of Machine Learning &amp;#8211; Regression v\/s Classification, in detail. So, let us begin!! Let us at first discuss about Regression v\/s Classification!....\nThe post Regression v\/s Classification in Machine Learning appeared first on JournalDev.","img":"https:\/\/cdn.journaldev.com\/wp-content\/uploads\/2020\/12\/Regression-v_s-Classification.png"},{"title":"SQL HAVING clause v\/s GROUP BY clause","url":"https:\/\/www.journaldev.com\/47426\/sql-having-vs-group-by-clause","description":"Hello folks! In the series of SQL with JournalDev, today, we will be having a look at an important topic of discussion &amp;#8212; SQL Having v\/s Group By clause, in detail. So, let us begin!!....\nThe post SQL HAVING clause v\/s GROUP BY clause appeared first on JournalDev.","img":"https:\/\/cdn.journaldev.com\/wp-content\/uploads\/2020\/12\/SQL-HAVING-V_S-GROUP-BY-CLAUSE.png"},{"title":"Top 10 Best Gnome Themes for All Linux Distros","url":"https:\/\/www.journaldev.com\/47458\/top-best-gnome-themes","description":"Gnome is one of the easiest Linux desktop environments and this article is about the best gnome themes that will give your desktop a sassy look, without the fuss of configuration files and manual changes.....\nThe post Top 10 Best Gnome Themes for All Linux Distros appeared first on JournalDev.","img":"https:\/\/cdn.journaldev.com\/wp-content\/uploads\/2020\/12\/Top-Best-Gnome-Themes-Linux.png"},{"title":"Python vs Golang \u2013 A wholesome comparison","url":"https:\/\/www.journaldev.com\/46824\/python-vs-golang","description":"But today, I am going to compare our favorite all-purpose programming language, Python, and one of the better, upcoming languages, Golang. \nThe post Python vs Golang &amp;#8211; A wholesome comparison appeared first on JournalDev.","img":"https:\/\/cdn.journaldev.com\/wp-content\/uploads\/2020\/12\/Python-vs-Golang.png"}]}});
+        });
+
+    }
+  }
+
+  
+  function loadScriptSync(src, id) {
+    return new Promise(function(resolve, reject) {
+        
+        if(src.indexOf('ima3.js') > 0 && document.querySelector('script[src*="imasdk.googleapis.com/js/sdkloader/ima3.js"]')) {
+            resolve();
+            return false;
+        }
+        var s = document.createElement("script");
+        s.id = id;
+        var existingScript = document.getElementById(id);
+        
+        s.async = true;
+        s.src = protocol + src;
+        document.body.appendChild(s);
+        s.onload = resolve;
+        s.onerror = reject;
+    })
+  }
+
+  function inIframe(){try{return self!==top}catch(r){return!0}}var iframe_Burst=inIframe() ? insideSafeFrame() ? false : true : false;
+
+
+
+  //#region full_dependencies testing
+                  loadPlayerDiv('_vdo_ads_player_ai_3432','s-journaldev',iframe_Burst);
+       if(typeof window.initVdoStories !== 'function') {  // Check for existing dependencies
+            Promise.all([
+              loadScriptSync(deps + "dependencies_stories_v1/vdo.min.js", "_vdo_ads_css_5654_"),
+              loadScriptSync("//imasdk.googleapis.com/js/sdkloader/ima3.js", "_vdo_ads_sdk_5654_")
+            ]).then(function() {
+               callAdframe();
+          })
+        }
+  //#endregion
+
+})(w_vdo, d_vdo, '//a.vdo.ai/core/', 's-journaldev');
+
+
+} catch (e) {
+
+
+    vdo_analytics('event', 'Err:' + (btoa(e.message).substr(0,10)), { send_to: vdo_analyticsID, value:1, event_category: 'VDOError' });
+
+
+    var oReq = new XMLHttpRequest();
+    oReq.open('get', '//a.vdo.ai/core/logger.php?msg=' + encodeURIComponent(e.stack)+ '&tag=s-journaldev&code='+btoa(e.message).substr(0,10) + '&url=' + encodeURIComponent(location.href)  + '&func=vdo.ai.js', true);
+    oReq.send();
+}

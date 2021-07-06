@@ -1,0 +1,18 @@
+ boolean isCircular( Node head) 
+{ 
+    // An empty linked list is circular 
+    if (head == null) 
+    return true; 
+  
+    // Next of head 
+    Node node = head.next; 
+  
+    // This loop would stope in both cases (1) If 
+    // Circular (2) Not circular 
+    while (node != null && node != head) 
+    node = node.next; 
+  
+    // If loop stopped because of circular 
+    // condition 
+    return (node == head); 
+} 

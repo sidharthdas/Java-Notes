@@ -1,0 +1,142 @@
+
+LinkedHashSet in Java With Examples
+
+LinkedHashSet in Java is also one of the implementation of the Set interface. Actually LinkedHashSet class in Java extends the HashSet 
+class and uses methods of that class for its operations.
+
+Just like other implementations of the Set interface HashSet and TreeSet, LinkedHashSet also stores unique elements. 
+How LinkedHashSet differs from the HashSet in Java is that it maintains the insertion-order of the elements; that is 
+elements in the LinkedHashSet are stored in the sequence in which they are inserted. Note that insertion order is not 
+affected if an element is re-inserted into the set.
+
+How is LinkedHashSet implemented in Java
+LinkedHashSet is the Hash table and linked list implementation of the Set interface, with predictable iteration order. 
+This implementation differs from HashSet in that it maintains a doubly-linked list running through all of its entries.
+
+If you have idea about how HashSet works internally in Java, you must be knowing internally HashSet uses HashMap for 
+storing its elements. Same way LinkedHashSet class in Java internally uses LinkedHashMap and calls the methods of HashSet 
+class for all the operations.
+
+Some of the important points about LinkedHashSet in Java are as follows-
+
+LinkedHashSet is an ordered set and maintains the insertion order of its elements.
+LinkedHashSet only stores unique elements, no duplicates.
+LinkedHashSet permits one null element to be added.
+LinkedHashSet implementation is not synchronized hence not thread safe. If LinkedHashSet is to be used in a multi-threaded 
+environment where it is accessed and modified concurrently then it must be synchronized externally. That can be done by 
+wrapping the set with in Collections.synchronizedSet method.
+The iterators returned by LinkedHashSet's iterator method are fail-fast: if the set is modified at any time after the iterator 
+is created, in any way except through the iterator's own remove method, the Iterator throws a ConcurrentModificationException.
+Java LinkedHashSet Constructors
+LinkedHashSet()- Constructs a new, empty linked hash set with the default initial capacity (16) and load factor (0.75).
+LinkedHashSet(int initialCapacity)- Constructs a new, empty linked hash set with the specified initial capacity and the default load factor (0.75).
+LinkedHashSet(int initialCapacity, float loadFactor)- Constructs a new, empty linked hash set with the specified initial capacity and load factor.
+LinkedHashSet(Collection<? extends E> c)- Constructs a new linked hash set with the same elements as the specified collection.
+Just take any of the Constructor of the LinkedHashSet and you will see all those constructors will ultimately call the Constructor 
+of the HashSet where map will be initialized as a LinkedHashMap.
+
+For example if we take the following constructor of the LinkedHashSet-
+public LinkedHashSet(int initialCapacity, float loadFactor) {
+    super(initialCapacity, loadFactor, true);
+}
+Which in turns call a constructor in HashSet and instantiates a LinkedHashMap-
+
+HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+    map = new LinkedHashMap<>(initialCapacity, loadFactor);
+}
+
+LinkedHashSet creation Java example
+Following example shows how to create a LinkedHashSet and add elements to it.
+
+public class LinkedHSDemo {
+
+    public static void main(String[] args) {
+        // Using Diamond operator Which is available from Java 7
+        // Use LinkedHashSet<String> if using less than version 7
+        Set<String> citySet = new LinkedHashSet<>();
+        
+        citySet.add("Delhi");
+        citySet.add("Mumbai");
+        citySet.add(null);
+        citySet.add("Bangalore");
+        citySet.add("Delhi");
+        citySet.add(null);
+        
+        // Iterating the Set
+        for(String str : citySet){
+            System.out.println("" + str);
+        }     
+    }
+}
+Output
+
+Delhi
+Mumbai
+null
+Bangalore
+Points to note here-
+
+It can be seen that the insertion order is maintained. While iterating the LinkedHashSet elements are displayed in 
+the order they were inserted.
+Even though Delhi is inserted twice it is displayed only once which shows that the LinkedHashSet doesn't allow 
+duplicates and insertion order is not affected if an element is re-inserted into the set.
+Only one null is allowed in the LinkedHashSet, even if I have tried to insert null twice it can be seen that only one is stored.
+LinkedHashSet element removal example
+public class LinkedHSDemo {
+
+    public static void main(String[] args) {
+        Set<String> citySet = new LinkedHashSet<String>();
+        // Adding elements
+        citySet.add("London");        
+        citySet.add("Tokyo");
+        citySet.add("New Delhi");
+        citySet.add("Beijing");
+        citySet.add("Nairobi");
+        // checking of set contains that element
+        if(citySet.contains("Nairobi")) {
+            citySet.remove("Nairobi");
+        }
+        System.out.println("--LinkedHashSet after removing using remove method--");
+        for(String city : citySet){
+            System.out.println("City- " + city);        
+        }
+        //using removeIf method
+        citySet.removeIf((String city)->city.equalsIgnoreCase("Tokyo"));
+        
+        System.out.println("--LinkedHashSet after removing using removeIf method--");
+        for(String city : citySet){
+            System.out.println("City- " + city);        
+        }
+        
+        System.out.println("Total number of elements in LinkedHashSet- " + citySet.size()); 
+    }
+}
+Output
+
+--LinkedHashSet after removing using remove method--
+City- London
+City- Tokyo
+City- New Delhi
+City- Beijing
+--LinkedHashSet after removing using removeIf method--
+City- London
+City- New Delhi
+City- Beijing
+Total number of elements in LinkedHashSet- 3
+
+LinkedHashSet is not synchronized
+LinkedHashSet in Java is not thread safe. In case we need to Synchronize it, it should be synchronized externally. 
+That can be done using the Collections.synchronizedSet method.
+
+Set s = Collections.synchronizedSet(new LinkedHashSet(...));
+To see an example of how to synchronize an ArrayList refer How and why to synchronize ArrayList in Java
+LinkedHashSet class' iterator is fail-fast
+Iterator returned by LinkedHashSet is fail-fast: if the set is modified at any time after the iterator is created, 
+in any way except through the iterator's own remove method, the iterator will throw a ConcurrentModificationException.
+
+To read more about fail-fast and fail-safe iterators refer this post fail-fast Vs fail-safe iterator in Java
+Performance of LinkedHashSet in Java
+The performance of LinkedHashSet is likely to be just slightly below that of HashSet, due to the added expense of 
+maintaining the linked list. But there is one exception: Iteration over a LinkedHashSet requires time proportional 
+to the size of the set, regardless of its capacity. Iteration over a HashSet is likely to be more expensive, 
+requiring time proportional to its capacity as in the case of HashSet based on the Hashing function it may have to go through all the buckets .

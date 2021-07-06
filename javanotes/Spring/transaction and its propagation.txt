@@ -1,0 +1,166 @@
+ 
+What Is @Transactional?
+
+We can use @Transactional to wrap a method in a database transaction.
+
+
+It allows us to set propagation, isolation, timeout, read-only, and rollback conditions for our transaction.
+ Also, we can specify the transaction manager.
+
+2.1. @Transactional Implementation Details
+Spring creates a proxy or manipulates the class byte-code to manage the creation, commit, and rollback of the 
+transaction. In the case of a proxy, Spring ignores @Transactional in internal method calls.
+
+Simply put, if we have a method like callMethod and we mark it as @Transactional, Spring would wrap some 
+transaction management code around the invocation:@Transactional method called:
+
+createTransactionIfNecessary();
+try {
+    callMethod();
+    commitTransactionAfterReturning();
+} catch (exception) {
+    completeTransactionAfterThrowing();
+    throw exception;
+}
+2.2. How to Use @Transactional
+--------------------------------
+We can put the annotation on definitions of interfaces, classes, or directly on methods.  They override each 
+other according to the priority order; from lowest to highest we have: Interface, superclass, class, interface 
+method, superclass method, and class method.
+
+Spring applies the class-level annotation to all public methods of this class that we did not annotate with @Transactional.
+
+However, if we put the annotation on a private or protected method, Spring will ignore it without an error.
+
+Let's start with an interface sample:
+
+@Transactional
+public interface TransferService {
+    void transfer(String user1, String user2, double val);
+}
+Usually, it is not recommended to set the @Transactional on the interface. However, it is acceptable for cases like 
+@Repository with Spring Data.
+We can put the annotation on a class definition to override the transaction setting of the interface/superclass:
+
+@Service
+@Transactional
+public class TransferServiceImpl implements TransferService {
+    @Override
+    public void transfer(String user1, String user2, double val) {
+        // ...
+    }
+}
+Now let's override it by setting the annotation directly on the method:
+
+@Transactional
+public void transfer(String user1, String user2, double val) {
+    // ...
+}
+
+3. Transaction Propagation
+---------------------------------
+Propagation defines our business logic ‘s transaction boundary. Spring manages to start and pause a transaction 
+according to our propagation setting.
+
+Spring calls TransactionManager::getTransaction to get or create a transaction according to the propagation. It 
+supports some of the propagations for all types of TransactionManager, but there are a few of them that only 
+supported by specific implementations of TransactionManager.
+
+
+3.1. REQUIRED Propagation
+--------------------------------
+REQUIRED is the default propagation. Spring checks if there is an active transaction, then it creates a new one 
+if nothing existed. Otherwise, the business logic appends to the currently active transaction:
+
+@Transactional(propagation = Propagation.REQUIRED)
+public void requiredExample(String user) { 
+    // ... 
+}
+Also as REQUIRED is the default propagation, we can simplify the code by dropping it:
+
+@Transactional
+public void requiredExample(String user) { 
+    // ... 
+}
+Let's see the pseudo-code of how transaction creation works for REQUIRED propagation:
+
+if (isExistingTransaction()) {
+    if (isValidateExistingTransaction()) {
+        validateExisitingAndThrowExceptionIfNotValid();
+    }
+    return existing;
+}
+return createNewTransaction();
+
+3.2. SUPPORTS Propagation
+---------------------------------
+For SUPPORTS, Spring first checks if an active transaction exists. If a transaction exists, then the existing 
+transaction will be used. If there isn't a transaction, it is executed non-transactional:
+
+@Transactional(propagation = Propagation.SUPPORTS)
+public void supportsExample(String user) { 
+    // ... 
+}
+Let's see the transaction creation's pseudo-code for SUPPORTS:
+
+if (isExistingTransaction()) {
+    if (isValidateExistingTransaction()) {
+        validateExisitingAndThrowExceptionIfNotValid();
+    }
+    return existing;
+}
+return emptyTransaction;
+
+3.3. MANDATORY Propagation
+---------------------------------
+When the propagation is MANDATORY, if there is an active transaction, then it will be used. If there isn't an 
+active transaction, then Spring throws an exception:
+
+@Transactional(propagation = Propagation.MANDATORY)
+public void mandatoryExample(String user) { 
+    // ... 
+}
+And let's again see the pseudo-code:
+
+if (isExistingTransaction()) {
+    if (isValidateExistingTransaction()) {
+        validateExisitingAndThrowExceptionIfNotValid();
+    }
+    return existing;
+}
+throw IllegalTransactionStateException;
+
+3.4. NEVER Propagation
+-----------------------------
+For transactional logic with NEVER propagation, Spring throws an exception if there's an active transaction:
+
+@Transactional(propagation = Propagation.NEVER)
+public void neverExample(String user) { 
+    // ... 
+}
+Let's see the pseudo-code of how transaction creation works for NEVER propagation:
+
+if (isExistingTransaction()) {
+    throw IllegalTransactionStateException;
+}
+return emptyTransaction;
+
+3.5. NOT_SUPPORTED Propagation
+----------------------------------------
+Spring at first suspends the current transaction if it exists, then the business logic is executed without a transaction.
+
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+public void notSupportedExample(String user) { 
+    // ... 
+}
+The JTATransactionManager supports real transaction suspension out-of-the-box. Others simulate the suspension by holding 
+a reference to the existing one and then clearing it from the thread context
+
+3.6. REQUIRES_NEW Propagation
+--------------------------------------
+When the propagation is REQUIRES_NEW, Spring suspends the current transaction if it exists and then creates a new one:
+
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void requiresNewExample(String user) { 
+    // ... 
+}

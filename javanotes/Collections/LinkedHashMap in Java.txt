@@ -1,0 +1,147 @@
+LinkedHashMap in Java With Examples
+-------------------------------------------
+
+LinkedHashMap in Java is also one of the implementation of the Map interface. Apart from implementing Map interface LinkedHashMap also 
+extends the HashMap class. So just like HashMap, LinkedHashMap also allows one null key and multiple null values.
+
+How LinkedHashMap differs from other implementations of the Map interface like HashMap and TreeMap in Java is that LinkedHashMap 
+maintains the ordering of the elements.
+
+In Java LinkedHashMap there are two options for ordering the elements-
+Insertion ordering- Insertion ordering means if you iterate a LinkedHashMap you'll get the keys in the order in which they were inserted in the Map. 
+Insertion ordering is the default ordering in the LinkedHashMap. Note that insertion order is not affected if a key is re-inserted into the map 
+(if a same key in inserted more than once the last time it was inserted will be taken into account).
+Access ordering- Another option for ordering in LinkedHashMap is access ordering. Which means while iterating order of iteration is the 
+order in which its entries were last accessed, from least-recently accessed to most-recently. A special constructor is provided to create 
+a LinkedHashMap that follows access ordering. If you pass true in that constructor then access ordering is followed.
+Table of contents
+How LinkedHashMap is implemented
+Java LinkedHashMap Constructors
+Java example creating LinkedHashMap and inserting elements
+LinkedHashMap with access order
+LinkedHashMap is not synchronized
+LinkedHashMap class' iterator is fail-fast
+Perfomance of the LinkedHashMap
+
+How LinkedHashMap is implemented
+LinkedHashMap in Java is the Hash table and linked list implementation of the Map interface. It maintains a doubly-linked list running through 
+all of its entries and that's how it maintains the iteration order. Apart from maintaining a doubly linked list the internal 
+implementation of the LinkedHashMap is same as the internal implementation of the HashMap.
+
+Some of the important points about LinkedHashMap in Java are-
+
+Unlike HashMap which is an unordered collection LinkedHashMap maintains the ordering of the elements. 
+By default it is insertion order (the order in which keys were inserted into the map). One of the constructor of the 
+LinkedHashMap gives an option to make it access order (from least-recently accessed to most-recently accessed element).
+LinkedHashMap in Java permits multiple null values and a single null key.
+In LinkedHashMap duplicate values are allowed but duplicate keys are not allowed. If a value is inserted with the duplicate key, 
+the previously stored value for the same key will be overwritten.
+LinkedHashMap in Java is not synchronized so it is not thread safe. If LinkedHashMap is accessed concurrently by multiple threads 
+and at least one of the threads modifies the map structurally, then the LinkedHashMap must be synchronized externally.
+LinkedHashMap does not implement Iterable interface so LinkedHashMap by itself can’t be iterated. You can get the “Collection view” 
+of the Map though and iterate it.
+Java LinkedHashMap Constructors
+LinkedHashMap()- Constructs an empty LinkedHashMap instance with the default initial capacity (16) and load factor (0.75). 
+Uses the default ordering which is insertion ordering.
+LinkedHashMap(int initialCapacity)- Constructs an empty insertion-ordered LinkedHashMap instance with the specified initial 
+capacity and a default load factor (0.75).
+LinkedHashMap(int initialCapacity, float loadFactor)- Constructs an empty insertion-ordered LinkedHashMap instance with the
+ specified initial capacity and load factor.
+LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)- Constructs an empty LinkedHashMap instance with the 
+specified initial capacity, load factor and ordering mode. If ordering mode is passed as true that means access-order, 
+false for insertion-order
+LinkedHashMap(Map<? extends K,? extends V> m)- Constructs an insertion-ordered LinkedHashMap instance with the same mappings 
+as the specified map.
+
+Java example creating LinkedHashMap and inserting elements
+public class LinkedHashMapDemo {
+
+    public static void main(String[] args) {
+        // Creating LinkedHashMap
+        Map<String, String> cityTemperatureMap = new LinkedHashMap<String, String>();
+        
+        // Storing elements
+        cityTemperatureMap.put("Delhi", "24");
+        cityTemperatureMap.put("Mumbai", "32");
+        cityTemperatureMap.put(null, "26");
+        cityTemperatureMap.put("Chennai", "35");
+        cityTemperatureMap.put("Bangalore", "22" );
+        cityTemperatureMap.put(null, "34");
+        cityTemperatureMap.put("Kolkata", "28");
+        cityTemperatureMap.put("Chennai", "36");
+        
+        // iterating the map
+        for(Map.Entry<String, String> me : cityTemperatureMap.entrySet()){
+            System.out.println(me.getKey() + " " + me.getValue());
+        }
+    }
+}
+Output
+
+Delhi 24
+Mumbai 32
+null 34
+Chennai 36
+Bangalore 22
+Kolkata 28
+Points to note here
+
+It can be seen that the insertion order is maintained. While iterating the LinkedHashMap elements are displayed in the order they were inserted.
+Even though two null keys were inserted only one is stored (only one null key is allowed in map).
+Two values were inserted with the same key "Chennai" which results in the overwriting of the old value with the new value 
+(as the calculated hash will be the same for the keys). Thus the last one is displayed while iterating the values.
+In case of reinsertion of the key insertion order of the LinkedHashMap is not affected. Value associated with the key last time 
+it was inserted (in case of reinsertion) will be taken into account.
+LinkedHashMap with access order
+A special constructor is provided to create a LinkedHashMap whose order of iteration is the order in which its entries were last accessed, 
+from least-recently accessed to most-recently (access-order). This kind of LinkedHashMap is well-suited for building Least Recently Used Cache.
+
+LinkedHashMap constructor with ordering mode
+
+public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)Lets see an example with this constructor
+public class LinkedHMAccessOrder {
+    public static void main(String[] args) {
+        Map<String, String> cityMap = new LinkedHashMap<String, String>(16, 0.75f, true);
+        cityMap.put("1","New York City" );
+        cityMap.put("2", "New Delhi");
+        cityMap.put("3", "Newark");
+        cityMap.put("4", "Newport");
+        System.out.println("" + cityMap.get("1"));
+        System.out.println("" + cityMap.get("4"));
+        for(Map.Entry<String, String> me : cityMap.entrySet()){
+            System.out.println(me.getKey() + " " + me.getValue());
+        }
+    }
+}
+Output
+
+New York City
+Newport
+2 New Delhi
+3 Newark
+1 New York City
+4 Newport
+Here it can be seen that access-order parameter is passed as true, that means ordering mode is Access order, if passed as false that 
+would mean ordering mode is insertion order.
+
+Since keys "1" and "4" are used so while iterating the map these two keys as displayed later as the access order is "from least-recently 
+accessed to most-recently".
+
+
+LinkedHashMap is not synchronized
+LinkedHashMap in Java is not thread safe. In case we need to Synchronize it, it should be synchronized externally. That can be done using the
+ Collections.synchronizedMap method.
+
+Map m = Collections.synchronizedMap(new LinkedHashMap(...));
+LinkedHashMap class' iterator is fail-fast
+The iterators returned by LinkedHashMap are fail-fast: if the map is structurally modified at any time after the iterator is created, 
+in any way except through the iterator's own remove method, the iterator will throw a ConcurrentModificationException.
+
+To read more about fail-fast and fail-safe iterators refer this post fail-fast Vs fail-safe iterator in Java
+Perfomance of the LinkedHashMap
+Since LinkedHashMap in Java extends HashMap and uses the same functionality for the basic operations (add, contains and remove), 
+it also provides constant-time performance 
+for these basic operations assuming the hash function disperses elements properly among the buckets.
+
+For maintaining iteration ordering, LinkedHashMap uses the doubly linked list so performance is likely to be just slightly below that of HashMap, 
+due to the added expense of maintaining that linked list.

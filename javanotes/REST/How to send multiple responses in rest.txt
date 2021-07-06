@@ -1,0 +1,88 @@
+
+Its possible to return ResponseEntity without using generics, such as follows,
+
+public ResponseEntity<?> method() {
+    boolean isValid = // some logic
+    if (isValid){
+        return new ResponseEntity(new Success(), HttpStatus.OK);
+    }
+    else{
+        return new ResponseEntity(new Error(), HttpStatus.BAD_REQUEST);
+    }
+}
+
+Not specifying generic type would cause GsonHttpMessageConverter to complain and throw error. But simply modifying to ResponseEntity<?> 
+would make it work. 
+
+Yes.. anyway when using Jackson, its okay to use without generics. 
+
+You can use a map with your object or string like bellow :
+
+-------------------------------------------------------------------------------
+
+@RequestMapping(value = "/path", 
+        method = RequestMethod.GET, 
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String,String>> getData(){
+
+    Map<String,String> response = new HashMap<String, String>();
+
+    boolean isValid = // some logic
+    if (isValid){
+        response.put("ok", "success saving data");
+        return ResponseEntity.accepted().body(response);
+    }
+    else{
+        response.put("error", "an error expected on processing file");
+        return ResponseEntity.badRequest().body(response);
+    }
+
+}
+----------------------------------------------------------------------------------------------
+Here is a way that I would do it:
+
+public ResponseEntity < ? extends BaseResponse > message(@PathVariable String player) { //REST Endpoint.
+
+ try {
+  Integer.parseInt(player);
+  return new ResponseEntity < ErrorResponse > (new ErrorResponse("111", "player is not found"), HttpStatus.BAD_REQUEST);
+ } catch (Exception e) {
+
+
+ }
+ Message msg = new Message(player, "Hello " + player);
+ return new ResponseEntity < Message > (msg, HttpStatus.OK);
+
+}
+
+@RequestMapping(value = "/getAll/{player}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity < List < ? extends BaseResponse >> messageAll(@PathVariable String player) { //REST Endpoint.
+
+ try {
+  Integer.parseInt(player);
+  List < ErrorResponse > errs = new ArrayList < ErrorResponse > ();
+  errs.add(new ErrorResponse("111", "player is not found"));
+  return new ResponseEntity < List < ? extends BaseResponse >> (errs, HttpStatus.BAD_REQUEST);
+ } catch (Exception e) {
+
+
+ }
+ Message msg = new Message(player, "Hello " + player);
+ List < Message > msgList = new ArrayList < Message > ();
+ msgList.add(msg);
+ return new ResponseEntity < List < ? extends BaseResponse >> (msgList, HttpStatus.OK);
+
+}
+
+---------------------------------------------------------------------------------------------
+
+You can also implement like this to return Success and Error on a same request mapping method,use Object class(Parent class of every class in java) :-
+
+public ResponseEntity< Object> method() {                                                                                                                                                                                                                                                                                                                                                                                  
+    boolean b = //  logic  here   
+      if (b)  
+        return new ResponseEntity< Object>(HttpStatus.OK);      
+    else      
+        return new ResponseEntity< Object>(HttpStatus.CONFLICT); //appropriate error code   
+}

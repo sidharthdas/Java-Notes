@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<!-- saved from url=(0086)https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html -->
+<html class=" js flexbox flexboxlegacy no-touch websqldatabase indexeddb history csscolumns csstransforms localstorage sessionstorage no-applicationcache svg inlinesvg zoom" lang="en" prefix="og: http://ogp.me/ns/# og:book: http://ogp.me/ns/book# og:video: http://ogp.me/ns/video#" itemscope="" itemtype="http://schema.org/Book http://schema.org/ItemPage" data-login-url="/accounts/login/" data-offline-url="/" data-url="/library/view/kafka-the-definitive/9781491936153/ch04.html" data-csrf-cookie="csrfsafari" data-user-id="10375405" data-user-uuid="4a6f73c4-7349-4949-9ed6-be14a97df95e" data-username="mailtomanojsharma45" data-account-type="Trial" data-activated-trial-date="12/28/2020" data-archive="9781491936153" data-publishers="O&#39;Reilly Media, Inc." data-htmlfile-name="ch04.html" data-epub-title="Kafka: The Definitive Guide" data-debug="0" data-testing="0" style=""><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="author" content="O&#39;Reilly Media"><meta name="format-detection" content="telephone=no"><meta http-equiv="cleartype" content="on"><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="apple-itunes-app" content="app-id=881697395, app-argument=safaridetail://9781491936153"><link rel="shortcut icon" href="https://www.oreilly.com/favicon.ico"><meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0"><meta property="twitter:account_id" content="4503599627559754"><link rel="shortcut icon" href="https://learning.oreilly.com/favicon.ico" type="image/x-icon"><link href="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/css" rel="stylesheet" type="text/css"><title>4. Kafka Consumers: Reading Data from Kafka - Kafka: The Definitive Guide</title><link rel="stylesheet" href="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/output.5bdb4fcb2aad.css" type="text/css"><link rel="stylesheet" type="text/css" href="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/annotator.e3b0c44298fc.css"><link rel="stylesheet" href="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/font-awesome.min.css"><style type="text/css" title="ibis-book">
+    @charset "utf-8";#sbo-rt-content html,#sbo-rt-content div,#sbo-rt-content div,#sbo-rt-content span,#sbo-rt-content applet,#sbo-rt-content object,#sbo-rt-content iframe,#sbo-rt-content h1,#sbo-rt-content h2,#sbo-rt-content h3,#sbo-rt-content h4,#sbo-rt-content h5,#sbo-rt-content h6,#sbo-rt-content p,#sbo-rt-content blockquote,#sbo-rt-content pre,#sbo-rt-content a,#sbo-rt-content abbr,#sbo-rt-content acronym,#sbo-rt-content address,#sbo-rt-content big,#sbo-rt-content cite,#sbo-rt-content code,#sbo-rt-content del,#sbo-rt-content dfn,#sbo-rt-content em,#sbo-rt-content img,#sbo-rt-content ins,#sbo-rt-content kbd,#sbo-rt-content q,#sbo-rt-content s,#sbo-rt-content samp,#sbo-rt-content small,#sbo-rt-content strike,#sbo-rt-content strong,#sbo-rt-content sub,#sbo-rt-content sup,#sbo-rt-content tt,#sbo-rt-content var,#sbo-rt-content b,#sbo-rt-content u,#sbo-rt-content i,#sbo-rt-content center,#sbo-rt-content dl,#sbo-rt-content dt,#sbo-rt-content dd,#sbo-rt-content ol,#sbo-rt-content ul,#sbo-rt-content li,#sbo-rt-content fieldset,#sbo-rt-content form,#sbo-rt-content label,#sbo-rt-content legend,#sbo-rt-content table,#sbo-rt-content caption,#sbo-rt-content tdiv,#sbo-rt-content tfoot,#sbo-rt-content thead,#sbo-rt-content tr,#sbo-rt-content th,#sbo-rt-content td,#sbo-rt-content article,#sbo-rt-content aside,#sbo-rt-content canvas,#sbo-rt-content details,#sbo-rt-content embed,#sbo-rt-content figure,#sbo-rt-content figcaption,#sbo-rt-content footer,#sbo-rt-content header,#sbo-rt-content hgroup,#sbo-rt-content menu,#sbo-rt-content nav,#sbo-rt-content output,#sbo-rt-content ruby,#sbo-rt-content section,#sbo-rt-content summary,#sbo-rt-content time,#sbo-rt-content mark,#sbo-rt-content audio,#sbo-rt-content video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#sbo-rt-content article,#sbo-rt-content aside,#sbo-rt-content details,#sbo-rt-content figcaption,#sbo-rt-content figure,#sbo-rt-content footer,#sbo-rt-content header,#sbo-rt-content hgroup,#sbo-rt-content menu,#sbo-rt-content nav,#sbo-rt-content section{display:block}#sbo-rt-content div{line-height:1}#sbo-rt-content ol,#sbo-rt-content ul{list-style:none}#sbo-rt-content blockquote,#sbo-rt-content q{quotes:none}#sbo-rt-content blockquote:before,#sbo-rt-content blockquote:after,#sbo-rt-content q:before,#sbo-rt-content q:after{content:none}#sbo-rt-content table{border-collapse:collapse;border-spacing:0}@page{margin:5px !important}#sbo-rt-content p{margin:10px 0 0;line-height:125%;text-align:left}#sbo-rt-content p.byline{text-align:left;margin:-33px auto 35px;font-style:italic;font-weight:bold}#sbo-rt-content div.preface p+p.byline{margin:1em 0 0 !important}#sbo-rt-content div.preface p.byline+p.byline{margin:0 !important}#sbo-rt-content div.sect1>p.byline{margin:-.25em 0 1em}#sbo-rt-content div.sect1>p.byline+p.byline{margin-top:-1em}#sbo-rt-content em{font-style:italic;font-family:inherit}#sbo-rt-content em strong,#sbo-rt-content strong em{font-weight:bold;font-style:italic;font-family:inherit}#sbo-rt-content strong,#sbo-rt-content span.bold{font-weight:bold}#sbo-rt-content em.replaceable{font-style:italic}#sbo-rt-content strong.userinput{font-weight:bold;font-style:normal}#sbo-rt-content span.bolditalic{font-weight:bold;font-style:italic}#sbo-rt-content a.ulink,#sbo-rt-content a.xref,#sbo-rt-content a.email,#sbo-rt-content a.link,#sbo-rt-content a{text-decoration:none;color:#8e0012}#sbo-rt-content span.lineannotation{font-style:italic;color:#a62a2a;font-family:serif}#sbo-rt-content span.underline{text-decoration:underline}#sbo-rt-content span.strikethrough{text-decoration:line-through}#sbo-rt-content span.smallcaps{font-variant:small-caps}#sbo-rt-content span.cursor{background:#000;color:#fff}#sbo-rt-content span.smaller{font-size:75%}#sbo-rt-content .boxedtext,#sbo-rt-content .keycap{border-style:solid;border-width:1px;border-color:#000;padding:1px}#sbo-rt-content span.gray50{color:#7F7F7F;}#sbo-rt-content h1,#sbo-rt-content div.toc-title,#sbo-rt-content h2,#sbo-rt-content h3,#sbo-rt-content h4,#sbo-rt-content h5{-webkit-hyphens:none;hyphens:none;adobe-hyphenate:none;font-weight:bold;text-align:left;page-break-after:avoid !important;font-family:sans-serif,"DejaVuSans"}#sbo-rt-content div.toc-title{font-size:1.5em;margin-top:20px !important;margin-bottom:30px !important}#sbo-rt-content section[data-type="sect1"] h1{font-size:1.3em;color:#8e0012;margin:40px 0 8px 0}#sbo-rt-content section[data-type="sect2"] h2{font-size:1.1em;margin:30px 0 8px 0 !important}#sbo-rt-content section[data-type="sect3"] h3{font-size:1em;color:#555;margin:20px 0 8px 0 !important}#sbo-rt-content section[data-type="sect4"] h4{font-size:1em;font-weight:normal;font-style:italic;margin:15px 0 6px 0 !important}#sbo-rt-content section[data-type="chapter"]>div>h1,#sbo-rt-content section[data-type="preface"]>div>h1,#sbo-rt-content section[data-type="appendix"]>div>h1,#sbo-rt-content section[data-type="glossary"]>div>h1,#sbo-rt-content section[data-type="bibliography"]>div>h1,#sbo-rt-content section[data-type="index"]>div>h1{font-size:2em;line-height:1;margin-bottom:50px;color:#000;padding-bottom:10px;border-bottom:1px solid #000}#sbo-rt-content span.label,#sbo-rt-content span.keep-together{font-size:inherit;font-weight:inherit}#sbo-rt-content div[data-type="part"] h1{font-size:2em;text-align:center;margin-top:0 !important;margin-bottom:50px;padding:50px 0 10px 0;border-bottom:1px solid #000}#sbo-rt-content img.width-ninety{width:90%}#sbo-rt-content img{max-width:95%;margin:0 auto;padding:0}#sbo-rt-content div.figure{background-color:transparent;text-align:center !important;margin:15px 0 15px 0 !important;page-break-inside:avoid}#sbo-rt-content figure{margin:15px 0 15px 0 !important;page-break-inside:avoid}#sbo-rt-content div.figure h6,#sbo-rt-content figure h6,#sbo-rt-content figure figcaption{font-size:.9rem !important;text-align:center;font-weight:normal !important;font-style:italic;font-family:serif !important;text-transform:none !important;letter-spacing:normal !important;color:#000 !important;padding-top:10px !important;page-break-before:avoid}#sbo-rt-content div.informalfigure{text-align:center !important;padding:5px 0 !important}#sbo-rt-content div.sidebar{margin:15px 0 10px 0 !important;border:1px solid #DCDCDC;background-color:#F7F7F7;padding:15px !important;page-break-inside:avoid}#sbo-rt-content aside[data-type="sidebar"]{margin:15px 0 10px 0 !important;page-break-inside:avoid}#sbo-rt-content div.sidebar-title,#sbo-rt-content aside[data-type="sidebar"] h5{font-weight:bold;font-size:1em;font-family:sans-serif;text-transform:uppercase;letter-spacing:1px;text-align:center;margin:4px 0 6px 0 !important;page-break-inside:avoid}#sbo-rt-content div.sidebar ol,#sbo-rt-content div.sidebar ul,#sbo-rt-content aside[data-type="sidebar"] ol,#sbo-rt-content aside[data-type="sidebar"] ul{margin-left:1.25em !important}#sbo-rt-content div.sidebar div.figure p.title,#sbo-rt-content aside[data-type="sidebar"] figcaption,#sbo-rt-content div.sidebar div.informalfigure div.caption{font-size:90%;text-align:center;font-weight:normal;font-style:italic;font-family:serif !important;color:#000;padding:5px !important;page-break-before:avoid;page-break-after:avoid}#sbo-rt-content div.sidebar div.tip,#sbo-rt-content div.sidebar div[data-type="tip"],#sbo-rt-content div.sidebar div.note,#sbo-rt-content div.sidebar div[data-type="note"],#sbo-rt-content div.sidebar div.warning,#sbo-rt-content div.sidebar div[data-type="warning"],#sbo-rt-content div.sidebar div[data-type="caution"],#sbo-rt-content div.sidebar div[data-type="important"]{margin:20px auto 20px auto !important;font-size:90%;width:85%}#sbo-rt-content aside[data-type="sidebar"] p.byline{font-size:90%;font-weight:bold;font-style:italic;text-align:center;text-indent:0;margin:5px auto 6px;page-break-after:avoid}#sbo-rt-content pre{white-space:pre-wrap;font-family:"Ubuntu Mono",monospace;margin:25px 0 25px 20px;font-size:85%;display:block;-webkit-hyphens:none;hyphens:none;adobe-hyphenate:none;overflow-wrap:break-word}#sbo-rt-content div.note pre.programlisting,#sbo-rt-content div.tip pre.programlisting,#sbo-rt-content div.warning pre.programlisting,#sbo-rt-content div.caution pre.programlisting,#sbo-rt-content div.important pre.programlisting{margin-bottom:0}#sbo-rt-content code{font-family:"Ubuntu Mono",monospace;-webkit-hyphens:none;hyphens:none;adobe-hyphenate:none;overflow-wrap:break-word}#sbo-rt-content code strong em,#sbo-rt-content code em strong,#sbo-rt-content pre em strong,#sbo-rt-content pre strong em,#sbo-rt-content strong code em code,#sbo-rt-content em code strong code,#sbo-rt-content span.bolditalic code{font-weight:bold;font-style:italic;font-family:"Ubuntu Mono BoldItal",monospace}#sbo-rt-content code em,#sbo-rt-content em code,#sbo-rt-content pre em,#sbo-rt-content em.replaceable{font-family:"Ubuntu Mono Ital",monospace;font-style:italic}#sbo-rt-content code strong,#sbo-rt-content strong code,#sbo-rt-content pre strong,#sbo-rt-content strong.userinput{font-family:"Ubuntu Mono Bold",monospace;font-weight:bold}#sbo-rt-content div[data-type="example"]{margin:10px 0 15px 0 !important}#sbo-rt-content div[data-type="example"] h1,#sbo-rt-content div[data-type="example"] h2,#sbo-rt-content div[data-type="example"] h3,#sbo-rt-content div[data-type="example"] h4,#sbo-rt-content div[data-type="example"] h5,#sbo-rt-content div[data-type="example"] h6{font-style:italic;font-weight:normal;text-align:left !important;text-transform:none !important;font-family:serif !important;margin:10px 0 5px 0 !important;border-bottom:1px solid #000}#sbo-rt-content li pre.example{padding:10px 0 !important}#sbo-rt-content div[data-type="example"] pre[data-type="programlisting"],#sbo-rt-content div[data-type="example"] pre[data-type="screen"]{margin:0}#sbo-rt-content section[data-type="titlepage"]>div>h1{font-size:2em;margin:50px 0 10px 0 !important;line-height:1;text-align:center}#sbo-rt-content section[data-type="titlepage"] h2,#sbo-rt-content section[data-type="titlepage"] p.subtitle,#sbo-rt-content section[data-type="titlepage"] p[data-type="subtitle"]{font-size:1.3em;font-weight:normal;text-align:center;margin-top:.5em;color:#555}#sbo-rt-content section[data-type="titlepage"]>div>h2[data-type="author"],#sbo-rt-content section[data-type="titlepage"] p.author{font-size:1.3em;font-family:serif !important;font-weight:bold;margin:50px 0 !important;text-align:center}#sbo-rt-content section[data-type="titlepage"] p.edition{text-align:center;text-transform:uppercase;margin-top:2em}#sbo-rt-content section[data-type="titlepage"]{text-align:center}#sbo-rt-content section[data-type="titlepage"]:after{content:url(css_assets/titlepage_footer_ebook.png);margin:0 auto;max-width:80%}#sbo-rt-content div.book div.titlepage div.publishername{margin-top:60%;margin-bottom:20px;text-align:center;font-size:1.25em}#sbo-rt-content div.book div.titlepage div.locations p{margin:0;text-align:center}#sbo-rt-content div.book div.titlepage div.locations p.cities{font-size:80%;text-align:center;margin-top:5px}#sbo-rt-content section.preface[title="Dedication"]>div.titlepage h2.title{text-align:center;text-transform:uppercase;font-size:1.5em;margin-top:50px;margin-bottom:50px}#sbo-rt-content ul.stafflist{margin:15px 0 15px 20px !important}#sbo-rt-content ul.stafflist li{list-style-type:none;padding:5px 0}#sbo-rt-content ul.printings li{list-style-type:none}#sbo-rt-content section.preface[title="Dedication"] p{font-style:italic;text-align:center}#sbo-rt-content div.colophon h1.title{font-size:1.3em;margin:0 !important;font-family:serif !important;font-weight:normal}#sbo-rt-content div.colophon h2.subtitle{margin:0 !important;color:#000;font-family:serif !important;font-size:1em;font-weight:normal}#sbo-rt-content div.colophon div.author h3.author{font-size:1.1em;font-family:serif !important;margin:10px 0 0 !important;font-weight:normal}#sbo-rt-content div.colophon div.editor h4,#sbo-rt-content div.colophon div.editor h3.editor{color:#000;font-size:.8em;margin:15px 0 0 !important;font-family:serif !important;font-weight:normal}#sbo-rt-content div.colophon div.editor h3.editor{font-size:.8em;margin:0 !important;font-family:serif !important;font-weight:normal}#sbo-rt-content div.colophon div.publisher{margin-top:10px}#sbo-rt-content div.colophon div.publisher p,#sbo-rt-content div.colophon div.publisher span.publishername{margin:0;font-size:.8em}#sbo-rt-content div.legalnotice p,#sbo-rt-content div.timestamp p{font-size:.8em}#sbo-rt-content div.timestamp p{margin-top:10px}#sbo-rt-content div.colophon[title="About the Author"] h1.title,#sbo-rt-content div.colophon[title="Colophon"] h1.title{font-size:1.5em;margin:0 !important;font-family:sans-serif !important}#sbo-rt-content section.chapter div.titlepage div.author{margin:10px 0 10px 0}#sbo-rt-content section.chapter div.titlepage div.author div.affiliation{font-style:italic}#sbo-rt-content div.attribution{margin:5px 0 0 50px !important}#sbo-rt-content h3.author span.orgname{display:none}#sbo-rt-content div.epigraph{margin:10px 0 10px 20px !important;page-break-inside:avoid;font-size:90%}#sbo-rt-content div.epigraph p{font-style:italic}#sbo-rt-content blockquote,#sbo-rt-content div.blockquote{margin:10px !important;page-break-inside:avoid;font-size:95%}#sbo-rt-content blockquote p,#sbo-rt-content div.blockquote p{font-style:italic;margin:.75em 0 0 !important}#sbo-rt-content blockquote div.attribution,#sbo-rt-content blockquote p[data-type="attribution"]{margin:5px 0 10px 30px !important;text-align:right;width:80%}#sbo-rt-content blockquote div.attribution p,#sbo-rt-content blockquote p[data-type="attribution"]{font-style:normal;margin-top:5px}#sbo-rt-content blockquote div.attribution p:before,#sbo-rt-content blockquote p[data-type="attribution"]:before{font-style:normal;content:"—";-webkit-hyphens:none;hyphens:none;adobe-hyphenate:none}#sbo-rt-content p.right{text-align:right;margin:0}#sbo-rt-content div[data-type="footnotes"]{border-top:1px solid black;margin-top:2em}#sbo-rt-content sub,#sbo-rt-content sup{font-size:75%;line-height:0;position:relative}#sbo-rt-content sup{top:-.5em}#sbo-rt-content sub{bottom:-.25em}#sbo-rt-content p[data-type="footnote"]{font-size:90% !important;line-height:1.2em !important;margin-left:2.5em !important;text-indent:-2.3em !important}#sbo-rt-content p[data-type="footnote"] sup{display:inline-block !important;position:static !important;width:2em !important;text-align:right !important;font-size:100% !important;padding-right:.5em !important}#sbo-rt-content p[data-type="footnote"] a[href$="-marker"]{font-family:sans-serif !important;font-size:90% !important;color:#8e0012 !important}#sbo-rt-content p[data-type="footnote"] a[data-type="xref"]{margin:0 !important;padding:0 !important;text-indent:0 !important}#sbo-rt-content a[data-type="noteref"]{font-family:sans-serif !important;color:#8e0012;margin-left:0;padding-left:0}#sbo-rt-content div.refentry p.refname{font-size:1em;font-family:sans-serif,"DejaVuSans";font-weight:bold;margin-bottom:5px;overflow:auto;width:100%}#sbo-rt-content div.refentry{width:100%;display:block;margin-top:2em}#sbo-rt-content div.refsynopsisdiv{display:block;clear:both}#sbo-rt-content div.refentry header{page-break-inside:avoid !important;display:block;break-inside:avoid !important;padding-top:0;border-bottom:1px solid #000}#sbo-rt-content div.refsect1 h6{font-size:.9em;font-family:sans-serif,"DejaVuSans";font-weight:bold}#sbo-rt-content div.refsect1{margin-top:3em}#sbo-rt-content dt{padding-top:10px !important;padding-bottom:0 !important}#sbo-rt-content dd{margin-left:1.5em !important;margin-bottom:.25em}#sbo-rt-content dd ol,#sbo-rt-content dd ul{padding-left:1em}#sbo-rt-content dd li{margin-top:0;margin-bottom:0}#sbo-rt-content dd,#sbo-rt-content li{text-align:left}#sbo-rt-content ul,#sbo-rt-content ul>li,#sbo-rt-content ol ul,#sbo-rt-content ol ul>li,#sbo-rt-content ul ol ul,#sbo-rt-content ul ol ul>li{list-style-type:disc}#sbo-rt-content ul ul,#sbo-rt-content ul ul>li{list-style-type:square}#sbo-rt-content ul ul ul,#sbo-rt-content ul ul ul>li{list-style-type:circle}#sbo-rt-content ol,#sbo-rt-content ol>li,#sbo-rt-content ol ul ol,#sbo-rt-content ol ul ol>li,#sbo-rt-content ul ol,#sbo-rt-content ul ol>li{list-style-type:decimal}#sbo-rt-content ol ol,#sbo-rt-content ol ol>li{list-style-type:lower-alpha}#sbo-rt-content ol ol ol,#sbo-rt-content ol ol ol>li{list-style-type:lower-roman}#sbo-rt-content ol,#sbo-rt-content ul{list-style-position:outside;margin:15px 0 15px 1.25em;padding-left:2.25em}#sbo-rt-content ol li,#sbo-rt-content ul li{margin:.5em 0 .65em;line-height:125%}#sbo-rt-content div.orderedlistalpha{list-style-type:upper-alpha}#sbo-rt-content table.simplelist,#sbo-rt-content ul.simplelist{margin:15px 0 15px 20px !important}#sbo-rt-content ul.simplelist li{list-style-type:none;padding:5px 0}#sbo-rt-content table.simplelist td{border:none}#sbo-rt-content table.simplelist tr{border-bottom:none}#sbo-rt-content table.simplelist tr:nth-of-type(even){background-color:transparent}#sbo-rt-content dl.calloutlist p:first-child{margin-top:-25px !important}#sbo-rt-content dl.calloutlist dd{padding-left:0;margin-top:-25px}#sbo-rt-content dl.calloutlist img,#sbo-rt-content a.co img{padding:0}#sbo-rt-content div.toc ol{margin-top:8px !important;margin-bottom:8px !important;margin-left:0 !important;padding-left:0 !important}#sbo-rt-content div.toc ol ol{margin-left:30px !important;padding-left:0 !important}#sbo-rt-content div.toc ol li{list-style-type:none}#sbo-rt-content div.toc a{color:#8e0012}#sbo-rt-content div.toc ol a{font-size:1em;font-weight:bold}#sbo-rt-content div.toc ol>li>ol a{font-weight:bold;font-size:1em}#sbo-rt-content div.toc ol>li>ol>li>ol a{text-decoration:none;font-weight:normal;font-size:1em}#sbo-rt-content div.tip,#sbo-rt-content div[data-type="tip"],#sbo-rt-content div.note,#sbo-rt-content div[data-type="note"],#sbo-rt-content div.warning,#sbo-rt-content div[data-type="warning"],#sbo-rt-content div[data-type="caution"],#sbo-rt-content div[data-type="important"]{margin:30px !important;font-size:90%;padding:10px 8px 20px 8px !important;page-break-inside:avoid}#sbo-rt-content div.tip ol,#sbo-rt-content div.tip ul,#sbo-rt-content div[data-type="tip"] ol,#sbo-rt-content div[data-type="tip"] ul,#sbo-rt-content div.note ol,#sbo-rt-content div.note ul,#sbo-rt-content div[data-type="note"] ol,#sbo-rt-content div[data-type="note"] ul,#sbo-rt-content div.warning ol,#sbo-rt-content div.warning ul,#sbo-rt-content div[data-type="warning"] ol,#sbo-rt-content div[data-type="warning"] ul,#sbo-rt-content div[data-type="caution"] ol,#sbo-rt-content div[data-type="caution"] ul,#sbo-rt-content div[data-type="important"] ol,#sbo-rt-content div[data-type="important"] ul{margin-left:1.5em !important}#sbo-rt-content div.tip,#sbo-rt-content div[data-type="tip"],#sbo-rt-content div.note,#sbo-rt-content div[data-type="note"]{border:1px solid #BEBEBE;background-color:transparent}#sbo-rt-content div.warning,#sbo-rt-content div[data-type="warning"],#sbo-rt-content div[data-type="caution"],#sbo-rt-content div[data-type="important"]{border:1px solid #BC8F8F}#sbo-rt-content div.tip h3,#sbo-rt-content div[data-type="tip"] h6,#sbo-rt-content div[data-type="tip"] h1,#sbo-rt-content div.note h3,#sbo-rt-content div[data-type="note"] h6,#sbo-rt-content div[data-type="note"] h1,#sbo-rt-content div.warning h3,#sbo-rt-content div[data-type="warning"] h6,#sbo-rt-content div[data-type="warning"] h1,#sbo-rt-content div[data-type="caution"] h6,#sbo-rt-content div[data-type="caution"] h1,#sbo-rt-content div[data-type="important"] h1,#sbo-rt-content div[data-type="important"] h6{font-weight:bold;font-size:110%;font-family:sans-serif !important;text-transform:uppercase;letter-spacing:1px;text-align:center;margin:4px 0 6px !important}#sbo-rt-content div[data-type="tip"] figure h6,#sbo-rt-content div[data-type="note"] figure h6,#sbo-rt-content div[data-type="warning"] figure h6,#sbo-rt-content div[data-type="caution"] figure h6,#sbo-rt-content div[data-type="important"] figure h6{font-family:serif !important}#sbo-rt-content div.tip h3,#sbo-rt-content div[data-type="tip"] h6,#sbo-rt-content div.note h3,#sbo-rt-content div[data-type="note"] h6,#sbo-rt-content div[data-type="tip"] h1,#sbo-rt-content div[data-type="note"] h1{color:#737373}#sbo-rt-content div.warning h3,#sbo-rt-content div[data-type="warning"] h6,#sbo-rt-content div[data-type="caution"] h6,#sbo-rt-content div[data-type="important"] h6,#sbo-rt-content div[data-type="warning"] h1,#sbo-rt-content div[data-type="caution"] h1,#sbo-rt-content div[data-type="important"] h1{color:#C67171}#sbo-rt-content div.sect1[title="Safari® Books Online"] div.note,#sbo-rt-content div.safarienabled{background-color:transparent;margin:8px 0 0 !important;border:0 solid #BEBEBE;font-size:100%;padding:0 !important;page-break-inside:avoid}#sbo-rt-content div.sect1[title="Safari® Books Online"] div.note h3,#sbo-rt-content div.safarienabled h6{display:none}#sbo-rt-content div.table,#sbo-rt-content table{margin:15px 0 30px 0 !important;max-width:95%;border:none !important;background:none;display:table !important}#sbo-rt-content div.table,#sbo-rt-content div.informaltable,#sbo-rt-content table{page-break-inside:avoid}#sbo-rt-content tr,#sbo-rt-content tr td{border-bottom:1px solid #c3c3c3}#sbo-rt-content thead td,#sbo-rt-content thead th{border-bottom:#9d9d9d 1px solid !important;border-top:#9d9d9d 1px solid !important}#sbo-rt-content tr:nth-of-type(even){background-color:#f1f6fc}#sbo-rt-content thead{font-family:sans-serif;font-weight:bold}#sbo-rt-content td,#sbo-rt-content th{display:table-cell;padding:.3em;text-align:left;vertical-align:middle;font-size:80%}#sbo-rt-content div.informaltable table{margin:10px auto !important}#sbo-rt-content div.informaltable table tr{border-bottom:none}#sbo-rt-content div.informaltable table tr:nth-of-type(even){background-color:transparent}#sbo-rt-content div.informaltable td,#sbo-rt-content div.informaltable th{border:#9d9d9d 1px solid}#sbo-rt-content div.table-title,#sbo-rt-content table caption{font-weight:normal;font-style:italic;font-family:serif;font-size:1em;margin:10px 0 10px 0 !important;padding:0;page-break-after:avoid;text-align:left !important}#sbo-rt-content table code{font-size:smaller}#sbo-rt-content table.border tbody>tr:last-child>td{border-bottom:transparent}#sbo-rt-content div.equation,#sbo-rt-content div[data-type="equation"]{margin:10px 0 15px 0 !important}#sbo-rt-content div.equation-title,#sbo-rt-content div[data-type="equation"] h5{font-style:italic;font-weight:normal;font-family:serif !important;font-size:90%;margin:20px 0 10px 0 !important;page-break-after:avoid}#sbo-rt-content div.equation-contents{margin-left:20px}#sbo-rt-content div[data-type="equation"] math{font-size:calc(.35em + 1vw)}#sbo-rt-content span.inlinemediaobject{height:.85em;display:inline-block;margin-bottom:.2em}#sbo-rt-content span.inlinemediaobject img{margin:0;height:.85em}#sbo-rt-content div.informalequation{margin:20px 0 20px 20px;width:75%}#sbo-rt-content div.informalequation img{width:75%}#sbo-rt-content div.index{text-indent:0}#sbo-rt-content div.index h3{padding:.25em;margin-top:1em !important;background-color:#F0F0F0}#sbo-rt-content div.index li{line-height:130%;list-style-type:none}#sbo-rt-content div.index a.indexterm{color:#8e0012 !important}#sbo-rt-content div.index ul{margin-left:0 !important;padding-left:0 !important}#sbo-rt-content div.index ul ul{margin-left:1em !important;margin-top:0 !important}#sbo-rt-content code.boolean,#sbo-rt-content .navy{color:rgb(0,0,128);}#sbo-rt-content code.character,#sbo-rt-content .olive{color:rgb(128,128,0);}#sbo-rt-content code.comment,#sbo-rt-content .blue{color:rgb(0,0,255);}#sbo-rt-content code.conditional,#sbo-rt-content .limegreen{color:rgb(50,205,50);}#sbo-rt-content code.constant,#sbo-rt-content .darkorange{color:rgb(255,140,0);}#sbo-rt-content code.debug,#sbo-rt-content .darkred{color:rgb(139,0,0);}#sbo-rt-content code.define,#sbo-rt-content .darkgoldenrod,#sbo-rt-content .gold{color:rgb(184,134,11);}#sbo-rt-content code.delimiter,#sbo-rt-content .dimgray{color:rgb(105,105,105);}#sbo-rt-content code.error,#sbo-rt-content .red{color:rgb(255,0,0);}#sbo-rt-content code.exception,#sbo-rt-content .salmon{color:rgb(250,128,11);}#sbo-rt-content code.float,#sbo-rt-content .steelblue{color:rgb(70,130,180);}#sbo-rt-content pre code.function,#sbo-rt-content .green{color:rgb(0,128,0);}#sbo-rt-content code.identifier,#sbo-rt-content .royalblue{color:rgb(65,105,225);}#sbo-rt-content code.ignore,#sbo-rt-content .gray{color:rgb(128,128,128);}#sbo-rt-content code.include,#sbo-rt-content .purple{color:rgb(128,0,128);}#sbo-rt-content code.keyword,#sbo-rt-content .sienna{color:rgb(160,82,45);}#sbo-rt-content code.label,#sbo-rt-content .deeppink{color:rgb(255,20,147);}#sbo-rt-content code.macro,#sbo-rt-content .orangered{color:rgb(255,69,0);}#sbo-rt-content code.number,#sbo-rt-content .brown{color:rgb(165,42,42);}#sbo-rt-content code.operator,#sbo-rt-content .black{color:#000;}#sbo-rt-content code.preCondit,#sbo-rt-content .teal{color:rgb(0,128,128);}#sbo-rt-content code.preProc,#sbo-rt-content .fuschia{color:rgb(255,0,255);}#sbo-rt-content code.repeat,#sbo-rt-content .indigo{color:rgb(75,0,130);}#sbo-rt-content code.special,#sbo-rt-content .saddlebrown{color:rgb(139,69,19);}#sbo-rt-content code.specialchar,#sbo-rt-content .magenta{color:rgb(255,0,255);}#sbo-rt-content code.specialcomment,#sbo-rt-content .seagreen{color:rgb(46,139,87);}#sbo-rt-content code.statement,#sbo-rt-content .forestgreen{color:rgb(34,139,34);}#sbo-rt-content code.storageclass,#sbo-rt-content .plum{color:rgb(221,160,221);}#sbo-rt-content code.string,#sbo-rt-content .darkred{color:rgb(139,0,0);}#sbo-rt-content code.structure,#sbo-rt-content .chocolate{color:rgb(210,106,30);}#sbo-rt-content code.tag,#sbo-rt-content .darkcyan{color:rgb(0,139,139);}#sbo-rt-content code.todo,#sbo-rt-content .black{color:#000;}#sbo-rt-content code.type,#sbo-rt-content .mediumslateblue{color:rgb(123,104,238);}#sbo-rt-content code.typedef,#sbo-rt-content .darkgreen{color:rgb(0,100,0);}#sbo-rt-content code.underlined{text-decoration:underline;}#sbo-rt-content pre code.hll{background-color:#ffc}#sbo-rt-content pre code.c{color:#09F;font-style:italic}#sbo-rt-content pre code.err{color:#A00}#sbo-rt-content pre code.k{color:#069;font-weight:bold}#sbo-rt-content pre code.o{color:#555}#sbo-rt-content pre code.cm{color:#35586C;font-style:italic}#sbo-rt-content pre code.cp{color:#099}#sbo-rt-content pre code.c1{color:#35586C;font-style:italic}#sbo-rt-content pre code.cs{color:#35586C;font-weight:bold;font-style:italic}#sbo-rt-content pre code.gd{background-color:#FCC}#sbo-rt-content pre code.ge{font-style:italic}#sbo-rt-content pre code.gr{color:#F00}#sbo-rt-content pre code.gh{color:#030;font-weight:bold}#sbo-rt-content pre code.gi{background-color:#CFC}#sbo-rt-content pre code.go{color:#000}#sbo-rt-content pre code.gp{color:#009;font-weight:bold}#sbo-rt-content pre code.gs{font-weight:bold}#sbo-rt-content pre code.gu{color:#030;font-weight:bold}#sbo-rt-content pre code.gt{color:#9C6}#sbo-rt-content pre code.kc{color:#069;font-weight:bold}#sbo-rt-content pre code.kd{color:#069;font-weight:bold}#sbo-rt-content pre code.kn{color:#069;font-weight:bold}#sbo-rt-content pre code.kp{color:#069}#sbo-rt-content pre code.kr{color:#069;font-weight:bold}#sbo-rt-content pre code.kt{color:#078;font-weight:bold}#sbo-rt-content pre code.m{color:#F60}#sbo-rt-content pre code.s{color:#C30}#sbo-rt-content pre code.na{color:#309}#sbo-rt-content pre code.nb{color:#366}#sbo-rt-content pre code.nc{color:#0A8;font-weight:bold}#sbo-rt-content pre code.no{color:#360}#sbo-rt-content pre code.nd{color:#99F}#sbo-rt-content pre code.ni{color:#999;font-weight:bold}#sbo-rt-content pre code.ne{color:#C00;font-weight:bold}#sbo-rt-content pre code.nf{color:#C0F}#sbo-rt-content pre code.nl{color:#99F}#sbo-rt-content pre code.nn{color:#0CF;font-weight:bold}#sbo-rt-content pre code.nt{color:#309;font-weight:bold}#sbo-rt-content pre code.nv{color:#033}#sbo-rt-content pre code.ow{color:#000;font-weight:bold}#sbo-rt-content pre code.w{color:#bbb}#sbo-rt-content pre code.mf{color:#F60}#sbo-rt-content pre code.mh{color:#F60}#sbo-rt-content pre code.mi{color:#F60}#sbo-rt-content pre code.mo{color:#F60}#sbo-rt-content pre code.sb{color:#C30}#sbo-rt-content pre code.sc{color:#C30}#sbo-rt-content pre code.sd{color:#C30;font-style:italic}#sbo-rt-content pre code.s2{color:#C30}#sbo-rt-content pre code.se{color:#C30;font-weight:bold}#sbo-rt-content pre code.sh{color:#C30}#sbo-rt-content pre code.si{color:#A00}#sbo-rt-content pre code.sx{color:#C30}#sbo-rt-content pre code.sr{color:#3AA}#sbo-rt-content pre code.s1{color:#C30}#sbo-rt-content pre code.ss{color:#A60}#sbo-rt-content pre code.bp{color:#366}#sbo-rt-content pre code.vc{color:#033}#sbo-rt-content pre code.vg{color:#033}#sbo-rt-content pre code.vi{color:#033}#sbo-rt-content pre code.il{color:#F60}#sbo-rt-content pre code.g{color:#050}#sbo-rt-content pre code.l{color:#C60}#sbo-rt-content pre code.l{color:#F90}#sbo-rt-content pre code.n{color:#008}#sbo-rt-content pre code.nx{color:#008}#sbo-rt-content pre code.py{color:#96F}#sbo-rt-content pre code.p{color:#000}#sbo-rt-content pre code.x{color:#F06}#sbo-rt-content div.blockquote_sampler_toc{width:95%;margin:5px 5px 5px 10px !important}#sbo-rt-content div{font-family:serif;text-align:left}#sbo-rt-content .gray-background,#sbo-rt-content .reverse-video{background:#2E2E2E;color:#FFF}#sbo-rt-content .light-gray-background{background:#A0A0A0}#sbo-rt-content .preserve-whitespace{white-space:pre-wrap}#sbo-rt-content span.gray{color:#4C4C4C}#sbo-rt-content .width-10{width:10vw !important}#sbo-rt-content .width-20{width:20vw !important}#sbo-rt-content .width-30{width:30vw !important}#sbo-rt-content .width-40{width:40vw !important}#sbo-rt-content .width-50{width:50vw !important}#sbo-rt-content .width-60{width:60vw !important}#sbo-rt-content .width-70{width:70vw !important}#sbo-rt-content .width-80{width:80vw !important}#sbo-rt-content .width-90{width:90vw !important}#sbo-rt-content .width-full,#sbo-rt-content .width-100{width:100vw !important}#sbo-rt-content table code{word-break:break-all !important;word-wrap:break-word !important;white-space:normal !important;overflow:visible}
+    </style><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/cool-2.1.15.min.js.download"></script><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ec.js.download"></script><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/analytics.js.download"></script><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/f.txt"></script><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/js"></script><script crossorigin="anonymous" integrity="sha256-YVd5f+oOy6EXRL0nbPFPXaaqax2k37tbmOkUYa0jZW4=" type="text/javascript" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/appcues.main.cfc53af059b5b93bea8cf68f5507901513619ad8.js.download" async=""></script><script async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/gtm.js.download"></script><script> // <![CDATA[
+    var g = {
+      position_cache: {
+        
+          "chapter": "/api/v1/book/9781491936153/chapter/ch04.html",
+          "book_id": "9781491936153",
+          "chapter_uri": "ch04.html",
+          "position": 0,
+          "user_uuid": "4a6f73c4-7349-4949-9ed6-be14a97df95e",
+          "next_chapter_uri": "/library/view/kafka-the-definitive/9781491936153/ch05.html"
+        
+      },
+      title: "Kafka: The Definitive Guide",
+      author_list: "Neha Narkhede, Gwen Shapira, Todd Palino",
+      format: "book",
+      source: "application/epub+zip",
+      is_system_book: true,
+      is_public: true,
+      loaded_from_server: true,
+      allow_scripts: false,
+      has_mathml: false
+    };
+    // ]]></script><script src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/modernizr.8e35451ddb64.js.download"></script><script>
+    
+      
+
+      
+        
+          window.PUBLIC_ANNOTATIONS = true;
+        
+      
+
+      window.MOBILE_PUBLIC_ANNOTATIONS = false;
+
+    
+
+    
+      window.PRIVACY_CONTROL_OVERRIDE = false;
+    
+
+      window.PRIVACY_CONTROL_SWITCH = true;
+
+      window.PUBLISHER_PAGES = true;
+
+      window.SBO = {
+        "constants": {
+          "SITB_ENDPOINT": "/api/v2/sitb/",
+          "SEARCH_SELECT_ENDPOINT": "https://learning.oreilly.com/api/v2/search/select/",
+          "ENABLE_ONLINE_TRAINING": true
+        }
+      };
+  </script><link rel="canonical" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html"><meta name="description" content=" Chapter 4. Kafka Consumers: Reading Data from Kafka Applications that need to read data from Kafka use a KafkaConsumer to subscribe to Kafka topics and receive messages from these topics. ... "><meta property="og:title" content="4. Kafka Consumers: Reading Data from Kafka"><meta itemprop="isPartOf" content="/library/view/kafka-the-definitive/9781491936153/"><meta itemprop="name" content="4. Kafka Consumers: Reading Data from Kafka"><meta property="og:url" itemprop="url" content="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html"><meta property="og:site_name" content="Safari"><meta property="og:image" itemprop="thumbnailUrl" content="https://learning.oreilly.com/library/cover/9781491936153/"><meta property="og:description" itemprop="description" content=" Chapter 4. Kafka Consumers: Reading Data from Kafka Applications that need to read data from Kafka use a KafkaConsumer to subscribe to Kafka topics and receive messages from these topics. ... "><meta itemprop="inLanguage" content="en"><meta itemprop="publisher" content="O&#39;Reilly Media, Inc."><meta property="og:type" content="book"><meta property="og:book:isbn" itemprop="isbn" content="9781491936160"><meta property="og:book:author" itemprop="author" content="Neha Narkhede"><meta property="og:book:author" itemprop="author" content="Gwen Shapira"><meta property="og:book:author" itemprop="author" content="Todd Palino"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@OReillyMedia"><style type="text/css" id="font-styles" data-template="#sbo-rt-content, #sbo-rt-content p, #sbo-rt-content div { font-size: &lt;%= font_size %&gt; !important; }"></style><style type="text/css" id="font-family" data-template="#sbo-rt-content, #sbo-rt-content p, #sbo-rt-content div { font-family: &lt;%= font_family %&gt; !important; }"></style><style type="text/css" id="column-width" data-template="#sbo-rt-content { max-width: &lt;%= column_width %&gt;% !important; margin: 0 auto !important; }"></style><noscript><meta http-equiv="refresh" content="0; url=/library/no-js/" /></noscript><script>
+    var dataLayer = window.dataLayer || [];
+
+    
+      window.medalliaVsgUserIdentifier = '4a6f73c4-7349-4949-9ed6-be14a97df95e';
+      dataLayer.push({userIdentifier: '4a6f73c4-7349-4949-9ed6-be14a97df95e'});
+      dataLayer.push({loggedIn: 'yes'});
+
+      
+        window.medalliaVsgAccountIdentifier = '0fa50266-fd42-43a6-be36-e5b2a13c9b6a';
+        
+
+        window.medalliaVsgIsIndividual = true;
+        
+          
+          dataLayer.push({learningAccountType: 'free trial'});
+          
+        
+
+        
+      
+    
+
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5P4V6Z');
+    (function () {
+      var VERSION = 'V1.1';
+      var AUTHOR = 'Awwad';
+      if (!window.GtmHelper)
+        window.GtmHelper = function () {
+          var instance = this;
+          var loc = document.location;
+          this.version = VERSION;
+          this.author = AUTHOR;
+          this.readCookie = function (name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+              var c = ca[i];
+              while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+              if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+          };
+          this.createCookie = function (name, value, days, cookieDomain) {
+            var domain = "";
+            var expires = "";
+
+            if (days) {
+              var date = new Date();
+              date.setTime(date.getTime() + Math.ceil(days * 24 * 60 * 60 * 1000));
+              var expires = " expires=" + date.toGMTString() + ";";
+            }
+
+            if (typeof (cookieDomain) != 'undefined')
+              domain = " domain=" + cookieDomain + "; ";
+
+            document.cookie = name + "=" + value + ";" + expires + domain + "path=/";
+          };
+
+          this.isDuplicated = function (currentTransactionId) {
+            // the previous transaction id:
+            var previousTransIdValue = this.readCookie("previousTransId");
+
+            if (currentTransactionId === previousTransIdValue) {
+              return true; // Duplication
+            } else {
+              return false;
+            }
+          };
+        }
+    })()
+  </script><script defer="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/vendor.2804c0c54c57.js.download"></script><script defer="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/reader.590e4106cb9f.js.download"></script><iframe src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource.html"></iframe><iframe src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource(2).html"></iframe><iframe src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource(3).html"></iframe><link rel="stylesheet" type="text/css" integrity="sha256-q9sKb2HpA5fJjN1cK9LjLaEXff5ix81Rv1Y3xJFptPE=" crossorigin="anonymous" href="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/container.cfc53af059b5b93bea8cf68f5507901513619ad8.css"><iframe src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource(4).html"></iframe><script async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/MathJax.js.download"></script><style id="annotator-dynamic-style">.annotator-adder, .annotator-outer, .annotator-notice {
+  z-index: 100019;
+}
+.annotator-filter {
+  z-index: 100009;
+}</style><script src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/f(1).txt"></script><style type="text/css" id="kampyleStyle">.noOutline{outline: none !important;}.wcagOutline:focus{outline: 1px dashed #595959 !important;outline-offset: 2px !important;transition: none !important;}</style></head>
+
+
+<body class="reading sidenav nav-collapsed  scalefonts subscribe-panel library">
+
+    
+  <noscript> 
+    <iframe src="//www.googletagmanager.com/ns.html?id=GTM-5P4V6Z"
+            height="0" width="0"
+            style="display:none;visibility:hidden">
+    </iframe>
+  </noscript>
+
+
+
+    
+      <div class="hide working" role="status">
+        <div class="working-image"></div>
+      </div>
+      <div class="sbo-site-nav">
+        
+
+  
+
+
+<a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#container" class="skip">Skip to content</a><header class="topbar t-topbar"><nav role="navigation" class="js-site-nav"><ul class="topnav"><li><a href="https://learning.oreilly.com/home/" class="l0 nav-icn"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M11.738 14H9.254v-3.676a.617.617 0 0 0-.621-.613H7.39a.617.617 0 0 0-.62.613V14H4.284a.617.617 0 0 1-.622-.613V10.22c0-.327.132-.64.367-.87l3.547-3.493a.627.627 0 0 1 .875 0l3.54 3.499c.234.229.366.54.367.864v3.167a.617.617 0 0 1-.62.613zM7.57 2.181a.625.625 0 0 1 .882 0l5.77 5.692-.93.92-5.28-5.209-5.28 5.208-.932-.919 5.77-5.692z"></path></svg><span>Home</span></a></li><li class="search"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="t-search-nav trigger nav-icn l0" data-dropdown-selector=".searchbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20" height="20" version="1.1" fill="#4A3C31"><desc>search icon</desc><g stroke="none" stroke-width="1" fill-rule="evenodd"><path d="M31.3 0C20.9 0 12.5 8.4 12.5 18.8 12.5 22.5 13.6 25.9 15.4 28.8L1.2 42.9C-0.4 44.5-0.4 47.2 1.2 48.8 2 49.6 3.1 50 4.2 50 5.2 50 6.3 49.6 7.1 48.8L21.2 34.6C24.1 36.5 27.5 37.5 31.3 37.5 41.6 37.5 50 29.1 50 18.8 50 8.4 41.6 0 31.3 0ZM31.3 31.3C24.4 31.3 18.8 25.6 18.8 18.8 18.8 11.9 24.4 6.3 31.3 6.3 38.1 6.3 43.8 11.9 43.8 18.8 43.8 25.6 38.1 31.3 31.3 31.3Z"></path></g></svg><span>Search</span></a></li><li class="usermenu dropdown"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="trigger l0 nav-icn nav-dropdown"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20" version="1.1" fill="#4A3C31"><desc>navigation arrow</desc><g stroke="none" stroke-width="1" fill-rule="evenodd"><path d="M0.1 12.5L9.7 3.1C9.8 3 9.9 3 10 3 10.1 3 10.2 3 10.3 3.1L19.9 12.5C20 12.5 20 12.6 20 12.8 20 12.9 20 13 19.9 13L17 15.9C16.9 16 16.8 16 16.7 16 16.5 16 16.4 16 16.4 15.9L10 9.7 3.6 15.9C3.6 16 3.5 16 3.3 16 3.2 16 3.1 16 3 15.9L0.1 13C0 12.9 0 12.8 0 12.7 0 12.7 0 12.6 0.1 12.5Z"></path></g></svg><span>Expand Nav</span></a><div class="drop-content"><ul><li class="flyout-parent"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="l1 nav-icn "><!--?xml version="1.0" encoding="UTF-8"?--><svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8,8 C6.34321755,8 5.00013,6.65691245 5.00013,5.00013 C5.00013,3.34334755 6.34321755,2.00026001 8,2.00026001 C9.65678245,2.00026001 10.99987,3.34334755 10.99987,5.00013 C10.99987,6.65691245 9.65678245,8 8,8 Z M2.33024571,11.3523547 L2.33774538,11.3523547 C3.7622187,9.70968996 5.82947484,8.76608166 8.00374984,8.76608166 C10.1780248,8.76608166 12.245281,9.70968996 13.6697543,11.3523547 C13.8892083,11.6177474 14.0062813,11.9530021 13.99974,12.2973138 L13.99974,13.99974 L2.00026001,13.99974 L2.00026001,12.2973138 C1.99371867,11.9530021 2.11079172,11.6177474 2.33024571,11.3523547 Z" id="path-1"></path></svg><span>Your O'Reilly</span></a><ul class="flyout"><li><a href="https://learning.oreilly.com/profile/" class="l2 nav-icn"><span>Profile</span></a></li><li><a href="https://learning.oreilly.com/history/" class="l2 nav-icn"><span>History</span></a></li><li><a href="https://learning.oreilly.com/playlists/" class="l2 nav-icn"><span>Playlists</span></a></li><li><a href="https://learning.oreilly.com/u/4a6f73c4-7349-4949-9ed6-be14a97df95e/" class="l2 nav-icn"><span>Highlights</span></a></li></ul></li><li class="flyout-parent"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="l1 nav-icn "><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M11.564 2.263l2.172 2.174c.17.168.264.397.264.636V11a.6.6 0 0 1-.6.6h-.6V6.2h-6V2.6a.6.6 0 0 1 .6-.6h3.527c.239 0 .468.095.637.263zM2.6 14a.6.6 0 0 1-.6-.6V6.8a.6.6 0 0 1 .6-.6h1.903a1.2 1.2 0 0 1 .849.352L6.2 7.4H11a.6.6 0 0 1 .6.6v5.4a.6.6 0 0 1-.6.6H2.6zM11 5h1.8L11 3.2V5z"></path></svg><span>Featured</span></a><ul class="flyout"><li><a href="https://learning.oreilly.com/featured/navigating-21st-century/" class="l2 nav-icn"><span>Navigating Change</span></a></li><li><a href="https://learning.oreilly.com/recommendations/" class="l2 nav-icn"><span>Recommended</span></a></li></ul></li><li class="flyout-parent"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="l1 nav-icn "><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20" height="20" version="1.1" fill="#4A3C31"><desc>queue icon</desc><g stroke="none" stroke-width="1" fill-rule="evenodd"><path d="M25 29.2C25.4 29.2 25.8 29.1 26.1 28.9L48.7 16.8C49.5 16.4 50 15.5 50 14.6 50 13.7 49.5 12.8 48.7 12.4L26.1 0.3C25.4-0.1 24.6-0.1 23.9 0.3L1.3 12.4C0.5 12.8 0 13.7 0 14.6 0 15.5 0.5 16.4 1.3 16.8L23.9 28.9C24.2 29.1 24.6 29.2 25 29.2ZM7.3 14.6L25 5.2 42.7 14.6 25 24 7.3 14.6ZM48.7 22.4L47.7 21.9 25 34.2 2.3 21.9 1.3 22.4C0.5 22.9 0 23.7 0 24.7 0 25.6 0.5 26.5 1.3 26.9L23.9 39.3C24.2 39.5 24.6 39.6 25 39.6 25.4 39.6 25.8 39.5 26.1 39.3L48.7 26.9C49.5 26.5 50 25.6 50 24.7 50 23.7 49.5 22.9 48.7 22.4ZM48.7 32.8L47.7 32.3 25 44.6 2.3 32.3 1.3 32.8C0.5 33.3 0 34.1 0 35.1 0 36 0.5 36.9 1.3 37.3L23.9 49.7C24.2 49.9 24.6 50 25 50 25.4 50 25.8 49.9 26.1 49.7L48.7 37.3C49.5 36.9 50 36 50 35.1 50 34.1 49.5 33.3 48.7 32.8Z"></path></g></svg><span>Explore</span></a><ul class="flyout"><li><a href="https://learning.oreilly.com/topics/" class="l2 nav-icn"><span>All Topics</span></a></li><li><a href="https://learning.oreilly.com/search/?query=&amp;extended_publisher_data=true&amp;highlight=true&amp;include_assessments=false&amp;include_case_studies=true&amp;include_courses=true&amp;include_orioles=true&amp;include_playlists=true&amp;include_collections=true&amp;include_notebooks=true&amp;is_academic_institution_account=false&amp;source=user&amp;formats=book&amp;sort=publication_date&amp;facet_json=true&amp;page=0" class="l2 nav-icn"><span>Early Releases</span></a></li><li><a href="https://learning.oreilly.com/playlists/discover/" class="l2 nav-icn"><span>Shared Playlists</span></a></li><li><a href="https://learning.oreilly.com/search/?query=&amp;extended_publisher_data=true&amp;highlight=true&amp;include_assessments=false&amp;include_case_studies=true&amp;include_courses=true&amp;include_orioles=true&amp;include_playlists=true&amp;include_collections=true&amp;include_notebooks=true&amp;is_academic_institution_account=false&amp;source=user&amp;formats=book&amp;formats=case%20study&amp;formats=learning%20path&amp;formats=live%20online%20training&amp;formats=notebook&amp;formats=oriole&amp;formats=video&amp;sort=popularity&amp;facet_json=true&amp;page=0&amp;collection_type=expert" class="l2 nav-icn"><span>Most Popular Titles</span></a></li><li><a href="https://learning.oreilly.com/resource-centers/" class="l2 nav-icn"><span>Resource Centers</span></a></li></ul></li><li class="flyout-parent"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="l1 nav-icn "><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M12.8 3.2A1.2 1.2 0 0 1 14 4.4v8.4a1.2 1.2 0 0 1-1.2 1.2H3.2A1.2 1.2 0 0 1 2 12.8V4.4a1.2 1.2 0 0 1 1.2-1.2h1.2V2h1.2v1.2h4.8V2h1.2v1.2h1.2zm-9.6 9.6h9.6V6.2H3.2v6.6zM8 9.5a1.35 1.35 0 1 1 0-2.7 1.35 1.35 0 0 1 0 2.7zm2.7 2.148v.552H5.3v-.552c0-.321.124-.634.355-.858a3.358 3.358 0 0 1 4.69 0c.23.224.355.537.355.858z"></path></svg><span>Attend</span></a><ul class="flyout"><li><a href="https://learning.oreilly.com/live-training/" class="l2 nav-icn"><span>Live Trainings</span></a></li><li><a href="https://learning.oreilly.com/featured/architectural-katas" class="l2 nav-icn"><span>Architectural Katas</span></a></li><li><a href="https://learning.oreilly.com/featured/strata/" class="l2 nav-icn"><span>Strata</span></a></li><li><a href="https://learning.oreilly.com/featured/oscon/" class="l2 nav-icn"><span>Open Source</span></a></li><li><a href="https://learning.oreilly.com/featured/infrastructure-ops/" class="l2 nav-icn"><span>Infra &amp; Ops</span></a></li><li><a href="https://learning.oreilly.com/featured/software-architecture/" class="l2 nav-icn"><span>Software Arch</span></a></li></ul></li><li class="flyout-parent"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="l1 nav-icn "><svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M11.6467109,4.35328907 L14.7964612,7.51003884 C15.0678463,7.78304342 15.0678463,8.22395603 14.7964612,8.49696061 L11.6467109,11.6467109 L10.6597892,10.6597892 L13.3055794,8 L10.6597892,5.34021084 L11.6467109,4.35328907 Z M4.35328907,11.6467109 L1.20353875,8.48996116 C0.932153749,8.21695658 0.932153749,7.77604397 1.20353875,7.50303939 L4.35328907,4.35328907 L5.34021084,5.34021084 L2.69442057,8 L5.34021084,10.6597892 L4.35328907,11.6467109 Z M5.84417089,11.4997226 L8.67194674,4.50027742 L10.1838269,4.50027742 L7.35605105,11.4997226 L5.84417089,11.4997226 Z" id="Mask"></path></svg><span>Interact</span></a><ul class="flyout"><li><a href="https://learning.oreilly.com/scenarios/?classification=content-scenario" class="l2 nav-icn"><span>Scenarios</span></a></li><li><a href="https://learning.oreilly.com/scenarios/?classification=sandbox-scenario" class="l2 nav-icn"><span>Sandboxes</span></a></li><li><a href="https://learning.oreilly.com/interactive/?classification=jupyter-notebook" class="l2 nav-icn"><span>Jupyter Notebooks</span></a></li></ul></li><li><a href="https://learning.oreilly.com/answers/" class="l1 nav-icn "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M2.31032699,3.75609006 C4.65421571,1.41371359 8.45302454,1.41472092 10.7955702,3.75860838 C13.1381158,6.10249583 13.1369405,9.90130261 10.7930518,12.243847 C8.44916311,14.5863913 4.65018639,14.5852161 2.30780867,12.2413286 C-0.0346204845,9.89749489 -0.0334929936,6.09853298 2.31032699,3.75609006 Z M8.8198605,4.98016308 C7.34193969,3.86924672 5.23410194,3.98609692 3.88914868,5.33104946 C3.12814393,6.09032122 2.72818176,7.13880077 2.79015179,8.21201133 C2.79115912,8.23064692 2.79233434,8.24928252 2.79350956,8.26791811 L2.79350956,8.26791811 C2.83179539,8.8307976 2.9944077,9.37404287 3.26947292,9.86201677 L3.26947292,9.86201677 L2.77621706,11.7027432 C2.7699968,11.7259241 2.77662063,11.7506624 2.79359185,11.7676337 C2.8105631,11.7846049 2.83530144,11.7912287 2.85848233,11.7850085 L2.85848233,11.7850085 L4.69400524,11.2922565 C5.26306363,11.6167344 5.90703177,11.786885 6.56209849,11.7858479 C8.64827865,11.7858479 10.3395879,10.094542 10.3395879,8.00836292 C10.3405204,6.84135608 9.80105674,5.73967784 8.87862141,5.02482134 L8.87862141,5.02482134 L8.82825492,4.98654283 Z M13.7933062,2 C14.7073496,2.00009863 15.4482759,2.74110484 15.4482759,3.65514822 C15.4482759,4.32460943 15.0449926,4.92814782 14.4264842,5.18432286 C13.8079757,5.44049789 13.096053,5.29885769 12.6226979,4.82545158 C12.1493429,4.35204547 12.0077795,3.64010743 12.2640213,3.02162665 C12.5202631,2.40314587 13.123845,1.99992776 13.7933062,2 Z"></path></svg><span>Answers</span></a></li><li><a href="https://learning.oreilly.com/certifications/" class="l1 nav-icn "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M12.912 9.18L14 8.014l-1.088-1.18a.304.304 0 01-.075-.268L13.195 5l-1.535-.463a.313.313 0 01-.194-.194l-.462-1.537-1.565.358c-.09.03-.194 0-.269-.074L8.007 2 6.845 3.09a.303.303 0 01-.269.074l-1.565-.358-.462 1.537a.313.313 0 01-.194.194L2.82 5l.358 1.567a.26.26 0 01-.075.269L2 8.015l1.088 1.164c.075.075.09.18.075.269l-.358 1.567 1.535.463c.09.03.164.104.194.194l.462 1.537 1.565-.358c.015 0 .045-.015.075-.015.075 0 .15.03.209.074L8.007 14l1.163-1.09a.303.303 0 01.269-.074l1.565.358.462-1.537a.313.313 0 01.194-.194L13.195 11l-.358-1.567a.338.338 0 01.075-.254zm-6.046 1.37L4.41 8.26l1.16-1.244 1.767 1.649L10.4 5.6l1.202 1.202-4.242 4.243-.495-.495z"></path></svg><span>Certifications</span></a></li><li><a href="https://learning.oreilly.com/preferences/" class="l1 nav-icn "><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 53" width="20" height="20" version="1.1" fill="#4A3C31"><desc>settings icon</desc><g stroke="none" stroke-width="1" fill-rule="evenodd"><path d="M44.6 29.6C44.7 28.6 44.8 27.5 44.8 26.5 44.8 25.5 44.7 24.4 44.6 23.4L49.6 19C50 18.8 50.1 18.3 49.9 17.9 48.9 14.7 47.1 11.7 44.9 9.1 44.6 8.8 44.2 8.7 43.8 8.8L37.4 11.1C35.8 9.8 34 8.7 32.1 8L30.9 1.4C30.8 0.9 30.4 0.6 30 0.5 26.7-0.2 23.3-0.2 20 0.5 19.6 0.6 19.2 0.9 19.1 1.4L17.9 8C16 8.7 14.1 9.8 12.6 11.1L6.2 8.8C5.8 8.7 5.4 8.8 5.1 9.1 2.9 11.7 1.1 14.7 0.1 17.9 -0.1 18.3 0 18.8 0.4 19L5.4 23.4C5.3 24.4 5.2 25.5 5.2 26.5 5.2 27.5 5.3 28.6 5.4 29.6L0.4 34C0 34.2-0.1 34.7 0.1 35.1 1.1 38.3 2.9 41.4 5.1 43.9 5.4 44.2 5.8 44.4 6.2 44.2L12.6 42C14.1 43.2 16 44.3 17.9 45L19.1 51.7C19.2 52.1 19.6 52.5 20 52.5 21.6 52.8 23.3 53 25 53 26.7 53 28.4 52.8 30 52.5 30.4 52.5 30.8 52.1 30.9 51.7L32.1 45C34 44.3 35.8 43.2 37.4 42L43.8 44.2C44.2 44.4 44.6 44.2 44.9 43.9 47.1 41.4 48.9 38.3 49.9 35.1 50.1 34.7 50 34.2 49.6 34L44.6 29.6ZM25 36.4C19.6 36.4 15.2 32 15.2 26.5 15.2 21 19.6 16.6 25 16.6 30.4 16.6 34.8 21 34.8 26.5 34.8 32 30.4 36.4 25 36.4Z"></path></g></svg><span>Settings</span></a></li><li><a href="https://learning.oreilly.com/public/support/" class="l1 nav-icn "><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M7.363 6.656a2.692 2.692 0 0 1-2.681-2.703c0-1.493 1.2-2.703 2.681-2.703a2.692 2.692 0 0 1 2.682 2.703c0 1.493-1.2 2.703-2.682 2.703zm4.023 2.027c-1.852 0-3.352 1.513-3.352 3.379H2v-1.534c-.006-.31.099-.612.295-.852a6.666 6.666 0 0 1 9.09-.993zm-.543.676h1.12v.304c.003.284.16.543.408.676a.766.766 0 0 0 .77 0l.303-.176.556.966-.302.176a.772.772 0 0 0-.362.676v.08a.772.772 0 0 0 .362.677l.302.21-.556.965-.302-.175a.766.766 0 0 0-.771 0 .778.778 0 0 0-.409.675v.352h-1.106v-.372a.778.778 0 0 0-.409-.676.766.766 0 0 0-.77 0l-.303.176-.556-.912.302-.176a.772.772 0 0 0 .362-.676v-.04-.04a.772.772 0 0 0-.362-.676l-.302-.176.556-.966.289.155a.766.766 0 0 0 .77 0 .778.778 0 0 0 .41-.676V9.36zm1.562 2.703c0-.271-.108-.531-.3-.722a1.001 1.001 0 0 0-.72-.292 1.01 1.01 0 0 0-.992 1.023 1.01 1.01 0 0 0 1.01 1.004 1.01 1.01 0 0 0 1.002-1.013z"></path></svg><span>Support</span></a></li><li><a href="https://get.oreilly.com/email-signup.html" class="l1 nav-icn " target="&quot;_blank&quot;"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M11.564 2.263l2.172 2.174c.17.168.264.397.264.636V11a.6.6 0 0 1-.6.6h-.6V6.2h-6V2.6a.6.6 0 0 1 .6-.6h3.527c.239 0 .468.095.637.263zM2.6 14a.6.6 0 0 1-.6-.6V6.8a.6.6 0 0 1 .6-.6h1.903a1.2 1.2 0 0 1 .849.352L6.2 7.4H11a.6.6 0 0 1 .6.6v5.4a.6.6 0 0 1-.6.6H2.6zM11 5h1.8L11 3.2V5z"></path></svg><span>Newsletters</span></a></li><li><a href="https://learning.oreilly.com/accounts/logout/" class="l1 nav-icn "><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M2.613 12.63A.607.607 0 0 1 2 12.03V3.602C2 3.269 2.274 3 2.613 3h5.515v1.204H3.226v7.223h4.902v1.203H2.613zM5.677 9.02V6.611h4.903V4.926a.301.301 0 0 1 .19-.274.31.31 0 0 1 .33.063l2.722 2.673a.594.594 0 0 1 0 .849L11.1 10.909a.31.31 0 0 1-.331.063.301.301 0 0 1-.19-.274V9.02H5.677z"></path></svg><span>Sign Out</span></a></li></ul></div></li></ul></nav></header>
+
+
+
+      </div>
+      <div id="container" class="application" style="height: auto;">
+        
+          <div class="nav-container clearfix">
+            
+
+
+            
+            
+          </div>
+
+          
+
+  <div class="js-toc">
+    
+      <div class="sbo-reading-menu sbo-menu-top"><section class="sbo-toc-container toc-menu"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="sbo-toc-thumb"><span class="sbo-title ss-list"><h1><div class="visuallyhidden">Table of Contents for </div>
+      
+      Kafka: The Definitive Guide
+      
+    </h1></span></a><div class="toc-contents"></div></section></div>
+
+    
+
+    <div class="interface-controls interface-controls-top">
+      <ul class="interface-control-btns js-bitlist js-reader">
+        <li class="js-search-in-archive search-in-archive t-search-in-archive"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" title="Search in archive" class="js-search-controls search-controls" onclick="window.Appcues.track(&#39;SearchBook_HeronBook&#39;)"><span class="icon">Search in book...</span></a><form class="search-archive-bar js-search-form"><input type="search" name="query" placeholder="Search inside this book..." autocomplete="off"></form><div class="search-archive-results"><div class="js-sitb-results-region"></div></div></li><li class="queue-control"><div class="js-content-uri" data-content-uri="/api/v1/book/9781491936153/chapter/ch04.html"><div class="js-collections-dropdown collections-dropdown menu-bit-cards" onclick="window.Appcues.track(&#39;AddPlaylist_HeronBook&#39;)"><div data-reactroot="" class="menu-dropdown-wrapper js-menu-dropdown-wrapper align-right"><img class="hidden" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ajax-transp.gif" alt="loading spinner"><div class="menu-control"><div class="control "><div class="js-playlists-menu"><button class="js-playlist-icon"><svg class="icon-add-to-playlist-sml" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill-rule="nonzero" fill="#000000"><g transform="translate(-1.000000, 0.000000)"><rect x="5" y="0" width="12" height="2"></rect><title>Playlists</title><path d="M4.5,14 C6.43299662,14 8,12.4329966 8,10.5 C8,8.56700338 6.43299662,7 4.5,7 C2.56700338,7 1,8.56700338 1,10.5 C1,12.4329966 2.56700338,14 4.5,14 Z M2.5,10 L4,10 L4,8.5 L5,8.5 L5,10 L6.5,10 L6.5,11 L5,11 L5,12.5 L4,12.5 L4,11 L2.5,11 L2.5,10 Z"></path><circle cx="2" cy="5" r="1"></circle><circle cx="1.94117647" cy="1" r="1"></circle><rect x="5" y="4" width="12" height="2"></rect><rect x="9" y="8" width="8" height="2"></rect><rect x="9" y="12" width="8" height="2"></rect></g></g></g></svg><div class="js-playlist-addto-label">Add&nbsp;To</div></button></div></div></div></div></div></div></li><li class="js-font-control-panel font-control-activator"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" data-push-state="false" id="font-controls" title="Change font size" aria-label="Change font size" onclick="window.Appcues.track(&#39;ChangeFont_HeronBook&#39;)"><span class="icon">Toggle Font Controls</span></a></li><li class="dropdown sharing-controls"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="trigger" data-push-state="false" title="Share" aria-label="Share" onclick="window.Appcues.track(&#39;Share_HeronBook&#39;)"><i class="fa fa-share"></i></a><ul class="social-sharing dropdown-menu"><li><a class="twitter share-button t-twitter" target="_blank" aria-label="Share this section on Twitter" title="Share this section on Twitter" href="https://twitter.com/share?url=https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html&amp;text=Kafka%3A%20The%20Definitive%20Guide&amp;via=OReillyMedia"><span>Twitter</span></a></li><li><a class="facebook share-button t-facebook" target="_blank" aria-label="Share this section on Facebook" title="Share this section on Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html"><span>Facebook</span></a></li><li><a class="googleplus share-button t-googleplus" target="_blank" aria-label="Share this secton on Google Plus" title="Share this secton on Google Plus" href="https://plus.google.com/share?url=https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html"><span>Google Plus</span></a></li><li><a class="email share-button t-email" aria-label="Share this section via email" title="Share this section via email" href="mailto:?subject=Safari:%204.%20Kafka%20Consumers%3A%20Reading%20Data%20from%20Kafka&amp;body=https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html%0D%0Afrom%20Kafka%3A%20The%20Definitive%20Guide%0D%0A"><span>Email</span></a></li></ul></li><!-- endif request.user.is_authenticated -->
+      </ul>
+    </div>
+
+      
+          
+      
+
+    <section role="document">
+        
+        
+
+
+
+
+  <script defer="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/djangoMessagesPage.fd5a76de2264.js.download"></script>
+
+
+        <script src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/48743.js.download"></script>
+<script>
+  var userId = "4a6f73c4-7349-4949-9ed6-be14a97df95e";
+
+  var userObject = {
+    firstName: "Manoj",
+    segment: "Trial",
+    admin: "False",
+    profileCreatedOn: "2020-12-28",
+    academic: ""
+  };
+  window.Appcues.identify(userId, userObject);
+  window.Appcues.page();
+
+  setTimeout(function () {
+    window.Appcues.track('ViewingBook_HeronBook')
+  }, 20000);
+</script>
+
+
+	  <div class="t-sbo-prev sbo-prev sbo-nav-top">
+  
+    
+      
+        <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html" class="prev nav-link">
+      
+          <span aria-hidden="true" class="pagination-label t-prev-label">Prev</span>
+          <span class="visuallyhidden">Previous Chapter</span>
+          <div class="pagination-title t-prev-title">3. Kafka Producers: Writing Messages to Kafka</div>
+        </a>
+    
+  
+  </div>
+
+  <div class="t-sbo-next sbo-next sbo-nav-top">
+  
+    
+      
+        <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch05.html" class="next nav-link">
+      
+          <span aria-hidden="true" class="pagination-label t-next-label">Next</span>
+          <span class="visuallyhidden">Next Chapter</span>
+          <div class="pagination-title t-next-title">5. Kafka Internals</div>
+        </a>
+    
+  
+  </div>
+
+
+
+<div id="sbo-rt-content" style="transform: none;"><div class="annotator-wrapper"><section data-type="chapter" epub:type="chapter" data-pdf-bookmark="Chapter 4. Kafka Consumers: Reading Data from Kafka"><div class="chapter" id="reading_data_from_kafka">
+<h1><span class="label">Chapter 4. </span>Kafka Consumers: Reading Data from Kafka</h1>
+
+
+<p><a data-type="indexterm" data-primary="consumers" id="ix_ch04-asciidoc0"></a>Applications that need to read data from Kafka use a <code>KafkaConsumer</code> to subscribe to Kafka topics and receive messages from these topics. Reading data from Kafka is a bit different than reading data from other messaging systems, and there are few unique concepts and ideas involved. It is difficult to understand how to use the consumer API without understanding these concepts first. We’ll start by explaining some of the important concepts, and then we’ll go through some examples that show the different ways consumer APIs can be used to implement applications with varying requirements.</p>
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Kafka Consumer Concepts"><div class="sect1" id="idm45788273658776">
+<h1>Kafka Consumer Concepts</h1>
+
+<p>In order to understand how to read data from Kafka, you first need to understand its consumers and consumer groups. The following sections cover those concepts.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Consumers and Consumer Groups"><div class="sect2" id="idm45788273657144">
+<h2>Consumers and Consumer Groups</h2>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="concepts" id="ix_ch04-asciidoc1"></a>Suppose <a data-type="indexterm" data-primary="consumer groups" data-secondary="basics" id="ix_ch04-asciidoc2"></a><a data-type="indexterm" data-primary="consumers" data-secondary="consumer groups" id="ix_ch04-asciidoc3"></a>you have an application that needs to read messages from a Kafka topic, run some validations against them, and write the results to another data store. In this case your application will create a consumer object, subscribe to the appropriate topic, and start receiving messages, validating them and writing the results. This may work well for a while, but what if the rate at which producers write messages to the topic exceeds the rate at which your application can validate them? If you are limited to a single consumer reading and processing the data, your application may fall farther and farther behind, unable to keep up with the rate of incoming messages. Obviously there is a need to scale consumption from topics. Just like multiple producers can write to the same topic, we need to allow multiple consumers to read from the same topic, splitting the data between them.</p>
+
+<p>Kafka consumers are typically part of a <code>consumer group</code>. When multiple consumers are subscribed to a topic and belong to the same consumer group, each consumer in the group will receive messages from a different subset of the partitions in the topic.</p>
+
+<p>Let’s take topic T1 with four partitions. Now suppose we created a new consumer, C1, which is the only consumer in group G1, and use it to subscribe to topic T1. Consumer C1 will get all messages from all four T1 partitions. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#T1_four_partitions">Figure&nbsp;4-1</a>.</p>
+
+<figure><div id="T1_four_partitions" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in01.png" alt="ktdg 04in01" width="710" height="501" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in01.png">
+<h6><span class="label">Figure 4-1. </span>One Consumer group with four partitions</h6>
+</div></figure>
+
+<p>If we add another consumer, C2, to group G1, each consumer will only get messages from two partitions. Perhaps messages from partition 0 and 2 go to C1 and messages from partitions 1 and 3 go to consumer C2. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#T1_two_groups">Figure&nbsp;4-2</a>.</p>
+
+<figure><div id="T1_two_groups" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in02.png" alt="ktdg 04in02" width="710" height="501" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in02.png">
+<h6><span class="label">Figure 4-2. </span>Four partitions split to two consumers in a group</h6>
+</div></figure>
+
+<p>If G1 has four consumers, then each will read messages from a single partition. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#T1_four_partition_group">Figure&nbsp;4-3</a>.</p>
+
+<figure><div id="T1_four_partition_group" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in03.png" alt="ktdg 04in03" width="710" height="501" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in03.png">
+<h6><span class="label">Figure 4-3. </span>Four consumers in a group with one partition each</h6>
+</div></figure>
+
+<p>If we add more consumers to a single group with a single topic than we have partitions, some of the consumers will be idle and get no messages at all. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#T1_overflow_nomessage">Figure&nbsp;4-4</a>.</p>
+
+<figure><div id="T1_overflow_nomessage" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in04.png" alt="ktdg 04in04" width="710" height="590" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in04.png">
+<h6><span class="label">Figure 4-4. </span>More consumers in a group than partitions means idle consumers</h6>
+</div></figure>
+
+<p>The main way we scale data consumption from a Kafka topic is by adding more consumers to a consumer group. It is common for Kafka consumers to do high-latency operations such as write to a database or a time-consuming computation on the data. In these cases, a single consumer can’t possibly keep up with the rate data flows into a topic, and adding more consumers that share the load by having each consumer own just a subset of the partitions and messages is our main method of scaling. This is a good reason to create topics with a large number of partitions—it allows adding more consumers when the load increases. Keep in mind that there is no point in adding more consumers than you have partitions in a topic—some of the consumers will just be idle. <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch02.html#installing_kafka">Chapter&nbsp;2</a> includes some suggestions on how to choose the number of partitions in a topic.</p>
+
+<p>In addition to adding consumers in order to scale a single application, it is very common to have multiple applications that need to read data from the same topic. In fact, one of the main design goals in Kafka was to make the data produced to Kafka topics available for many use cases throughout the organization. In those cases, we want each application to get all of the messages, rather than just a subset. To make sure an application gets all the messages in a topic, ensure the application has its own consumer group. Unlike many traditional messaging systems, Kafka scales to a large number of consumers and consumer groups without reducing performance.</p>
+
+<p>In the previous example, if we add a new consumer group G2 with a single consumer, this consumer will get all the messages in topic T1 independent of what G1 is doing. G2 can have more than a single consumer, in which case they will each get a subset of partitions, just like we showed for G1, but G2 as a whole will still get all the messages regardless of other consumer groups. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#receive_all_messages">Figure&nbsp;4-5</a>.</p>
+
+<figure><div id="receive_all_messages" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in05.png" alt="ktdg 04in05" width="710" height="826" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in05.png">
+<h6><span class="label">Figure 4-5. </span>Adding a new consumer group, both groups receive all messages</h6>
+</div></figure>
+
+<p>To summarize, you create a new consumer group for each application that needs all the messages from one or more topics. You add consumers to an existing consumer group to scale the reading and processing of messages from the topics, so each additional consumer in a group will only get a subset of the messages.<a data-type="indexterm" data-startref="ix_ch04-asciidoc3" id="idm45788273628216"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc2" id="idm45788273627512"></a></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Consumer Groups and Partition Rebalance"><div class="sect2" id="idm45788273656520">
+<h2>Consumer Groups and Partition Rebalance</h2>
+
+<p><a data-type="indexterm" data-primary="consumer groups" data-secondary="partition rebalance" id="ix_ch04-asciidoc4"></a><a data-type="indexterm" data-primary="rebalance" data-secondary="consumer groups and" id="ix_ch04-asciidoc5"></a>As we saw in the previous section, consumers in a consumer group share ownership of the partitions in the topics they subscribe to. When we add a new consumer to the group, it starts consuming messages from partitions previously consumed by another consumer. The same thing happens when a consumer shuts down or crashes; it leaves the group, and the partitions it used to consume will be consumed by one of the remaining consumers. Reassignment of partitions to consumers also happen when the topics the consumer group is consuming are modified (e.g., if an administrator adds new partitions).</p>
+
+<p><a data-type="indexterm" data-primary="rebalance" data-secondary="defined" id="idm45788273622104"></a>Moving partition ownership from one consumer to another is called a <em>rebalance</em>. Rebalances are important because they provide the consumer group with high availability and scalability (allowing us to easily and safely add and remove consumers), but in the normal course of events they are fairly undesirable. During a rebalance, consumers can’t consume messages, so a rebalance is basically a short window of unavailability of the entire consumer group. In addition, when partitions are moved from one consumer to another, the consumer loses its current state; if it was caching any data, it will need to refresh its caches—slowing down the application until the consumer sets up its state again. Throughout this chapter we will discuss how to safely handle rebalances and how to avoid unnecessary ones.</p>
+
+<p><a data-type="indexterm" data-primary="consumer groups" data-secondary="heartbeats and" id="idm45788273619496"></a><a data-type="indexterm" data-primary="heartbeats" id="idm45788273618520"></a>The way consumers maintain membership in a consumer group and ownership of the partitions assigned to them is by sending <em>heartbeats</em> to a <a data-type="indexterm" data-primary="group coordinator" id="idm45788273617192"></a>Kafka broker designated as the <em>group coordinator</em> (this broker can be different for different consumer groups). As long as the consumer is sending heartbeats at regular intervals, it is assumed to be alive, well, and processing messages from its partitions. Heartbeats are sent when the consumer polls (i.e., retrieves records) and when it commits records it has consumed.</p>
+
+<p>If the consumer stops sending heartbeats for long enough, its session will time out and the group coordinator will consider it dead and trigger a rebalance. If a consumer crashed and stopped processing messages, it will take the group coordinator a few seconds without heartbeats to decide it is dead and trigger the rebalance. During those seconds, no messages will be processed from the partitions owned by the dead consumer. When closing a consumer cleanly, the consumer will notify the group coordinator that it is leaving, and the group coordinator will trigger a rebalance immediately, reducing the gap in processing. Later in this chapter we will discuss configuration options that control heartbeat frequency and session timeouts and how to set those to match your requirements.</p>
+<aside data-type="sidebar" epub:type="sidebar"><div class="sidebar" id="idm45788273614264">
+<h5>Changes to Heartbeat Behavior in Recent Kafka Versions</h5>
+<p>In release 0.10.1, the Kafka community introduced a separate heartbeat thread that will send heartbeats in between polls as well. This allows you to separate the heartbeat frequency (and therefore how long it takes for the consumer group to detect that a consumer crashed and is no longer sending heartbeats) from the frequency of polling (which is determined by the time it takes to process the data returned from the brokers). With newer versions of Kafka, you can configure how long the application can go without polling before it will leave the group and trigger a rebalance. <a data-type="indexterm" data-primary="livelock" id="idm45788273612312"></a>This configuration is used to prevent a <em>livelock</em>, where the application did not crash but fails to make progress for some reason. This configuration is separate from <code>session.timeout.ms</code>, which controls the time it takes to detect a consumer crash and stop sending heartbeats.</p>
+
+<p>The rest of the chapter will discuss some of the challenges with older behaviors and how the programmer can handle them. This chapter includes discussion about how to handle applications that take longer to process records. This is less relevant to readers running Apache Kafka 0.10.1 or later. If you are using a new version and need to handle records that take longer to process, you simply need to tune <code>max.poll.interval.ms</code> so it will handle longer delays between polling for new records.</p>
+</div></aside>
+<div data-type="tip"><h1>How Does the Process of Assigning Partitions to Brokers Work?</h1>
+<p><a data-type="indexterm" data-primary="broker" data-secondary="partition assignment" id="idm45788273607688"></a><a data-type="indexterm" data-primary="partitions" data-secondary="assigning to brokers" id="idm45788273606408"></a>When a consumer wants to join a group, it sends a <code>JoinGroup</code> request to the group coordinator. <a data-type="indexterm" data-primary="group leader" id="idm45788273604888"></a>The first consumer to join the group becomes the group <em>leader</em>. The leader receives a list of all consumers in the group from the group coordinator (this will include all consumers that sent a heartbeat recently and which are therefore considered alive) and is responsible for assigning a subset of partitions to each consumer. It uses an implementation of <code>PartitionAssignor</code> to decide which partitions should be handled by which consumer.</p>
+
+<p>Kafka has two built-in partition assignment policies, which we will discuss in more depth in the configuration section. After deciding on the partition assignment, the consumer group leader sends the list of assignments to the <code>GroupCoordinator</code>, which sends this information to all the consumers. Each consumer only sees his own assignment—the leader is the only client process that has the full list of consumers in the group and their assignments. This process repeats every time a rebalance happens<a data-type="indexterm" data-startref="ix_ch04-asciidoc5" id="idm45788273601592"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc4" id="idm45788273600888"></a>.<a data-type="indexterm" data-startref="ix_ch04-asciidoc1" id="idm45788273600088"></a></p>
+</div>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Creating a Kafka Consumer"><div class="sect1" id="idm45788273599000">
+<h1>Creating a Kafka Consumer</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="creating" id="idm45788273597720"></a><a data-type="indexterm" data-primary="KafkaConsumer" data-seealso="consumers" id="idm45788273596520"></a>The first step to start consuming records is to create a <code>KafkaConsumer</code> instance. Creating a <code>KafkaConsumer</code> is very similar to creating a <code>KafkaProducer</code>—you create a Java <code>Properties</code> instance with the properties you want to pass to the consumer. We will discuss all the properties in depth later in the chapter. <a data-type="indexterm" data-primary="consumers" data-secondary="mandatory properties" id="idm45788273593528"></a>To start we just need to use the three mandatory properties: <code>bootstrap.servers</code>, <code>key.deserializer</code>, and <code>value.deserializer</code>.</p>
+
+<p>The first property, <code>bootstrap.servers</code>, is the connection string to a Kafka cluster. It is used the exact same way as in <code>KafkaProducer</code> (you can refer to <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a> for details on how this is defined). The other two properties, <code>key.deserializer</code> and <code>value.deserializer</code>, are similar to the <code>serializers</code> defined for the producer, but rather than specifying classes that turn Java objects to byte arrays, you need to specify classes that can take a byte array and turn it into a Java object.</p>
+
+<p><a data-type="indexterm" data-primary="group.id" id="idm45788273587080"></a>There is a fourth property, which is not strictly mandatory, but for now we will pretend it is. The property is <code>group.id</code> and it specifies the consumer group the <code>Kafka</code><span class="keep-together"><code>Consumer</code></span> instance belongs to. While it is possible to create consumers that do not belong to any consumer group, this is uncommon, so for most of the chapter we will assume the consumer is part of a group.</p>
+
+<p>The following code snippet shows how to create a <code>KafkaConsumer</code>:</p>
+
+<pre data-type="programlisting">Properties props = new Properties();
+props.put("bootstrap.servers", "broker1:9092,broker2:9092");
+props.put("group.id", "CountryCounter");
+props.put("key.deserializer",
+    "org.apache.kafka.common.serialization.StringDeserializer");
+props.put("value.deserializer",
+    "org.apache.kafka.common.serialization.StringDeserializer");
+
+KafkaConsumer&lt;String, String&gt; consumer =
+    new KafkaConsumer&lt;String, String&gt;(props);</pre>
+
+<p>Most of what you see here should be familiar if you’ve read <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a> on creating producers. We assume that the records we consume will have <code>String</code> objects as both the key and the value of the record. The only new property here is <code>group.id</code>, which is the name of the consumer group this consumer belongs to.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Subscribing to Topics"><div class="sect1" id="idm45788273579960">
+<h1>Subscribing to Topics</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="subscribing to topics" id="idm45788273578504"></a><a data-type="indexterm" data-primary="topics" data-secondary="subscribing consumer to" id="idm45788273577528"></a>Once we create a consumer, the next step is to subscribe to one or more topics. The <code>subcribe()</code> method takes a list of topics as a parameter, so it’s pretty simple to use:</p>
+
+<pre data-type="programlisting">consumer.subscribe(Collections.singletonList("customerCountries")); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO1-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO1-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO1-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO1-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>Here we simply create a list with a single element: the topic name <span class="keep-together"><code>customerCountries</code></span>.</p></dd>
+</dl>
+
+<p><a data-type="indexterm" data-primary="regular expressions, subscribe() and" id="idm45788273568632"></a>It is also possible to call <code>subscribe</code> with a regular expression. The expression can match multiple topic names, and if someone creates a new topic with a name that matches, a rebalance will happen almost immediately and the consumers will start consuming from the new topic. This is useful for applications that need to consume from multiple topics and can handle the different types of data the topics will contain. Subscribing to multiple topics using a regular expression is most commonly used in applications that replicate data between Kafka and another system.</p>
+
+<p class="pagebreak-before">To subscribe to all test topics, we can call:</p>
+
+<pre data-type="programlisting">consumer.subscribe(Pattern.compile("test.*"));</pre>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="The Poll Loop"><div class="sect1" id="idm45788273565336">
+<h1>The Poll Loop</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="poll loop" id="ix_ch04-asciidoc6"></a><a data-type="indexterm" data-primary="poll loop" data-secondary="consumers and" id="ix_ch04-asciidoc7"></a>At the heart of the consumer API is a simple loop for polling the server for more data. Once the consumer subscribes to topics, the poll loop handles all details of coordination, partition rebalances, heartbeats, and data fetching, leaving the developer with a clean API that simply returns available data from the assigned partitions. The main body of a consumer will look as follows:</p>
+
+<pre data-type="programlisting">try {
+    while (true) { <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO2-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO2-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+        ConsumerRecords&lt;String, String&gt; records = consumer.poll(100); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO2-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO2-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+        for (ConsumerRecord&lt;String, String&gt; record : records) <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO2-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO2-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+        {
+            log.debug("topic = %s, partition = %d, offset = %d,"
+                customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(),
+                record.key(), record.value());
+
+            int updatedCount = 1;
+            if (custCountryMap.countainsKey(record.value())) {
+                updatedCount = custCountryMap.get(record.value()) + 1;
+            }
+            custCountryMap.put(record.value(), updatedCount)
+
+            JSONObject json = new JSONObject(custCountryMap);
+            System.out.println(json.toString(4)) <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO2-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO2-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a>
+        }
+    }
+} finally {
+    consumer.close(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO2-5" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO2-5"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/5.png" alt="5" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/5.png"></a>
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO2-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO2-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>This is indeed an infinite loop. Consumers are usually long-running applications that continuously poll Kafka for more data. We will show later in the chapter how to cleanly exit the loop and close the consumer.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO2-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO2-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>This is the most important line in the chapter. The same way that sharks must keep moving or they die, consumers must keep polling Kafka or they will be considered dead and the partitions they are consuming will be handed to another consumer in the group to continue consuming. The parameter we pass, <code>poll()</code>, is a timeout interval and controls how long <code>poll()</code> will block if data is not available in the consumer buffer. If this is set to 0, <code>poll()</code> will return immediately; otherwise, it will wait for the specified number of milliseconds for data to arrive from the broker.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO2-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO2-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p><code>poll()</code> returns a list of records. Each record contains the topic and partition the record came from, the offset of the record within the partition, and of course the key and the value of the record. Typically we want to iterate over the list and process the records individually.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO2-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO2-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a></dt>
+<dd><p>Processing usually ends in writing a result in a data store or updating a stored record. Here, the goal is to keep a running count of customers from each county, so we update a hashtable and print the result as JSON. A more realistic example would store the updates result in a data store.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO2-5" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO2-5"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/5.png" alt="5" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/5.png"></a></dt>
+<dd><p>Always <code>close()</code> the consumer before exiting. This will close the network connections and sockets. It will also trigger a rebalance immediately rather than wait for the group coordinator to discover that the consumer stopped sending heartbeats and is likely dead, which will take longer and therefore result in a longer period of time in which consumers can’t consume messages from a subset of the partitions.</p></dd>
+</dl>
+
+<p>The <code>poll</code> loop does a lot more than just get data. The first time you call <code>poll()</code> with a new consumer, it is responsible for finding the <code>GroupCoordinator</code>, joining the consumer group, and receiving a partition assignment. If a rebalance is triggered, it will be handled inside the poll loop as well. And of course the heartbeats that keep consumers alive are sent from within the poll loop. For this reason, we try to make sure that whatever processing we do between iterations is fast and efficient.</p>
+<div data-type="tip"><h1>Thread Safety</h1>
+<p><a data-type="indexterm" data-primary="consumer groups" data-secondary="thread rule" id="idm45788273529992"></a><a data-type="indexterm" data-primary="consumers" data-secondary="thread rule" id="idm45788273529144"></a>You can’t have multiple consumers that belong to the same group in one thread and you can’t have multiple threads safely use the same consumer. One consumer per thread is the rule.
+To run multiple consumers in the same group in one application, you will need to run each in its own thread. It is useful to wrap the consumer logic in its own object and then use Java’s <code>ExecutorService</code> to start multiple threads each with its own consumer. The Confluent blog has a <a href="http://bit.ly/2tfVu6O">tutorial</a> that shows how to do just that.<a data-type="indexterm" data-startref="ix_ch04-asciidoc7" id="idm45788273526424"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc6" id="idm45788273525720"></a></p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" class="pagebreak-before" data-pdf-bookmark="Configuring Consumers"><div class="sect1" id="idm45788273524792">
+<h1>Configuring Consumers</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="configuring" id="ix_ch04-asciidoc8"></a>So far we have focused on learning the consumer API, but we’ve only looked at a few of the configuration properties—just the mandatory <code>bootstrap.servers</code>, <code>group.id</code>, <code>key.deserializer</code>, and <code>value.deserializer</code>. All the consumer configuration is documented in Apache Kafka <a href="http://kafka.apache.org/documentation.html#newconsumerconfigs">documentation</a>. Most of the parameters have reasonable defaults and do not require modification, but some have implications on the performance and availability of the consumers. Let’s take a look at some of the more important properties.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="fetch.min.bytes"><div class="sect3" id="idm45788273518504">
+<h3>fetch.min.bytes</h3>
+
+<p><a data-type="indexterm" data-primary="fetch.min.bytes parameter" id="idm45788273517304"></a>This property allows a consumer to specify the minimum amount of data that it wants to receive from the broker when fetching records. If a broker receives a request for records from a consumer but the new records amount to fewer bytes than <code>fetch.min.bytes</code>, the broker will wait until more messages are available before sending the records back to the consumer. This reduces the load on both the consumer and the broker as they have to handle fewer back-and-forth messages in cases where the topics don’t have much new activity (or for lower activity hours of the day). You will want to set this parameter higher than the default if the consumer is using too much CPU when there isn’t much data available, or reduce load on the brokers when you have large number of consumers.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="fetch.max.wait.ms"><div class="sect3" id="idm45788273515064">
+<h3>fetch.max.wait.ms</h3>
+
+<p><a data-type="indexterm" data-primary="fetch.max.wait.ms parameter" id="idm45788273513864"></a>By setting <code>fetch.min.bytes</code>, you tell Kafka to wait until it has enough data to send before responding to the consumer. <code>fetch.max.wait.ms</code> lets you control how long to wait. By default, Kafka will wait up to 500 ms. This results in up to 500 ms of extra latency in case there is not enough data flowing to the Kafka topic to satisfy the minimum amount of data to return. If you want to limit the potential latency (usually due to SLAs controlling the maximum latency of the application), you can set <code>fetch.max.wait.ms</code> to a lower value.
+If you set <code>fetch.max.wait.ms</code> to 100 ms and <code>fetch.min.bytes</code> to 1 MB, Kafka will receive a fetch request from the consumer and will respond with data either when it has 1 MB of data to return or after 100 ms, whichever happens first.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="max.partition.fetch.bytes"><div class="sect3" id="idm45788273509912">
+<h3>max.partition.fetch.bytes</h3>
+
+<p><a data-type="indexterm" data-primary="max.partition.fetch.bytes parameter" id="idm45788273508744"></a>This property controls the maximum number of bytes the server will return per partition. The default is 1 MB, which means that when <code>KafkaConsumer.poll()</code> returns <code>ConsumerRecords</code>, the record object will use at most <code>max.partition.fetch.bytes</code> per partition assigned to the consumer. So if a topic has 20 partitions, and you have 5 consumers, each consumer will need to have 4 MB of memory available for <code>ConsumerRecords</code>. In practice, you will want to allocate more memory as each consumer will need to handle more partitions if other consumers in the group fail. <code>max.</code> <span class="keep-together"><code>partition.fetch.bytes</code></span> must be larger than the largest message a broker will accept (determined by the <code>max.message.bytes</code> property in the broker configuration), or the broker may have messages that the consumer will be unable to consume, in which case the consumer will hang trying to read them.
+Another important consideration when setting <code>max.partition.fetch.bytes</code> is the amount of time it takes the consumer to process data. As you recall, the consumer must call <code>poll()</code> frequently enough to avoid session timeout and subsequent rebalance. If the amount of data a single <code>poll()</code> returns is very large, it may take the consumer longer to process, which means it will not get to the next iteration of the poll loop in time to avoid a session timeout. If this occurs, the two options are either to lower <code>max.</code> <span class="keep-together"><code>partition.fetch.bytes</code></span> or to increase the session timeout.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="session.timeout.ms"><div class="sect3" id="idm45788273500312">
+<h3>session.timeout.ms</h3>
+
+<p><a data-type="indexterm" data-primary="session.timeout.ms parameter" id="idm45788273499176"></a>The amount of time a consumer can be out of contact with the brokers while still considered alive defaults to 10 seconds. If more than <code>session.timeout.ms</code> passes without the consumer sending a heartbeat to the group coordinator, it is considered dead and the group coordinator will trigger a rebalance of the consumer group to allocate partitions from the dead consumer to the other consumers in the group. This property is closely related to <code>heartbeat.interval.ms</code>. <code>heartbeat.interval.ms</code> controls how frequently the <code>KafkaConsumer poll()</code> method will send a heartbeat to the group coordinator, whereas <code>session.timeout.ms</code> controls how long a consumer can go without sending a heartbeat. Therefore, those two properties are typically modified together—<code>heartbeat.interval.ms</code> must be lower than <code>session.timeout.ms</code>, and is usually set to one-third of the timeout value. So if <code>session.timeout.ms</code> is 3 seconds, <code>heartbeat.interval.ms</code> should be 1 second. Setting <code>session.timeout.ms</code> lower than the default will allow consumer groups to detect and recover from failure sooner, but may also cause unwanted rebalances as a result of consumers taking longer to complete the poll loop or garbage collection. Setting <code>session.timeout.ms</code> higher will reduce the chance of accidental rebalance, but also means it will take longer to detect a real failure.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="auto.offset.reset"><div class="sect3" id="idm45788273492184">
+<h3>auto.offset.reset</h3>
+
+<p><a data-type="indexterm" data-primary="auto.offset.reset parameter" id="idm45788273491048"></a>This property controls the behavior of the consumer when it starts reading a partition for which it doesn’t have a committed offset or if the committed offset it has is invalid (usually because the consumer was down for so long that the record with that offset was already aged out of the broker). The default is “latest,” which means that lacking a valid offset, the consumer will start reading from the newest records (records that were written after the consumer started running). The alternative is “earliest,” which means that lacking a valid offset, the consumer will read all the data in the partition, starting from the very beginning. Setting <code>auto.offset.reset</code> to <code>none</code> will cause an exception to be thrown when attempting to consume from invalid offset.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="enable.auto.commit"><div class="sect3" id="idm45788273488392">
+<h3>enable.auto.commit</h3>
+
+<p><a data-type="indexterm" data-primary="enable.auto.commit parameter" id="idm45788273487192"></a>We’ll discuss the different options for committing offsets later in this chapter. This parameter controls whether the consumer will commit offsets automatically, and defaults to <code>true</code>. Set it to <code>false</code> if you prefer to control when offsets are committed, which is necessary to minimize duplicates and avoid missing data. If you set <code>enable.auto.commit</code> to <code>true</code>, then you might also want to control how frequently offsets will be committed using <code>auto.commit.interval.ms</code>.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="partition.assignment.strategy"><div class="sect3" id="idm45788273483496">
+<h3>partition.assignment.strategy</h3>
+
+<p><a data-type="indexterm" data-primary="assignment" data-secondary="strategies" id="idm45788273482328"></a><a data-type="indexterm" data-primary="partition.assignment.strategy parameter" id="idm45788273481352"></a>We learned that partitions are assigned to consumers in a consumer group. A <span class="keep-together"><code>PartitionAssignor</code></span> is a class that, given consumers and topics they subscribed to, decides which partitions will be assigned to which consumer. By default, Kafka has two assignment strategies:</p>
+<dl>
+<dt><a data-type="indexterm" data-primary="Range assignment strategy" id="idm45788273478616"></a>Range</dt>
+<dd>
+<p>Assigns to each consumer a consecutive subset of partitions from each topic it subscribes to. So if consumers C1 and C2 are subscribed to two topics, T1 and T2, and each of the topics has three partitions, then C1 will be assigned partitions 0 and 1 from topics T1 and T2, while C2 will be assigned partition 2 from those topics. Because each topic has an uneven number of partitions and the assignment is done for each topic independently, the first consumer ends up with more partitions than the second. This happens whenever Range assignment is used and the number of consumers does not divide the number of partitions in each topic neatly.</p>
+</dd>
+<dt><a data-type="indexterm" data-primary="RoundRobin assignment strategy" id="idm45788273475960"></a>RoundRobin</dt>
+<dd>
+<p>Takes all the partitions from all subscribed topics and assigns them to consumers sequentially, one by one. If C1 and C2 described previously used RoundRobin assignment, C1 would have partitions 0 and 2 from topic T1 and partition 1 from topic T2. C2 would have partition 1 from topic T1 and partitions 0 and 2 from topic T2. In general, if all consumers are subscribed to the same topics (a very common scenario), RoundRobin assignment will end up with all consumers having the same number of partitions (or at most 1 partition difference).</p>
+</dd>
+</dl>
+
+<p>The <code>partition.assignment.strategy</code> allows you to choose a partition-assignment strategy. The default is <code>org.apache.kafka.clients.consumer.RangeAssignor</code>, which implements the Range strategy described above. You can replace it with <code>org.apache.kafka.clients.consumer.RoundRobinAssignor</code>. A more advanced option is to implement your own assignment strategy, in which case <span class="keep-together"><code>partition.assignment.strategy</code></span> should point to the name of your class.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="client.id"><div class="sect3" id="idm45788273470344">
+<h3>client.id</h3>
+
+<p><a data-type="indexterm" data-primary="client.id parameter" id="idm45788273469176"></a>This can be any string, and will be used by the brokers to identify messages sent from the client. It is used in logging and metrics, and for quotas.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="max.poll.records"><div class="sect3" id="idm45788273467928">
+<h3>max.poll.records</h3>
+
+<p><a data-type="indexterm" data-primary="max.poll.records parameter" id="idm45788273466760"></a>This controls the maximum number of records that a single call to <code>poll()</code> will return. This is useful to help control the amount of data your application will need to process in the polling loop.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="receive.buffer.bytes and send.buffer.bytes"><div class="sect3" id="idm45788273465048">
+<h3>receive.buffer.bytes and send.buffer.bytes</h3>
+
+<p><a data-type="indexterm" data-primary="receive.buffer.bytes parameter" id="idm45788273463816"></a><a data-type="indexterm" data-primary="send.buffer.bytes parameter" id="idm45788273463096"></a>These are the sizes of the TCP send and receive buffers used by the sockets when writing and reading data. If these are set to -1, the OS defaults will be used. It can be a good idea to increase those when producers or consumers communicate with brokers in a different datacenter, because those network links typically have higher latency and lower bandwidth.<a data-type="indexterm" data-startref="ix_ch04-asciidoc8" id="idm45788273461912"></a></p>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Commits and Offsets"><div class="sect1" id="idm45788273524200">
+<h1>Commits and Offsets</h1>
+
+<p><a data-type="indexterm" data-primary="commits and offsets" id="ix_ch04-asciidoc9"></a><a data-type="indexterm" data-primary="consumers" data-secondary="commits and offsets" id="ix_ch04-asciidoc10"></a>Whenever we call <code>poll()</code>, it returns records written to Kafka that consumers in our group have not read yet. This means that we have a way of tracking which records were read by a consumer of the group. As discussed before, one of Kafka’s unique characteristics is that it does not track acknowledgments from consumers the way many JMS queues do. Instead, it allows consumers to use Kafka to track their position (offset) in each partition.</p>
+
+<p>We call the action of updating the current position in the partition a <code>commit</code>.</p>
+
+<p>How does a consumer commit an offset? It produces a message to Kafka, to a special <code><code>__consumer_offsets</code></code> topic, with the committed offset for each partition. As long as all your consumers are up, running, and churning away, this will have no impact. <a data-type="indexterm" data-primary="rebalance" data-secondary="offsets and" id="idm45788273454376"></a>However, if a consumer crashes or a new consumer joins the consumer group, this will <em>trigger a rebalance</em>. After a rebalance, each consumer may be assigned a new set of partitions than the one it processed before. In order to know where to pick up the work, the consumer will read the latest committed offset of each partition and continue from there.</p>
+
+<p>If the committed offset is smaller than the offset of the last message the client processed, the messages between the last processed offset and the committed offset will be processed twice. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#reprocessed_offsets">Figure&nbsp;4-6</a>.</p>
+
+<figure><div id="reprocessed_offsets" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in06.png" alt="ktdg 04in06" width="978" height="422" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in06.png">
+<h6><span class="label">Figure 4-6. </span>Re-processed messages</h6>
+</div></figure>
+
+<p>If the committed offset is larger than the offset of the last message the client actually processed, all messages between the last processed offset and the committed offset will be missed by the consumer group. See <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#missed_messages_offsets">Figure&nbsp;4-7</a>.</p>
+
+<figure><div id="missed_messages_offsets" class="figure">
+<img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/ktdg_04in07.png" alt="ktdg 04in07" width="979" height="485" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/ktdg_04in07.png">
+<h6><span class="label">Figure 4-7. </span>Missed messages between offsets</h6>
+</div></figure>
+
+<p>Clearly, managing offsets has a big impact on the client application. The <span class="keep-together"><code>KafkaConsumer</code></span> API provides multiple ways of committing offsets.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Automatic Commit"><div class="sect2" id="idm45788273444152">
+<h2>Automatic Commit</h2>
+
+<p><a data-type="indexterm" data-primary="automatic commits" id="idm45788273442808"></a><a data-type="indexterm" data-primary="commits and offsets" data-secondary="automatic commit" id="idm45788273441880"></a>The easiest way to commit offsets is to allow the consumer to do it for you.
+If you configure <code>enable.auto.commit=true</code>, then every five seconds the consumer will commit the largest offset your client received from <code>poll()</code>. <a data-type="indexterm" data-primary="auto.commit.interval.ms" id="idm45788273439784"></a>The five-second interval is the default and is controlled by setting <code>auto.commit.interval.ms</code>. Just like everything else in the consumer, the automatic commits are driven by the poll loop. Whenever you poll, the consumer checks if it is time to commit, and if it is, it will commit the offsets it returned in the last poll.</p>
+
+<p>Before using this convenient option, however, it is important to understand the consequences.</p>
+
+<p>Consider that, by default, automatic commits occur every five seconds. Suppose that we are three seconds after the most recent commit and a rebalance is triggered. After the rebalancing, all consumers will start consuming from the last offset committed. In this case, the offset is three seconds old, so all the events that arrived in those three seconds will be processed twice. It is possible to configure the commit interval to commit more frequently and reduce the window in which records will be duplicated, but it is impossible to completely eliminate them.</p>
+
+<p>With autocommit enabled, a call to poll will always commit the last offset returned by the previous poll. It doesn’t know which events were actually processed, so it is critical to always process all the events returned by <code>poll()</code> before calling <code>poll()</code> again. (Just like <code>poll()</code>, <code>close()</code> also commits offsets automatically.) This is usually not an issue, but pay attention when you handle exceptions or exit the poll loop prematurely.</p>
+
+<p>Automatic commits are convenient, but they don’t give developers enough control to avoid duplicate messages.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Commit Current Offset"><div class="sect2" id="idm45788273433576">
+<h2>Commit Current Offset</h2>
+
+<p><a data-type="indexterm" data-primary="commits and offsets" data-secondary="commit current offset" id="idm45788273432200"></a>Most developers exercise more control over the time at which offsets are committed—both to eliminate the possibility of missing messages and to reduce the number of messages duplicated during rebalancing. The consumer API has the option of committing the current offset at a point that makes sense to the application developer rather than based on a timer.</p>
+
+<p>By setting <code>enable.auto.commit=false</code>, offsets will only be committed when the application explicitly chooses to do so. The simplest and most reliable of the commit APIs is <code>commitSync()</code>. This API will commit the latest offset returned by <code>poll()</code> and return once the offset is committed, throwing an exception if commit fails for some reason.</p>
+
+<p>It is important to remember that <code>commitSync()</code> will commit the latest offset returned by <code>poll()</code>, so make sure you call <code>commitSync()</code> after you are done processing all the records in the collection, or you risk missing messages as described previously. When a rebalance is triggered, all the messages from the beginning of the most recent batch until the time of the rebalance will be processed twice.</p>
+
+<p>Here is how we would use <code>commitSync</code> to commit offsets after we finished processing the latest batch of messages:</p>
+
+<pre data-type="programlisting">while (true) {
+    ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        System.out.printf("topic = %s, partition = %d, offset =
+            %d, customer = %s, country = %s\n",
+            record.topic(), record.partition(),
+            record.offset(), record.key(), record.value()); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO3-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO3-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+    }
+    try {
+        consumer.commitSync(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO3-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO3-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+    } catch (CommitFailedException e) {
+        log.error("commit failed", e) <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO3-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO3-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO3-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO3-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>Let’s assume that by printing the contents of a record, we are done processing it. Your application will likely do a lot more with the records—modify them, enrich them, aggregate them, display them on a dashboard, or notify users of important events. You should determine when you are “done” with a record according to your use case.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO3-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO3-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>Once we are done “processing” all the records in the current batch, we call <code>commitSync</code> to commit the last offset in the batch, before polling for additional messages.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO3-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO3-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p><code>commitSync</code> retries committing as long as there is no error that can’t be recovered. If this happens, there is not much we can do except log an error.</p></dd>
+</dl>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Asynchronous Commit"><div class="sect2" id="idm45788273409144">
+<h2>Asynchronous Commit</h2>
+
+<p><a data-type="indexterm" data-primary="asynchronous commits" id="idm45788273407640"></a><a data-type="indexterm" data-primary="commits and offsets" data-secondary="asynchronous commit" id="idm45788273406936"></a>One drawback of manual commit is that the application is blocked until the broker responds to the commit request. This will limit the throughput of the application. Throughput can be improved by committing less frequently, but then we are increasing the number of potential duplicates that a rebalance will create.</p>
+
+<p>Another option is the asynchronous commit API. Instead of waiting for the broker to respond to a commit, we just send the request and continue on:</p>
+
+<pre data-type="programlisting">while (true) {
+    ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        System.out.printf("topic = %s, partition = %s,
+            offset = %d, customer = %s, country = %s\n",
+            record.topic(), record.partition(), record.offset(),
+            record.key(), record.value());
+    }
+    consumer.commitAsync(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO4-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO4-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO4-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO4-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>Commit the last offset and carry on.</p></dd>
+</dl>
+
+<p>The drawback is that while <code>commitSync()</code> will retry the commit until it either succeeds or encounters a nonretriable failure, <code>commitAsync()</code> will not retry. The reason it does not retry is that by the time <code>commitAsync()</code> receives a response from the server, there may have been a later commit that was already successful. Imagine that we sent a request to commit offset 2000. There is a temporary communication problem, so the broker never gets the request and therefore never responds. Meanwhile, we processed another batch and successfully committed offset 3000. If <code>commitAsync()</code> now retries the previously failed commit, it might succeed in committing offset 2000 <em>after</em> offset 3000 was already processed and committed. In the case of a rebalance, this will cause more duplicates.</p>
+
+<p>We mention this complication and the importance of correct order of commits, because <code>commitAsync()</code> also gives you an option to pass in a callback that will be triggered when the broker responds. It is common to use the callback to log commit errors or to count them in a metric, but if you want to use the callback for retries, you need to be aware of the problem with commit order:</p>
+
+<pre data-type="programlisting">while (true) {
+    ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        System.out.printf("topic = %s, partition = %s,
+        offset = %d, customer = %s, country = %s\n",
+        record.topic(), record.partition(), record.offset(),
+        record.key(), record.value());
+    }
+    consumer.commitAsync(new OffsetCommitCallback() {
+        public void onComplete(Map&lt;TopicPartition,
+        OffsetAndMetadata&gt; offsets, Exception e) {
+            if (e != null)
+                log.error("Commit failed for offsets {}", offsets, e);
+        }
+    }); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO5-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO5-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO5-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO5-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>We send the commit and carry on, but if the commit fails, the failure and the offsets will be logged.</p></dd>
+</dl>
+<div data-type="tip"><h1>Retrying Async Commits</h1>
+<p><a data-type="indexterm" data-primary="commits and offsets" data-secondary="commit order and sequence numbers" id="idm45788273386536"></a>A simple pattern to get commit order right for asynchronous retries is to use a monotonically increasing sequence number. Increase the sequence number every time you commit and add the sequence number at the time of the commit to the <code>commitAsync</code> callback. When you’re getting ready to send a retry, check if the commit sequence number the callback got is equal to the instance variable; if it is, there was no newer commit and it is safe to retry. If the instance sequence number is higher, don’t retry because a newer commit was already sent.</p>
+</div>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Combining Synchronous and Asynchronous Commits"><div class="sect2" id="idm45788273408552">
+<h2>Combining Synchronous and Asynchronous Commits</h2>
+
+<p><a data-type="indexterm" data-primary="asynchronous commits" id="idm45788273383096"></a><a data-type="indexterm" data-primary="commits and offsets" data-secondary="combining synchronous and asynchronous commits" id="idm45788273382392"></a><a data-type="indexterm" data-primary="synchronous commits" id="idm45788273381352"></a>Normally, occasional failures to commit without retrying are not a huge problem because if the problem is temporary, the following commit will be successful. But if we know that this is the last commit before we close the consumer, or before a rebalance, we want to make extra sure that the commit succeeds.</p>
+
+<p>Therefore, a common pattern is to combine <code>commitAsync()</code> with <code>commitSync()</code> just before shutdown. Here is how it works (we will discuss how to commit just before rebalance when we get to the section about rebalance listeners):</p>
+
+<pre data-type="programlisting">try {
+    while (true) {
+        ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+        for (ConsumerRecord&lt;String, String&gt; record : records) {
+            System.out.printf("topic = %s, partition = %s, offset = %d,
+                customer = %s, country = %s\n",
+                record.topic(), record.partition(),
+                record.offset(), record.key(), record.value());
+        }
+        consumer.commitAsync(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO6-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO6-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+    }
+} catch (Exception e) {
+    log.error("Unexpected error", e);
+} finally {
+    try {
+        consumer.commitSync(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO6-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO6-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+    } finally {
+        consumer.close();
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO6-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO6-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>While everything is fine, we use <code>commitAsync</code>. It is faster, and if one commit fails, the next commit will serve as a retry.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO6-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO6-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>But if we are closing, there is no “next commit.” We call <code>commitSync()</code>, because it will retry until it succeeds or suffers unrecoverable failure.</p></dd>
+</dl>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" data-pdf-bookmark="Commit Specified Offset"><div class="sect2" id="idm45788273366792">
+<h2>Commit Specified Offset</h2>
+
+<p><a data-type="indexterm" data-primary="commits and offsets" data-secondary="commiting specified offsets" id="idm45788273365480"></a>Committing the latest offset only allows you to commit as often as you finish processing batches. But what if you want to commit more frequently than that? What if <code>poll()</code> returns a huge batch and you want to commit offsets in the middle of the batch to avoid having to process all those rows again if a rebalance occurs? You can’t just call <code>commitSync()</code> or <code>commitAsync()</code>—this will commit the last offset returned, which you didn’t get to process yet.</p>
+
+<p>Fortunately, the consumer API allows you to call <code>commitSync()</code> and <code>commitAsync()</code> and pass a map of partitions and offsets that you wish to commit. If you are in the middle of processing a batch of records, and the last message you got from partition 3 in topic “customers” has offset 5000, you can call <code>commitSync()</code> to commit offset 5001 for partition 3 in topic “customers.” Since your consumer may be consuming more than a single partition, you will need to track offsets on all of them, which adds complexity to your code.</p>
+
+<p>Here is what a commit of specific offsets looks like:</p>
+
+<pre data-type="programlisting">private Map&lt;TopicPartition, OffsetAndMetadata&gt; currentOffsets =
+    new HashMap&lt;&gt;(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO7-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO7-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+int count = 0;
+
+....
+
+while (true) {
+    ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        System.out.printf("topic = %s, partition = %s, offset = %d,
+            customer = %s, country = %s\n",
+            record.topic(), record.partition(), record.offset(),
+            record.key(), record.value()); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO7-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO7-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+        currentOffsets.put(
+            new TopicPartition(record.topic(), record.partition()),
+            new OffsetAndMetadata(record.offset()+1, "no metadata")); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO7-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO7-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+        if (count % 1000 == 0)   <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO7-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO7-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a>
+            consumer.commitAsync(currentOffsets, null); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO7-5" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO7-5"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/5.png" alt="5" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/5.png"></a>
+        count++;
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO7-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO7-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>This is the map we will use to manually track offsets.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO7-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO7-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>Remember, <code>println</code> is a stand-in for whatever processing you do for the records you consume.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO7-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO7-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p>After reading each record, we update the offsets map with the offset of the next message we expect to process. The committed offset should always be the offset of the next message that your application will read. This is where we’ll start reading next time we start.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO7-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO7-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a></dt>
+<dd><p>Here, we decide to commit current offsets every 1,000 records. In your application, you can commit based on time or perhaps content of the records.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO7-5" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO7-5"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/5.png" alt="5" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/5.png"></a></dt>
+<dd><p>I chose to call <code>commitAsync()</code>, but <code>commitSync()</code> is also completely valid here. Of course, when committing specific offsets you still need to perform all the error handling we’ve seen in previous sections.<a data-type="indexterm" data-startref="ix_ch04-asciidoc10" id="idm45788273333672"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc9" id="idm45788273332968"></a></p></dd>
+</dl>
+</div></section>
+
+
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Rebalance Listeners"><div class="sect1" id="idm45788273460648">
+<h1>Rebalance Listeners</h1>
+
+<p><a data-type="indexterm" data-primary="ConsumerRebalanceListener" id="ix_ch04-asciidoc11"></a><a data-type="indexterm" data-primary="consumers" data-secondary="rebalancing listeners" id="ix_ch04-asciidoc12"></a><a data-type="indexterm" data-primary="listeners, rebalancing" id="ix_ch04-asciidoc13"></a><a data-type="indexterm" data-primary="rebalance" data-secondary="listeners" id="ix_ch04-asciidoc14"></a>As we mentioned in the previous section about committing offsets, a consumer will want to do some cleanup work before exiting and also before partition rebalancing.</p>
+
+<p>If you know your consumer is about to lose ownership of a partition, you will want to commit offsets of the last event you’ve processed. Perhaps you also need to close file handles, database connections, and such.</p>
+
+<p>The consumer API allows you to run your own code when partitions are added or removed from the consumer. You do this by passing a <code>ConsumerRebalanceListener</code> when calling the <code>subscribe()</code> method we discussed previously. <code>ConsumerRebalanceListener</code> has two methods you can implement:</p>
+<dl>
+<dt><code>public void onPartitionsRevoked(Collection&lt;TopicPartition&gt; partitions)</code></dt>
+<dd>
+<p>Called before the rebalancing starts and after the consumer stopped consuming messages. This is where you want to commit offsets, so whoever gets this partition next will know where to start.</p>
+</dd>
+<dt><code>public void onPartitionsAssigned(Collection&lt;TopicPartition&gt; partitions)</code></dt>
+<dd>
+<p>Called after partitions have been reassigned to the broker, but before the consumer starts consuming messages.</p>
+</dd>
+</dl>
+
+<p>This example will show how to use <code>onPartitionsRevoked()</code> to commit offsets before losing ownership of a partition. In the next section we will show a more involved example that also demonstrates the use of <code>onPartitionsAssigned()</code>:</p>
+
+<pre data-type="programlisting">private Map&lt;TopicPartition, OffsetAndMetadata&gt; currentOffsets =
+    new HashMap&lt;&gt;();
+
+private class HandleRebalance implements ConsumerRebalanceListener { <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO8-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO8-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+    public void onPartitionsAssigned(Collection&lt;TopicPartition&gt;
+        partitions) { <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO8-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO8-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+    }
+
+    public void onPartitionsRevoked(Collection&lt;TopicPartition&gt; partitions) {
+        System.out.println("Lost partitions in rebalance. " +
+            "Committing current offsets:" + currentOffsets);
+        consumer.commitSync(currentOffsets); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO8-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO8-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+    }
+}
+
+try {
+    consumer.subscribe(topics, new HandleRebalance()); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO8-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO8-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a>
+
+    while (true) {
+        ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+        for (ConsumerRecord&lt;String, String&gt; record : records) {
+            System.out.printf("topic = %s, partition = %s, offset = %d,
+                 customer = %s, country = %s\n",
+                 record.topic(), record.partition(), record.offset(),
+                 record.key(), record.value());
+             currentOffsets.put(
+                 new TopicPartition(record.topic(), record.partition()),
+                 new OffsetAndMetadata(record.offset()+1, null));
+        }
+        consumer.commitAsync(currentOffsets, null);
+    }
+} catch (WakeupException e) {
+    // ignore, we're closing
+} catch (Exception e) {
+    log.error("Unexpected error", e);
+} finally {
+    try {
+        consumer.commitSync(currentOffsets);
+    } finally {
+        consumer.close();
+        System.out.println("Closed consumer and we are done");
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO8-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO8-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>We start by implementing a <code>ConsumerRebalanceListener</code>.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO8-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO8-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>In this example we don’t need to do anything when we get a new partition; we’ll just start consuming messages.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO8-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO8-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p>However, when we are about to lose a partition due to rebalancing, we need to commit offsets. Note that we are committing the latest offsets we’ve processed, not the latest offsets in the batch we are still processing. This is because a partition could get revoked while we are still in the middle of a batch. We are committing offsets for all partitions, not just the partitions we are about to lose—because the offsets are for events that were already processed, there is no harm in that. And we are using <code>commitSync()</code> to make sure the offsets are committed before the rebalance proceeds.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO8-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO8-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a></dt>
+<dd><p>The most important part: pass the <code>ConsumerRebalanceListener</code> to the <code>subscribe()</code> method so it will get invoked by the consumer.<a data-type="indexterm" data-startref="ix_ch04-asciidoc14" id="idm45788273295928"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc13" id="idm45788273295224"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc12" id="idm45788273294552"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc11" id="idm45788273293880"></a></p></dd>
+</dl>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Consuming Records with Specific Offsets"><div class="sect1" id="idm45788273293080">
+<h1>Consuming Records with Specific Offsets</h1>
+
+<p><a data-type="indexterm" data-primary="commits and offsets" data-secondary="consuming records with specific offsets" id="ix_ch04-asciidoc15"></a><a data-type="indexterm" data-primary="consumers" data-secondary="consuming records with specific offsets" id="ix_ch04-asciidoc16"></a>So far we’ve seen how to use <code>poll()</code> to start consuming messages from the last committed offset in each partition and to proceed in processing all messages in sequence. However, sometimes you want to start reading at a different offset.</p>
+
+<p>If you want to start reading all messages from the beginning of the partition, or you want to skip all the way to the end of the partition and start consuming only new messages, there are APIs specifically for that:
+ <code>seekToBeginning(Collection&lt;TopicPartition&gt; tp)</code> and <code>seekToEnd(Collection&lt;TopicPartition&gt; tp)</code>.</p>
+
+<p>However, the Kafka API also lets you seek a specific offset. This ability can be used in a variety of ways; for example, to go back a few messages or skip ahead a few messages (perhaps a time-sensitive application that is falling behind will want to skip ahead to more relevant messages). The most exciting use case for this ability is when offsets are stored in a system other than Kafka.</p>
+
+<p>Think about this common scenario: Your application is reading events from Kafka (perhaps a clickstream of users in a website), processes the data (perhaps remove records that indicate clicks from automated programs rather than users), and then stores the results in a database, NoSQL store, or Hadoop. Suppose that we really don’t want to lose any data, nor do we want to store the same results in the database twice.</p>
+
+<p>In these cases, the consumer loop may look a bit like this:</p>
+
+<pre data-type="programlisting">while (true) {
+    ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        currentOffsets.put(
+            new TopicPartition(record.topic(), record.partition()),
+            record.offset());
+        processRecord(record);
+        storeRecordInDB(record);
+        consumer.commitAsync(currentOffsets);
+    }
+}</pre>
+
+<p>In this example, we are very paranoid, so we commit offsets after processing each record. However, there is still a chance that our application will crash after the record was stored in the database but before we committed offsets, causing the record to be processed again and the database to contain duplicates.</p>
+
+<p>This could be avoided if there was a way to store both the record and the offset in one atomic action. Either both the record and the offset are committed, or neither of them are committed. As long as the records are written to a database and the offsets to Kafka, this is impossible.</p>
+
+<p>But what if we wrote both the record and the offset to the database, in one transaction? Then we’ll know that either we are done with the record and the offset is committed or we are not and the record will be reprocessed.</p>
+
+<p>Now the only problem is if the offset is stored in a database and not in Kafka, how will our consumer know where to start reading when it is assigned a partition? This is exactly what <code>seek()</code> can be used for. When the consumer starts or when new partitions are assigned, it can look up the offset in the database and <code>seek()</code> to that location.</p>
+
+<p>Here is a skeleton example of how this may work. We use <code>ConsumerRebalanceLister</code> and <code>seek()</code> to make sure we start processing at the offsets stored in the database:</p>
+
+<pre data-type="programlisting">public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
+
+    public void onPartitionsRevoked(Collection&lt;TopicPartition&gt; partitions) {
+        commitDBTransaction(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO9-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO9-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+    }
+
+    public void onPartitionsAssigned(Collection&lt;TopicPartition&gt; partitions) {
+        for(TopicPartition partition: partitions)
+            consumer.seek(partition, getOffsetFromDB(partition)); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO9-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO9-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+    }
+}
+
+
+consumer.subscribe(topics, new SaveOffsetOnRebalance(consumer));
+consumer.poll(0);
+
+for (TopicPartition partition: consumer.assignment())
+    consumer.seek(partition, getOffsetFromDB(partition));   <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO9-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO9-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+
+while (true) {
+    ConsumerRecords&lt;String, String&gt; records =
+        consumer.poll(100);
+    for (ConsumerRecord&lt;String, String&gt; record : records) {
+        processRecord(record);
+        storeRecordInDB(record);
+        storeOffsetInDB(record.topic(), record.partition(),
+            record.offset()); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO9-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO9-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a>
+    }
+    commitDBTransaction();
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO9-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO9-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>We use an imaginary method here to commit the transaction in the database. The idea here is that the database records and offsets will be inserted to the database as we process the records, and we just need to commit the transactions when we are about to lose the partition to make sure this information is persisted.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO9-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO9-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>We also have an imaginary method to fetch the offsets from the database, and then we <code>seek()</code> to those records when we get ownership of new partitions.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO9-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO9-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p>When the consumer first starts, after we subscribe to topics, we call <code>poll()</code> once to make sure we join a consumer group and get assigned partitions, and then we immediately <code>seek()</code> to the correct offset in the partitions we are assigned to. Keep in mind that <code>seek()</code> only updates the position we are consuming from, so the next <code>poll()</code> will fetch the right messages. If there was an error in <code>seek()</code> (e.g., the offset does not exist), the exception will be thrown by <code>poll()</code>.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO9-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO9-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a></dt>
+<dd><p>Another imaginary method: this time we update a table storing the offsets in our database. Here we assume that updating records is fast, so we do an update on every record, but commits are slow, so we only commit at the end of the batch. However, this can be optimized in different ways.</p></dd>
+</dl>
+
+<p>There are many different ways to implement exactly-once semantics by storing offsets and data in an external store, but all of them will need to use the <code>ConsumerRebalanceListener</code> and <code>seek()</code> to make sure offsets are stored in time and that the consumer starts reading messages from the correct location.<a data-type="indexterm" data-startref="ix_ch04-asciidoc16" id="idm45788273252664"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc15" id="idm45788273251960"></a></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="But How Do We Exit?"><div class="sect1" id="idm45788273292488">
+<h1>But How Do We Exit?</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="exiting the poll loop" id="idm45788273250008"></a><a data-type="indexterm" data-primary="poll loop" data-secondary="exiting" id="idm45788273249032"></a>Earlier in this chapter, when we discussed the poll loop, I told you not to worry about the fact that the consumer polls in an infinite loop and that we would discuss how to exit the loop cleanly. So, let’s discuss how to exit cleanly.</p>
+
+<p>When you decide to exit the poll loop, you will need another thread to call <span class="keep-together"><code>consumer.wakeup()</code></span>. If you are running the consumer loop in the main thread, this can be done from <code>ShutdownHook</code>. Note that <code>consumer.wakeup()</code> is the only consumer method that is safe to call from a different thread.
+Calling wakeup will cause <code>poll()</code> to exit with <code>WakeupException</code>, or if <code>consumer.wakeup()</code> was called while the thread was not waiting on poll, the exception will be thrown on the next iteration when <code>poll()</code> is called. The <code>WakeupException</code> doesn’t need to be handled,  but before exiting the thread, you must call <code>consumer.close()</code>. Closing the consumer will commit offsets if needed and will send the group coordinator a message that the consumer is leaving the group. The consumer coordinator will trigger rebalancing immediately and you won’t need to wait for the session to time out before partitions from the consumer you are closing will be assigned to another consumer in the group.</p>
+
+<p>Here is what the exit code will look like if the consumer is running in the main application thread. This example is a bit truncated, but you can view the full example at <a href="http://bit.ly/2u47e9A"><em class="hyperlink">http://bit.ly/2u47e9A</em></a>.</p>
+
+<pre data-type="programlisting">Runtime.getRuntime().addShutdownHook(new Thread() {
+    public void run() {
+        System.out.println("Starting exit...");
+        consumer.wakeup(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO10-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO10-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+        try {
+            mainThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+});
+
+...
+
+try {
+    // looping until ctrl-c, the shutdown hook will cleanup on exit
+    while (true) {
+        ConsumerRecords&lt;String, String&gt; records =
+            movingAvg.consumer.poll(1000);
+        System.out.println(System.currentTimeMillis() +
+            "--  waiting for data...");
+        for (ConsumerRecord&lt;String, String&gt; record : records) {
+            System.out.printf("offset = %d, key = %s, value = %s\n",
+                record.offset(), record.key(), record.value());
+        }
+        for (TopicPartition tp: consumer.assignment())
+            System.out.println("Committing offset at position:" +
+                consumer.position(tp));
+            movingAvg.consumer.commitSync();
+    }
+} catch (WakeupException e) {
+    // ignore for shutdown <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO10-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO10-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+} finally {
+    consumer.close(); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO10-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO10-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+    System.out.println("Closed consumer and we are done");
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO10-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO10-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p><code>ShutdownHook</code> runs in a separate thread, so the only safe action we can take is to call <code>wakeup</code> to break out of the <code>poll</code> loop.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO10-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO10-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>Another thread calling <code>wakeup</code> will cause poll to throw a <code>WakeupException</code>. You’ll want to catch the exception to make sure your application doesn’t exit unexpectedly, but there is no need to do anything with it.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO10-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO10-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p>Before exiting the consumer, make sure you close it cleanly.</p></dd>
+</dl>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Deserializers"><div class="sect1" id="idm45788273222088">
+<h1>Deserializers</h1>
+
+<p><a data-type="indexterm" data-primary="consumers" data-secondary="deserializers" id="ix_ch04-asciidoc17"></a><a data-type="indexterm" data-primary="deserializers" id="ix_ch04-asciidoc18"></a>As discussed in the previous chapter, Kafka producers require <em>serializers</em> to convert objects into byte arrays that are then sent to Kafka. Similarly, Kafka consumers require <em>deserializers</em> to convert byte arrays received from Kafka into Java objects. In previous examples, we just assumed that both the key and the value of each message are strings and we used the default <code>StringDeserializer</code> in the consumer configuration.</p>
+
+<p>In <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a> about the Kafka producer, we saw how to serialize custom types and how to use Avro and <code>AvroSerializers</code> to generate Avro objects from schema definitions and then serialize them when producing messages to Kafka. We will now look at how to create custom deserializers for your own objects and how to use Avro and its deserializers.</p>
+
+<p>It should be obvious that the serializer used to produce events to Kafka must match the deserializer that will be used when consuming events. Serializing with <code>IntSerializer</code> and then deserializing with <code>StringDeserializer</code> will not end well. This means that as a developer you need to keep track of which serializers were used to write into each topic, and make sure each topic only contains data that the deserializers you use can interpret. This is one of the benefits of using Avro and the Schema Repository for serializing and deserializing—the <code>AvroSerializer</code> can make sure that all the data written to a specific topic is compatible with the schema of the topic, which means it can be deserialized with the matching deserializer and schema. Any errors in compatibility—on the producer or the consumer side—will be caught easily with an appropriate error message, which means you will not need to try to debug byte arrays for serialization errors.</p>
+
+<p>We will start by quickly showing how to write a custom deserializer, even though this is the less common method, and then we will move on to an example of how to use Avro to deserialize message keys and values.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Custom deserializers"><div class="sect3" id="idm45788273211400">
+<h3>Custom deserializers</h3>
+
+<p><a data-type="indexterm" data-primary="custom deserializers" id="ix_ch04-asciidoc19"></a><a data-type="indexterm" data-primary="deserializers" data-secondary="custom" id="ix_ch04-asciidoc20"></a>Let’s take the same custom object we serialized in <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a>, and write a deserializer for it:</p>
+
+<pre data-type="programlisting">public class Customer {
+    private int customerID;
+    private String customerName;
+
+    public Customer(int ID, String name) {
+        this.customerID = ID;
+        this.customerName = name;
+    }
+
+    public int getID() {
+        return customerID;
+    }
+
+    public String getName() {
+        return customerName;
+    }
+}</pre>
+
+<p>The custom deserializer will look as follows:</p>
+
+<pre data-type="programlisting">import org.apache.kafka.common.errors.SerializationException;
+
+import java.nio.ByteBuffer;
+import java.util.Map;
+
+public class CustomerDeserializer implements Deserializer&lt;Customer&gt; { <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO11-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO11-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+
+    @Override
+    public void configure(Map configs, boolean isKey) {
+        // nothing to configure
+    }
+
+    @Override
+    public Customer deserialize(String topic, byte[] data) {
+        int id;
+        int nameSize;
+        String name;
+
+        try {
+            if (data == null)
+                return null;
+            if (data.length &lt; 16)
+                throw new SerializationException("Size of data received " +
+                    "by deserializer is shorter than expected");
+
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+            id = buffer.getInt();
+            nameSize = buffer.getInt();
+
+            byte[] nameBytes = new byte[nameSize];
+            buffer.get(nameBytes);
+            name = new String(nameBytes, "UTF-8");
+
+            return new Customer(id, name); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO11-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO11-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+
+        } catch (Exception e) {
+  	    throw new SerializationException("Error when deserializing " +   	        "byte[] to Customer " + e);
+        }
+    }
+
+    @Override
+    public void close() {
+        // nothing to close
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO11-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO11-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>The consumer also needs the implementation of the <code>Customer</code> class, and both the class and the serializer need to match on the producing and consuming applications. In a large organization with many consumers and producers sharing access to the data, this can become challenging.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO11-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO11-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>We are just reversing the logic of the serializer here—we get the customer ID and name out of the byte array and use them to construct the object we need.</p></dd>
+</dl>
+
+<p>The consumer code that uses this serializer will look similar to this example:</p>
+
+<pre data-type="programlisting">Properties props = new Properties();
+props.put("bootstrap.servers", "broker1:9092,broker2:9092");
+props.put("group.id", "CountryCounter");
+props.put("key.deserializer",
+    "org.apache.kafka.common.serialization.StringDeserializer");
+props.put("value.deserializer",
+    CustomerDeserializer.class.getName());
+
+KafkaConsumer&lt;String, Customer&gt; consumer =
+    new KafkaConsumer&lt;&gt;(props);
+
+consumer.subscribe(Collections.singletonList("customerCountries"))
+
+while (true) {
+    ConsumerRecords&lt;String, Customer&gt; records = consumer.poll(100);
+    for (ConsumerRecord&lt;String, Customer&gt; record : records) {
+        System.out.println("current customer Id: " +
+            record.value().getID() + " and
+            current customer name: " +  record.value().getName());
+    }
+    consumer.commitSync();
+}</pre>
+
+<p>Again, it is important to note that implementing a custom serializer and deserializer is not recommended. It tightly couples producers and consumers and is fragile and error-prone. A better solution would be to use a standard message format such as JSON, Thrift, Protobuf, or Avro. We’ll now see how to use Avro deserializers with the Kafka consumer. For background on Apache Avro, its schemas, and schema-compatibility capabilities, refer back to <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a>.<a data-type="indexterm" data-startref="ix_ch04-asciidoc20" id="idm45788273189304"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc19" id="idm45788273188600"></a></p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" data-pdf-bookmark="Using Avro deserialization with Kafka consumer"><div class="sect3" id="idm45788273187800">
+<h3>Using Avro deserialization with Kafka consumer</h3>
+
+<p><a data-type="indexterm" data-primary="Avro" data-secondary="deserialization with Kafka consumer" id="idm45788273186696"></a><a data-type="indexterm" data-primary="deserializers" data-secondary="using Avro deserialization with Kafka consumer" id="idm45788273185704"></a>Let’s assume we are using the implementation of the <code>Customer</code> class in Avro that was shown in <a data-type="xref" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html#writing_messages_to_kafka">Chapter&nbsp;3</a>. In order to consume those objects from Kafka, you want to implement a consuming application similar to this:</p>
+
+<pre data-type="programlisting">Properties props = new Properties();
+props.put("bootstrap.servers", "broker1:9092,broker2:9092");
+props.put("group.id", "CountryCounter");
+props.put("key.deserializer",
+    "org.apache.kafka.common.serialization.StringDeserializer");
+props.put("value.deserializer",
+    "io.confluent.kafka.serializers.KafkaAvroDeserializer"); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO12-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO12-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+props.put("specific.avro.reader","true");
+props.put("schema.registry.url", schemaUrl); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO12-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO12-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+String topic = "customerContacts"
+
+KafkaConsumer&lt;String, Customer&gt; consumer =
+    new KafkaConsumer&lt;&gt;(props);
+consumer.subscribe(Collections.singletonList(topic));
+
+System.out.println("Reading topic:" + topic);
+
+while (true) {
+    ConsumerRecords&lt;String, Customer&gt; records = consumer.poll(1000); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO12-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO12-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a>
+
+    for (ConsumerRecord&lt;String, Customer&gt; record: records) {
+        System.out.println("Current customer name is: " +
+            record.value().getName()); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO12-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO12-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a>
+    }
+    consumer.commitSync();
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO12-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO12-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>We use <code>KafkaAvroDeserializer</code> to deserialize the Avro messages.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO12-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO12-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p><code>schema.registry.url</code> is a new parameter. This simply points to where we store the schemas. This way the consumer can use the schema that was registered by the producer to deserialize the message.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO12-3" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO12-3"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/3.png" alt="3" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/3.png"></a></dt>
+<dd><p>We specify the generated class, <code>Customer</code>, as the type for the record value.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO12-4" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO12-4"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/4.png" alt="4" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/4.png"></a></dt>
+<dd><p><code>record.value()</code> is a <code>Customer</code> instance and we can use it accordingly.<a data-type="indexterm" data-startref="ix_ch04-asciidoc18" id="idm45788273161000"></a><a data-type="indexterm" data-startref="ix_ch04-asciidoc17" id="idm45788273160296"></a></p></dd>
+</dl>
+</div></section>
+
+
+
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Standalone Consumer: Why and How to Use a Consumer Without a Group"><div class="sect1" id="idm45788273159368">
+<h1>Standalone Consumer: Why and How to Use a Consumer Without a Group</h1>
+
+<p><a data-type="indexterm" data-primary="consumer groups" data-secondary="consumers without" id="idm45788273158008"></a><a data-type="indexterm" data-primary="consumers" data-secondary="without consumer group" id="idm45788273157032"></a>So far, we have discussed consumer groups, which are where partitions are assigned automatically to consumers and are rebalanced automatically when consumers are added or removed from the group. Typically, this behavior is just what you want, but in some cases you want something much simpler. Sometimes you know you have a single consumer that always needs to read data from all the partitions in a topic, or from a specific partition in a topic. In this case, there is no reason for groups or rebalances—just assign the consumer-specific topic and/or partitions, consume messages, and commit offsets on occasion.</p>
+
+<p><a data-type="indexterm" data-primary="assignment" data-secondary="subscription vs." id="idm45788273155064"></a><a data-type="indexterm" data-primary="subscription, assignment vs." id="idm45788273154088"></a>When you know exactly which partitions the consumer should read, you don’t <em>subscribe</em> to a topic—instead, you <em>assign</em> yourself a few partitions. A consumer can either subscribe to topics (and be part of a consumer group), or assign itself partitions, but not both at the same time.</p>
+
+<p>Here is an example of how a consumer can assign itself all partitions of a specific topic and consume from them:</p>
+
+<pre data-type="programlisting">List&lt;PartitionInfo&gt; partitionInfos = null;
+partitionInfos = consumer.partitionsFor("topic"); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO13-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO13-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a>
+
+if (partitionInfos != null) {
+    for (PartitionInfo partition : partitionInfos)
+        partitions.add(new TopicPartition(partition.topic(),
+            partition.partition()));
+    consumer.assign(partitions); <a class="co" id="co_kafka_consumers__reading_data_from_kafka_CO13-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#callout_kafka_consumers__reading_data_from_kafka_CO13-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a>
+
+    while (true) {
+        ConsumerRecords&lt;String, String&gt; records = consumer.poll(1000);
+
+        for (ConsumerRecord&lt;String, String&gt; record: records) {
+            System.out.printf("topic = %s, partition = %s, offset = %d,
+                customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(),
+                record.key(), record.value());
+        }
+        consumer.commitSync();
+    }
+}</pre>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO13-1" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO13-1"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/1.png" alt="1" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/1.png"></a></dt>
+<dd><p>We start by asking the cluster for the partitions available in the topic. If you only plan on consuming a specific partition, you can skip this part.</p></dd>
+<dt><a class="co" id="callout_kafka_consumers__reading_data_from_kafka_CO13-2" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#co_kafka_consumers__reading_data_from_kafka_CO13-2"><img src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/2.png" alt="2" width="12" height="12" data-mfp-src="/library/view/kafka-the-definitive/9781491936153/assets/2.png"></a></dt>
+<dd><p>Once we know which partitions we want, we call <code>assign()</code> with the list.</p></dd>
+</dl>
+
+<p>Other than the lack of rebalances and the need to manually find the partitions, everything else is business as usual. Keep in mind that if someone adds new partitions to the topic, the consumer will not be notified. You will need to handle this by checking <code>consumer.partitionsFor()</code> periodically or simply by bouncing the application whenever partitions are added.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Older Consumer APIs"><div class="sect1" id="idm45788273138872">
+<h1>Older Consumer APIs</h1>
+
+<p><a data-type="indexterm" data-primary="APIs" data-secondary="consumer" id="idm45788273137736"></a><a data-type="indexterm" data-primary="consumers" data-secondary="older APIs" id="idm45788273136536"></a>In this chapter we discussed the Java <code>KafkaConsumer</code> client that is part of the <code>org.apache.kafka.clients</code> package.
+At the time of writing, Apache Kafka still has two older clients written in Scala that are part of the <code>kafka.consumer</code> package, which is part of the core Kafka module. <a data-type="indexterm" data-primary="SimpleConsumer" id="idm45788273133992"></a>These consumers are called <code>SimpleConsumer</code> (which is not very simple). <code>SimpleConsumer</code> is a thin wrapper around the Kafka APIs that allows you to consume from specific partitions and offsets. <a data-type="indexterm" data-primary="ZookeeperConsumerConnector" id="idm45788273132136"></a>The other old API is called high-level consumer or <code>ZookeeperConsumerConnector</code>. The high-level consumer is somewhat similar to the current consumer in that it has consumer groups and it rebalances partitions, but it uses Zookeeper to manage consumer groups and does not give you the same control over commits and rebalances as we have now.</p>
+
+<p>Because the current consumer supports both behaviors and provides much more reliability and control to the developer, we will not discuss the older APIs. If you are interested in using them, please think twice and then refer to Apache Kafka documentation to learn more.</p>
+</div></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" data-pdf-bookmark="Summary"><div class="sect1" id="idm45788273129720">
+<h1>Summary</h1>
+
+<p>We started this chapter with an in-depth explanation of Kafka’s consumer groups and the way they allow multiple consumers to share the work of reading events from topics. We followed the theoretical discussion with a practical example of a consumer subscribing to a topic and continuously reading events.
+We then looked into the most important consumer configuration parameters and how they affect consumer behavior.
+We dedicated a large part of the chapter to discussing offsets and how consumers keep track of them. Understanding how consumers commit offsets is critical when writing reliable consumers, so we took time to explain the different ways this can be done.
+We then discussed additional parts of the consumer APIs, handling rebalances and closing the consumer.</p>
+
+<p>We concluded by discussing the deserializers used by consumers to turn bytes stored in Kafka into Java objects that the applications can process. We discussed Avro deserializers in some detail, even though they are just one type of deserializer you can use, because these are most commonly used with Kafka.<a data-type="indexterm" data-startref="ix_ch04-asciidoc0" id="idm45788273126872"></a></p>
+
+<p>Now that you know how to produce and consume events with Kafka, the next chapter explains some of the internals of a Kafka implementation.</p>
+</div></section>
+
+
+
+
+
+
+
+</div></section><div class="annotator-outer annotator-viewer viewer annotator-hide">
+  <ul class="annotator-widget annotator-listing"></ul>
+</div><div class="annotator-modal-wrapper annotator-editor-modal annotator-editor annotator-hide">
+	<div class="annotator-outer editor">
+		<h2 class="title">Highlight</h2>
+		<form class="annotator-widget">
+			<ul class="annotator-listing">
+			<li class="annotator-item"><textarea id="annotator-field-0" placeholder="Add a note using markdown (optional)" class="js-editor" maxlength="750"></textarea></li></ul>
+			<div class="annotator-controls">
+				<a class="link-to-markdown" href="https://daringfireball.net/projects/markdown/basics" target="_blank">?</a>
+				<ul>
+					<li class="delete annotator-hide"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#delete" class="annotator-delete-note button positive">Delete Note</a></li>
+					<li class="save"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#save" class="annotator-save annotator-focus button positive">Save Note</a></li>
+					<li class="cancel"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#cancel" class="annotator-cancel button">Cancel</a></li>
+				</ul>
+			</div>
+		</form>
+	</div>
+</div><div class="annotator-modal-wrapper annotator-delete-confirm-modal" style="display: none;">
+  <div class="annotator-outer">
+    <h2 class="title">Highlight</h2>
+      <a class="js-close-delete-confirm annotator-cancel close" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#close">Close</a>
+      <div class="annotator-widget">
+         <div class="delete-confirm">
+            Are you sure you want to permanently delete this note?
+         </div>
+         <div class="annotator-controls">
+            <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#cancel" class="annotator-cancel button js-cancel-delete-confirm">No, I changed my mind</a>
+            <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#delete" class="annotator-delete button positive js-delete-confirm">Yes, delete it</a>
+         </div>
+       </div>
+   </div>
+</div><div class="annotator-adder" style="display: none;">
+	<ul class="adders">
+		
+		<li class="copy"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#">Copy</a></li>
+		
+		<li class="add-highlight"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#">Add Highlight</a></li>
+		<li class="add-note"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#">
+			Add Note
+		</a></li>
+		
+	</ul>
+</div></div></div>
+
+
+
+  <div class="t-sbo-prev sbo-prev sbo-nav-bottom">
+  
+    
+      
+        <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch03.html" class="prev nav-link">
+      
+          <span aria-hidden="true" class="pagination-label t-prev-label">Prev</span>
+          <span class="visuallyhidden">Previous Chapter</span>
+          <div class="pagination-title t-prev-title">3. Kafka Producers: Writing Messages to Kafka</div>
+        </a>
+    
+  
+  </div>
+
+  <div class="t-sbo-next sbo-next sbo-nav-bottom">
+  
+    
+      
+        <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch05.html" class="next nav-link">
+      
+          <span aria-hidden="true" class="pagination-label t-next-label">Next</span>
+          <span class="visuallyhidden">Next Chapter</span>
+          <div class="pagination-title t-next-title">5. Kafka Internals</div>
+        </a>
+    
+  
+  </div>
+
+
+        
+    </section>
+  </div>
+<section class="sbo-saved-archives"></section>
+
+
+
+          
+          
+  
+
+
+
+
+    
+    
+      <div id="js-subscribe-nag" class="subscribe-nag clearfix trial-panel t-subscribe-nag collapsed slideUp">
+        
+        
+          <p class="usage-data">Find answers on the fly, or master something new. Subscribe today. <a href="https://learning.oreilly.com/subscribe/" class="ga-active-trial-subscribe-nag">See pricing options.</a></p>
+        
+
+        
+        
+
+      </div>
+
+    
+    
+
+
+
+        
+      </div>
+      
+        
+
+<footer class="pagefoot t-pagefoot" style="padding-bottom: 69px;">
+  <a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" class="icon-up" onclick="window.Appcues.track(&#39;JumpTop_HeronBook&#39;)" style="display: none;"><div class="visuallyhidden">Back to top</div></a>
+  <ul class="js-footer-nav">
+  
+    
+    <li><a href="https://learning.oreilly.com/public/support/">Support</a></li>
+    
+    <li><a href="https://learning.oreilly.com/accounts/logout/">Sign Out</a></li>
+    
+  
+  
+  </ul>
+  <span class="copyright">© 2020 <a href="https://learning.oreilly.com/" target="_blank">O'Reilly Media, Inc</a>.</span>
+  
+    
+    <a href="https://www.oreilly.com/terms/">Terms of Service</a> 
+     / 
+    
+    <a href="https://learning.oreilly.com/privacy">Privacy Policy</a> 
+    
+    
+  
+</footer>
+
+      
+    
+    <script src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource" charset="utf-8"></script>
+    <script src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/saved_resource(1)" charset="utf-8"></script>
+  
+
+<div></div><div></div><div class="annotator-notice"></div><div class="font-flyout" style="top: 201px; left: 1280px;"><div class="font-controls-panel">
+	<div class="nightmodes">
+		<ul>
+			<li class="day"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" id="day-mode" title="Day Mode">
+				<i class="fa fa-sun-o"></i>
+				<span>Day Mode</span></a></li>
+			<li class="cloudy"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" id="cloudy-mode" title="Cloudy Mode">
+				<i class="fa fa-cloud"></i>
+				<span>Cloud Mode</span>
+			</a></li>
+			<li class="night"><a href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#" id="night-mode" title="Night Mode">
+				<i class="fa fa-moon-o"></i>
+				<span>Night Mode</span>
+			</a></li>
+		</ul>
+	</div>
+
+	<div class="font-resizer resizer">
+		<div class="draggable-containment-wrapper">
+			<i class="fa fa-font left"></i>
+			<span class="filler" style="width: 50%;"></span>
+			<div id="js-font-size-draggable" class="draggable ui-widget-content ui-draggable ui-draggable-handle" style="position: relative; left: 80px;"></div>
+			<i class="fa fa-font right"></i>
+		</div>
+	</div>
+
+	<div class="column-resizer resizer">
+		<div class="draggable-containment-wrapper">
+			<i class="fa fa-compress left"></i>
+			<span class="filler" style="width: 50%;"></span>
+			<div id="js-column-size-draggable" class="draggable ui-widget-content ui-draggable ui-draggable-handle" style="position: relative; left: 80px;"></div>
+			<i class="fa fa-expand right"></i>
+		</div>
+	</div>
+
+	<a id="reset" class="button" href="https://learning.oreilly.com/library/view/kafka-the-definitive/9781491936153/ch04.html#">Reset</a>
+</div>
+</div><script type="text/javascript" id="">(function(){window.medalliaUserIdentifier=document.documentElement.dataset.userUuid;window.medalliaUserName=document.documentElement.dataset.username})();</script>
+<script type="text/javascript" id="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/embed.js.download"></script><script type="text/javascript" async="" src="./4. Kafka Consumers_ Reading Data from Kafka - Kafka_ The Definitive Guide_files/generic1607612729884.js.download" charset="UTF-8"></script><script type="text/javascript" id="">function forceInputUppercase(a){var b=a.target.selectionStart,c=a.target.selectionEnd;a.target.value=a.target.value.toUpperCase();a.target.setSelectionRange(b,c)}void 0!=document.getElementById("id_promotion")&&null!=document.getElementById("id_promotion")&&document.getElementById("id_promotion").addEventListener("keyup",forceInputUppercase,!1);
+void 0!=document.getElementsByName("promotionCode")[0]&&null!=document.getElementsByName("promotionCode")[0]&&document.getElementsByName("promotionCode")[0].addEventListener("keyup",forceInputUppercase,!1);</script><script type="text/javascript" id="">var nonwExpandable=document.querySelectorAll(".orm-ff-NavigationSubnav-headerListItem a, .orm-ff-NavigationView-headerListItem a");nonwExpandable.forEach(function(a,b){b+1!=nonwExpandable.length?a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"global nav",eventAct:"navigation",eventLbl:a.childNodes[1].textContent})}):b+1==nonwExpandable.length&&a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"user login",eventAct:"logout",eventLbl:"global nav | unified"})})});
+var nonwExpandableFo=document.querySelectorAll(".drop-content li:not(.flyout-parent) a");
+nonwExpandableFo.forEach(function(a,b){"drop-content"==a.parentNode.parentNode.parentNode.className&&b+1!=nonwExpandableFo.length?a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"global nav",eventAct:"navigation",eventLbl:a.childNodes[1].textContent})}):"drop-content"==a.parentNode.parentNode.parentNode.className&&b+1==nonwExpandableFo.length&&a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"user login",eventAct:"logout",eventLbl:"global nav | unified"})})});
+var expandable=document.querySelectorAll(".orm-ff-NavigationSubnav-toggleControls a, .orm-ff-NavigationView-toggleControls a");expandable.forEach(function(a){a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"global nav",eventAct:"navigation",eventLbl:a.parentNode.parentNode.parentNode.querySelectorAll(".orm-Button-btnContentWrap span")[0].childNodes[1].textContent+" | "+a.textContent})})});var flyoutLinks=document.querySelectorAll(".flyout a");
+flyoutLinks.forEach(function(a){a.addEventListener("click",function(){dataLayer.push({event:"eventTracker",eventCat:"global nav",eventAct:"navigation",eventLbl:a.closest("li.flyout-parent").getElementsByTagName("a")[0].textContent+" | "+a.textContent})})});</script><span></span></body></html>

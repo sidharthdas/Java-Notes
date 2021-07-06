@@ -1,0 +1,40 @@
+
+Are (String ...) and String[] synonymous in how they work, but the argument passing is just easier
+ using the former because there is no need to create an array? As far as I can tell, the former 
+also gets translated to a string array in the background so would they both compile to the same 
+code and it's just 'syntactic sugar'?
+
+A feature of String[] vs String... is that the "String..." does not need to be part of the call.
+
+public void test(String... args){ 
+   if(args.length > 0){
+      for( String text : args){
+         System.out.println(text);
+      }
+   }else{
+      System.out.println("No args defined.");
+   }
+}
+
+public void callerTest(){
+     test();
+     System.out.println();
+
+     test("tree");
+     System.out.println();
+
+     test("dog", "cat", "pigeon");
+}
+Then if you call callerTest(); the Output will be:
+
+No args defined.
+
+tree
+
+dog
+cat
+pigeon
+
+Note:
+
+int ...a ==>valid which means array of int

@@ -1,0 +1,44 @@
+Why you should always override hashCode when overriding equals
+
+Q - What could happen if I only override equals?
+Suppose you only override equals but not hashCode
+This means that hashCode is inherited from Object
+Object.hashCode always tries to return different hash codes for different objects (regardless if they are equal or not)
+This means that you may end up with different hash codes for two objects that you consider to be equal
+This in turn causes these two equal objects to end up in different buckets in hash based collections such as HashSet
+This causes such collections to break
+Let's illustrate with an example:
+
+class IntBox {
+    int i;
+    IntBox(int i) { this.i = i; }
+
+    // equals other IntBoxes that store the same int value.
+    @Override
+    public boolean equals(Object o) {
+        IntBox other = (IntBox) o;
+        return this.i == other.i;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Set<IntBox> intBoxes = new HashSet<>();
+        intBoxes.add(new IntBox(0));
+        boolean found = intBoxes.contains(new IntBox(0));
+        // found == false
+    }
+}
+
+Q - What could happen if I only override hashCode?
+This will not break the code as above, but may degrade performance.
+
+Suppose you only override hashCode but not equals
+This means that you may return the same hash code for two non-equal objects
+Object.hashCode might do so too, but it does an as good job as possible to avoid it
+This in turn means that two non-equal objects end up in the same bucket in a hash based collection such as HashSet
+This degrades performance since objects are not distributed as evenly as possible among the buckets
+
+Put differently: If you don't override equals any two objects will be considered non-equal. Since Object.hashCode ensures that all 
+objects are distributed as evenly as possible in a hash based collection Object.hashCode is optimal, and overriding it with anything else 
+will worsen the performance.

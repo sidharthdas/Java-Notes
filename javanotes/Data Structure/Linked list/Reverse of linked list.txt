@@ -1,0 +1,12 @@
+	public void reverseLinkedList(LinkedList linkedList) {
+		Node previous = null;
+		Node current = linkedList.head;
+		Node next;
+		while (current != null) {
+			next = current.next;
+			current.next = previous;
+			previous = current;
+			current = next;
+		}
+		linkedList.head = previous;
+	}

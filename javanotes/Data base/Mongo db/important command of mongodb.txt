@@ -1,0 +1,10 @@
+command to import from json file to mongo db
+
+mongoimport --db qoedb --collection user --file C:/MongoDB/user.json
+mongoimport --db qoedb --collection <collection> --file <collection>.json
+
+
+
+
+command to connect development database
+mongo --host 192.168.252.108

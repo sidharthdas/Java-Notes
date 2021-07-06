@@ -1,0 +1,13 @@
+Cascade is a convenient feature to save the lines of code needed to manage the state of the other side manually.
+
+The “Cascade” keyword is often appear on the collection mapping to manage the state of the collection automatically.
+
+
+Cascade Operations	and Description
+--------------------------------
+PERSIST	In this cascade operation, if the parent entity is persisted then all its related entity will also be persisted.
+MERGE	In this cascade operation, if the parent entity is merged then all its related entity will also be merged.
+DETACH	In this cascade operation, if the parent entity is detached then all its related entity will also be detached.
+REFRESH	In this cascade operation, if the parent entity is refreshed then all its related entity will also be refreshed.
+REMOVE	In this cascade operation, if the parent entity is removed then all its related entity will also be removed.
+ALL	In this case, all the above cascade operations can be applied to the entities related to parent entity.

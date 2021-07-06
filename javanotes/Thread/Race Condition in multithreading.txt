@@ -1,0 +1,70 @@
+What is Race Condition in multithreading – 2 Examples in Java
+
+ 
+Race condition in Java is a type of concurrency bug or issue which is introduced in your program because  parallel execution of your program 
+by multiple threads at same time, Since Java is a multi-threaded programming language hence risk of Race condition is higher in Java which demands
+clear understanding of what causes a race condition and how to avoid that. Anyway Race conditions are just one of hazards or risk presented by  
+use of multi-threading in Java just like deadlock in Java. Race conditions occurs when two thread operate on same object without proper 
+synchronization and there operation interleaves on each other. Classical example of Race condition is incrementing a counter since increment 
+is not an atomic operation and can be further divided into three steps like read, update and write. if two threads tries to increment count at same
+ time and if they read same value because of interleaving of read operation of one thread to update operation of another thread, one count will be 
+ lost when one thread overwrite increment done by other thread. atomic operations are not subject to race conditions because those operation 
+ cannot be interleaved. This is also a popular multi-threading interview questions during core java interviews. In this article we will see how 
+ to find race condition in Java and  two sample code patterns which often causes race conditions in Java.
+
+How to find Race Conditions in Java
+Race condition in Java with Example tutorialFinding Race conditions in any language is most difficult job and Java is no different, 
+though since readability of Java code is very good and synchronized constructs are well defined heaps to find race conditions by code review. 
+finding race conditions by unit testing is not reliable due to random nature of race conditions. since race conditions surfaces only some time 
+your unit test may passed without facing any race condition. only sure shot way to find race condition is reviewing code manually or using code 
+review tools which can alert you on potential race conditions based on code pattern and use of synchronization in Java. I solely rely on code 
+review and yet to find a suitable tool for exposing race condition in java.
+
+ 
+
+Code Example of Race Condition in Java
+Based on my experience in Java synchronization and where we use synchronized keyword I found that two code patterns namely "check and act" and 
+"read modify write" can suffer race condition if not synchronized properly. both cases rely on natural assumption that a single line of code will
+ be atomic and execute in one shot which is wrong e.g. ++ is not atomic.
+
+"Check and Act" race condition pattern
+classical example of "check and act" race condition in Java is getInstance() method of Singleton Class, remember that was one questions which we 
+have discussed on 10 Interview questions on Singleton pattern in Java as "How to write thread-safe Singleton in Java". getInstace() method 
+first check for whether instance is null and than initialized the instance and return to caller. Whole purpose of Singleton is that getInstance 
+should always return same instance of Singleton. if you call getInstance() method from two thread simultaneously its possible that while one thread 
+is initializing singleton after null check, another thread sees value of _instance reference variable as null (quite possible in java) especially 
+if your object takes longer time to initialize and enters into critical section which eventually results in getInstance() returning two separate 
+instance of Singleton. This may not happen always because a fraction of delay may result in value of _instance updated in main memory. 
+here is a code example
+
+public Singleton getInstance(){
+if(_instance == null){   //race condition if two threads sees _instance= null
+_instance = new Singleton();
+}
+}
+
+an easy way to fix "check and act" race conditions is to synchronized keyword and enforce locking which will make this operation atomic and 
+guarantees that block or method will only be executed by one thread and result of operation will be visible to all threads once synchronized blocks 
+completed or thread exited form synchronized block.
+
+read-modify-update race conditions
+This is another code pattern in Java which cause race condition, classical example is the non thread safe counter we discussed in how to write 
+thread safe class in Java. this is also a very popular multi-threading question where they ask you to find bugs on concurrent code. read-modify-update 
+pattern also comes due to improper synchronization of non-atomic operations or combination of two individual atomic operations which is not atomic 
+together e.g. put if absent scenario. consider below code
+
+if(!hashtable.contains(key)){
+hashtable.put(key,value);
+}
+
+here we only insert object into hashtable if its not already there. point is both contains() and put() are atomic but still this code can result 
+in race condition since both operation together is not atomic. consider thread T1 checks for conditions and goes inside if block now CPU is switched 
+from T1 to thread T2 which also checks condition and goes inside if block. now we have two thread inside if block which result in either T1 
+overwriting T2 value or vice-versa based on which thread has CPU for execution. In order to fix this race condition in Java you need to wrap 
+this code inside synchronized block which makes them atomic together because no thread can go inside synchronized block if one thread is already there.
+
+These are just some of examples of race conditions in Java, there will be numerous based on your business logic and code. best approach to find 
+Race conditions is code review but its hard because thinking concurrently is not natural and we still assume code to run sequentially. 
+Problem can become worse if JVM reorders code in absent of proper synchronization to gain performance benefit and this usually happens on 
+production under heavily load, which is worst. I also suggest doing load testing in production like environment which many time helps to 
+expose race conditions in java. Please share if you have faced any race condition in java projects.

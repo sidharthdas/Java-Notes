@@ -1,0 +1,141 @@
+Mongo Db
+----------------
+
+1. Mongo Db is no SQL database. It is non relational database. It is open source database. It is a simple query language rich document based queries.
+2. mongodb vs rdbms
+	collection - table
+	field - 	 column
+	document - 	 row
+	
+3. use mydatabasename   - this command will switch to mydatabasename or it will create mydatabasename
+4. show dbs             - this command will show all the collections available in the database. 
+						  note: It should contain at at least one collection  in the collection
+
+5. db.dropdatabase		- this command is used to delete the database.
+
+6. db.createcollection("mycollection")  - this command is used to create collection.
+
+7. show collections 	  - this is used to show collections in the db
+
+8.db.collection.drop()    - this will be used to drop collection.
+
+9. Inserting document
+
+a. one student inserted at a time.
+ use school
+ db.student.insert(
+ {
+ "student no":"1",
+ "name":"manoj",
+ "age":"15"
+ }
+ )
+ 
+ b. multiple student inserted at a time. It is inserted in pin bracket.
+ 
+  db.student.insert(
+ [
+ {
+ "student no":"1",
+ "name":"manoj",
+ "age":"15"
+ },
+  {
+ "student no":"1",
+ "name":"manoj",
+ "age":"15"
+ },
+  {
+ "student no":"1",
+ "name":"manoj",
+ "age":"15"
+ }
+ ]
+ )
+ 
+10. Retrieve query:
+	-------------------
+
+-- db.student.find()                - it will show all the document.
+
+-- db.student.find().pretty()		- it will show all the document in the JSON format.
+
+-- db.student.findone()				- it will show the first document in the JSON format.
+
+--db.student.find(					- it will query on the basis of student no whhich is equal to 1.
+{
+ "student no":"1"
+}
+)
+
+--db.student.find(					- it will show all the students whose age is greater than 7.
+{
+"age":{$gt :"7"}
+}
+)
+
+-- --db.student.find(					- it will show all the students whose age is greater than 7 and equal to 7. just by adding e.
+{
+"age":{$gte :"7"}
+}
+)
+
+
+--db.student.find(					- it will show all the students whose age is less than 7.
+{
+"age":{$lt :"7"}
+}
+)
+
+-- db.student.find(					- it will show all the students whose age is less than 7 and equal to 7. just by adding e.
+{
+"age":{$lte :"7"}
+}
+)
+
+
+-- db.student.find(					- it will show all the students whose age is not equal to  7 .
+{
+"age":{$ne :"7"}
+}
+)
+
+-- db.student.find(					- it will query on the basis of student no AND age.And operator is used.
+{
+ "student no":"1", "age"":"10"
+}
+)						  
+
+--  db.student.find(					- it will query on the basis of student no OR age.OR operator is used.
+{
+ $or :[{"student no":"1"}, {"age"":"10"}]
+}
+)
+
+--  db.student.find(					- it will query on the basis of student no 1 and age 15 OR age 16. AND & OR operator is used.
+{
+ "student no":"1",$or :[{"age":"15"}, {"age"":"10"}]
+}
+)
+
+11. UPDATE:
+	--------------
+
+
+--  db.student.update(					- it will update the exiting document whose student no is 1 and it will set the name to kumar.
+											only 1 row will be updated.
+{
+ {"student no":"1"},
+ {$set:{"name":"Kumar"}}
+}
+)
+
+--  db.student.update(					- it will update the exiting document whose student no is 1 and it will set the name to kumar.
+											it will update as many  row whose age is equal to 16.
+{
+ {"age":"16"},
+ {$set:{"name":"Kumar"}},
+ {multi:true}
+}
+)
+

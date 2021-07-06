@@ -1,0 +1,8 @@
+Web application vs enterprise apllication
+
+web  application can be developed by servlets jsp html . online shopping. web server is required to run this application.
+ex tomcat
+
+
+enterprise apllication can be developed by servlets jsp html + jms ejb j2ee components. application server is required to run this application.
+ex weblogic

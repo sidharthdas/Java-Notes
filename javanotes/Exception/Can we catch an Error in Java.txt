@@ -1,0 +1,35 @@
+
+Can we catch an Error in Java?
+==================================
+If you run following code then it will compile and run successfully,
+
+public class Example {
+    public static void main(String[] args) {
+        // insert code here
+        try {
+            new Example().go();
+            // throw new OutOfMemoryError();
+        } catch (Error e) {
+            System.out.println(e);
+        }
+    }
+
+    void go() {
+        go();
+    }
+}
+
+With following output :
+
+java.lang.StackOverflowError
+
+Answer:
+------------
+
+Yes, you can catch an Error, but you are advised not to do it, since Errors indicate 
+serious problems that a reasonable application should not try to catch. (as stated in the Javadoc of Error)
+
+since you have an error, it's a serious indication that you should never try to catch it.
+Just don't do infinite things in your code, when this error happens, no stack space is available, how would you want to proceed?
+StackOverFlowError indicates that you have severe problems, it's a bad idea to catch this error, 
+instead, try to understand what problems you have in your code and fix them.

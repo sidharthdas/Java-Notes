@@ -1,0 +1,235 @@
+The best way to map a @OneToMany relationship with JPA and Hibernate
+
+Introduction
+
+In a relational database system, a one-to-many association links two tables based on a Foreign Key column so 
+that the child table record references the Primary Key of the parent table row.
+
+The one-to-many table relationship
+
+As straightforward as it might be in a RDBMS, when it comes to JPA, the one-to-many database association can be 
+represented either through a @ManyToOne or a @OneToMany association since the OOP association can be either unidirectional or bidirectional.
+
+The @ManyToOne annotation allows you to map the Foreign Key column in the child entity mapping so that the child 
+has an entity object reference to its parent entity. This is the most natural way of mapping a database one-to-many 
+database association, and, usually, the most efficient alternative too.
+
+The bidirectional association requires the child entity mapping to provide a @ManyToOne annotation, 
+which is responsible for controlling the association.
+
+One the other hand, the unidirectional @OneToMany association is simpler since it’s just the parent-side which defines the relationship. 
+In this article, I’m going to explain the caveats of @OneToMany associations, and how you can overcome them.
+
+There are many ways to map the @OneToMany association. We can use a List or a Set. We can also define the @JoinColumn annotation too. 
+So, let’s see how all these work.
+Unidirectional @OneToMany
+Consider we have the following mapping:
+
+@Entity(name = "Post")
+@Table(name = "post")
+public class Post {
+ 
+    @Id
+    @GeneratedValue
+    private Long id;
+ 
+    private String title;
+ 
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<PostComment> comments = new ArrayList<>();
+ 
+    //Constructors, getters and setters removed for brevity
+}
+ 
+@Entity(name = "PostComment")
+@Table(name = "post_comment")
+public class PostComment {
+ 
+    @Id
+    @GeneratedValue
+    private Long id;
+ 
+    private String review;
+ 
+    //Constructors, getters and setters removed for brevity
+}
+Now, if we persist one Post and three PostComment(s):
+
+Post post = new Post("First post");
+ 
+post.getComments().add(
+    new PostComment("My first review")
+);
+post.getComments().add(
+    new PostComment("My second review")
+);
+post.getComments().add(
+    new PostComment("My third review")
+);
+
+
+insert into post (title, id)
+values ('First post', 1)
+ 
+insert into post_comment (review, id)
+values ('My first review', 2)
+ 
+insert into post_comment (review, id)
+values ('My second review', 3)
+ 
+insert into post_comment (review, id)
+values ('My third review', 4)
+ 
+insert into post_post_comment (Post_id, comments_id)
+values (1, 2)
+ 
+insert into post_post_comment (Post_id, comments_id)
+values (1, 3)
+ 
+insert into post_post_comment (Post_id, comments_id)
+values (1, 4)
+What is that! Why there are so many queries executed? And what’s the deal with that post_post_comment table anyway?
+
+Well, by default, that’s how the unidirectional @OneToMany association works, and this is how it looks from a database perspective:
+
+-----------------------------------------------------------
+Unidirectional one-to-many JPA relationship
+
+For a DBA, this looks more like a many-to-many database association than a one-to-many relationship, and it’s not very efficient either. 
+Instead of two tables, we now have three tables, so we are using more storage than necessary. Instead of only one Foreign Key, 
+we now have two of them. However, since we are most likely going to index these Foreign Keys, we are going to require twice as much
+ memory to cache the index for this association. Not nice!
+
+Unidirectional @OneToMany with @JoinColumn
+To fix the aforementioned extra join table issue, we just need to add the @JoinColumn in the mix:
+
+@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+@JoinColumn(name = "post_id")
+private List<PostComment> comments = new ArrayList<>();
+
+The @JoinColumn annotation helps Hibernate (the most famous JPA provider) to figure out that there is a post_id 
+Foreign Key column in the post_comment table that defines this association.
+
+With this annotation in place, when persisting the three PostComment entities, we get the following SQL output:
+
+insert into post (title, id)
+values ('First post', 1)
+ 
+insert into post_comment (review, id)
+values ('My first review', 2)
+ 
+insert into post_comment (review, id)
+values ('My second review', 3)
+ 
+insert into post_comment (review, id)
+values ('My third review', 4)
+ 
+update post_comment set post_id = 1 where id = 2
+ 
+update post_comment set post_id = 1 where id =  3
+ 
+update post_comment set post_id = 1 where id =  4
+A little bit better, but what’s the purpose of those three update statements?
+
+----------------------------------------------------------------------------------
+Bidirectional @OneToMany
+The best way to map a @OneToMany association is to rely on the @ManyToOne side to propagate all entity state changes:
+
+@Entity(name = "Post")
+@Table(name = "post")
+public class Post {
+ 
+    @Id
+    @GeneratedValue
+    private Long id;
+ 
+    private String title;
+ 
+    @OneToMany(
+        mappedBy = "post",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<PostComment> comments = new ArrayList<>();
+ 
+    //Constructors, getters and setters removed for brevity
+ 
+    public void addComment(PostComment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
+ 
+    public void removeComment(PostComment comment) {
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+}
+ 
+@Entity(name = "PostComment")
+@Table(name = "post_comment")
+public class PostComment {
+ 
+    @Id
+    @GeneratedValue
+    private Long id;
+ 
+    private String review;
+ 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
+ 
+    //Constructors, getters and setters removed for brevity
+ 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PostComment )) return false;
+        return id != null && id.equals(((PostComment) o).getId());
+    }
+ 
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+}
+There are several things to note on the aforementioned mapping:
+
+The @ManyToOne association uses FetchType.LAZY because, otherwise, we’d fall back to EAGER fetching which is bad for performance.
+The parent entity, Post, features two utility methods (e.g. addComment and removeComment) which are used to synchronize 
+both sides of the bidirectional association. You should always provide these methods whenever you are working with a 
+bidirectional association as, otherwise, you risk very subtle state propagation issues.
+The child entity, PostComment, implement the equals and hashCode methods. Since we cannot rely on a natural identifier 
+for equality checks, we need to use the entity identifier instead for the equals method. However, you need to do it properly 
+so that equality is consistent across all entity state transitions, which is also the reason why the hashCode has to be a constant value. 
+Because we rely on equality for the removeComment, it’s good practice to override equals and hashCode for the child entity in a bidirectional association.
+If we persist three PostComment(s):
+
+Post post = new Post("First post");
+ 
+post.addComment(
+    new PostComment("My first review")
+);
+post.addComment(
+    new PostComment("My second review")
+);
+post.addComment(
+    new PostComment("My third review")
+);
+ 
+entityManager.persist(post);
+Hibernate generates just one SQL statement for each persisted PostComment entity:
+
+insert into post (title, id)
+values ('First post', 1)
+ 
+insert into post_comment (post_id, review, id)
+values (1, 'My first review', 2)
+ 
+insert into post_comment (post_id, review, id)
+values (1, 'My second review', 3)
+ 
+insert into post_comment (post_id, review, id)
+values (1, 'My third review', 4)

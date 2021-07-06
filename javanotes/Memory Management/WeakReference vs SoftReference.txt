@@ -1,0 +1,72 @@
+WeakReference vs SoftReference WeakReference vs SoftReference in Java
+=============================================
+This special behavior of SoftReference and WeakReference makes them useful in 
+certain cases like SoftReference looks perfect for implementing caches, so when 
+JVM needs memory it removes objects which have only SoftReference pointing towards them.
+
+On the other hand, WeakReference is great for storing metadata e.g. storing ClassLoader reference. 
+If no class is loaded then no point in keeping a reference of ClassLoader, a WeakReference makes 
+ClassLoader eligible for Garbage collection as soon as the last strong reference removed.
+
+For those who don't know there are four kind of reference in Java :
+Strong reference
+Weak Reference
+Soft Reference
+Phantom Reference
+
+Strong Reference is most simple as we use it in our day to day programming life e.g. in 
+the code, String s = "abc" , reference variable s has strong reference to String object "abc".
+ Any object which has Strong reference attached to it is not eligible for garbage collection. 
+ Obviously these are objects which is needed by Java program. Weak Reference are represented 
+ using java.lang.ref.WeakReference class and you can create Weak Reference by using following code :
+
+Counter counter = new Counter(); // strong reference - line 1
+WeakReference<Counter> weakCounter = new WeakReference<Counter>(counter); //weak reference
+counter = null; // now Counter object is eligible for garbage collection
+
+Now as soon as you make strong reference counter = null, counter object created on line 1 
+becomes eligible for garbage collection; because it doesn't have any more Strong reference 
+and Weak reference by reference variable weakCounter can not prevent Counter object from 
+being garbage collected.  On the other hand, had this been Soft Reference, Counter object 
+is not garbage collected until JVM absolutely needs memory. Soft reference in Java is represented
+ using java.lang.ref.SoftReference class. You can use following code to create a SoftReference in Java
+
+Counter prime = new Counter();  // prime holds a strong reference - line 2
+SoftReference<Counter> soft = new SoftReference<Counter>(prime) ; //soft reference variable 
+has SoftReference to Counter Object created at line 2
+
+prime = null;  // now Counter object is eligible for garbage collection but only
+ be collected when JVM absolutely needs memory
+ 
+After making strong reference null, Counter object created on line 2 only has one 
+soft reference which can not prevent it from being garbage collected but it can delay
+ collection, which is eager in case of WeakReference. Due to this major difference 
+ between SoftReference and WeakReference, SoftReference are more suitable for caches 
+ and WeakReference are more suitable for storing meta data. One convenient example of
+ WeakReference is WeakHashMap, which is another implementation of Map interface like 
+ HashMap or TreeMap but with one unique feature. WeakHashMap wraps keys as WeakReference
+ which means once strong reference to actual object removed, WeakReference present internally
+ on WeakHashMap doesn't prevent them from being Garbage collected.
+
+Phantom reference is third kind of reference type available in java.lang.ref package. 
+Phantom reference is represented by java.lang.ref.PhantomReference class. Object which 
+only has Phantom reference pointing them can be collected whenever Garbage Collector likes it. 
+Similar to WeakReference and SoftReference you can create PhantomReference by using following code :
+
+DigitalCounter digit = new DigitalCounter(); // digit reference variable has strong reference - line 3
+PhantomReference<DigitalCounter> phantom = new PhantomReference<DigitalCounter>(digit); // phantom reference to object created at line 3
+
+digit = null;
+As soon as you remove Strong reference, DigitalCounter object created at line 3 can be garbage 
+collected at any time as it only has one more PhantomReference pointing towards it, which can not prevent it from GC'd.
+
+Apart from knowing about WeakReference, SoftReference, PhantomReference and WeakHashMap there is one
+ more class called ReferenceQueue which is worth knowing. You can supply a ReferenceQueue instance 
+ while creating any WeakReference, SoftReference or PhantomReference as shown in following code :
+
+ReferenceQueue refQueue = new ReferenceQueue(); //reference will be stored in this queue for cleanup
+
+DigitalCounter digit = new DigitalCounter();
+PhantomReference<DigitalCounter> phantom = new PhantomReference<DigitalCounter>(digit, refQueue);
+Reference of instance will be appended to ReferenceQueue and you can use it to perform any clean-up by polling ReferenceQueue.
+ An Object's life-cycle is nicely summed up by this diagram.

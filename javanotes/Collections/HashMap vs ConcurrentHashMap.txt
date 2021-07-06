@@ -1,0 +1,55 @@
+HashMap vs ConcurrentHashMap
+
+
+1.  Thread -Safe : 
+
+     ConcurrentHashMap is thread-safe that is the code can be accessed by single thread at a time .    
+     while HashMap is not thread-safe .
+difference between hashmap and concurrenthashmap in java
+2.  Synchronization Method :
+
+    HashMap can be synchronized by using    
+    synchronizedMap(HashMap)  method .  By using this  
+
+    method we get a HashMap object which is equivalent 
+    to the HashTable object . So every modification  is performed    
+    on  Map is locked on Map object.
+
+
+import java.util.*;
+
+public class HashMapSynchronization {
+    public static void main(String[] args) {
+        // create map
+        Map<String,String> map = new HashMap<String,String>();
+        
+        // populate the map
+        map.put("1","ALIVE ");
+        map.put("2","IS");
+        map.put("3","AWESOME");
+        
+        // create a synchronized map
+        Map<String,String> syncMap = Collections.synchronizedMap(map);
+        
+        System.out.println("Synchronized map :"+syncMap);
+    }
+}
+
+
+   ConcurrentHashMap synchronizes or locks on the certain portion of the Map . To optimize
+   the performance of ConcurrentHashMap , Map is divided into different partitions depending
+   upon the Concurrency level . So that we do not need to synchronize the whole Map Object.
+
+
+3.  Null Key
+
+
+     ConcurrentHashMap does not allow NULL values . So the key can not be null in
+     ConcurrentHashMap .While In HashMap there can only be one null key .
+
+  
+4.  Performance 
+
+     In multiple threaded environment HashMap is usually faster than ConcurrentHashMap . As    
+     only single thread can access the certain portion of the Map and thus reducing the performance . 
+     While in HashMap any number of threads can access the code at the same time .

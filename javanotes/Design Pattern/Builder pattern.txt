@@ -1,0 +1,169 @@
+Definition of Builder Pattern
+===========================================
+
+Builder pattern aims to “Separate the construction of a complex object from its representation so 
+that the same construction process can create different representations.”
+
+Where we need Builder Pattern
+======================================
+Builder pattern helps us in creating immutable classes with large set of state attributes.
+
+Let’s discuss a common problem in our application. In any user management module, primary entity is User, 
+let’s say. Ideally and practically as well, once a user object is fully created, you will not want to change 
+it’s state. It simply does not make sense, right? Now, let’s assume, our User object has following 5 attributes
+ i.e. firstName, lastName, age, phone and address.
+
+In normal practice, if you want to make a immutable User class, then you must pass all five information as 
+parameters to constructor. It will look like this:
+
+public User (String firstName, String lastName, int age, String phone, String address){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.age = age;
+    this.phone = phone;
+    this.address = address;
+}
+Very good. Now what if only firstName and lastName are mandatory and rest 3 fields are optional. 
+Problem !! We need more constructors.
+
+public User (String firstName, String lastName, int age, String phone){ ... }
+public User (String firstName, String lastName, String phone, String address){ ...  }
+public User (String firstName, String lastName, int age){ ...   }
+public User (String firstName, String lastName){ ...    }
+We will need some more like above. Still can manage? Now let’s introduce our sixth attribute i.e. salary. Now it is problem.
+
+One way it to create more constructors, and another is to loose the immutability and introduce setter methods. 
+You choose any of both options, you loose something, right?
+
+Here, builder pattern will help you to consume additional attributes while retaining the immutability of Use class.
+
+A sample implementation using Builder Pattern
+Below is the coded solution of problem we discussed above. This uses a additional class UserBuilder which helps us 
+in building desired User object with all mandatory attributes and combination of optional attributes, without loosing the immutability.
+public class SmartHome {
+    // Fields omitted for brevity
+    // The same fields should be in `SmartHome` and `SmartHomeBuilder`
+
+    // Private constructor means we can't instantiate it
+    // by simply calling `new SmartHome()`
+    private SmartHome() {}
+
+    public static class SmartHomeBuilder {
+        private String name;
+        private int serialNumber;
+        private String addressName;
+        private String addressNumber;
+        private String city;
+        private String country;
+        private String postalCode;
+        private int light1PortNum;
+        private int light2PortNum;
+        private int door1PortNum;
+        private int door2PortNum;
+        private int microwavePortNum;
+        private int tvPortNum;
+        private int waterHeaterPortNum;
+
+        public SmartHomeBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public SmartHomeBuilder withSerialNumber(int serialNumber) {
+            this.serialNumber = serialNumber;
+            return this;
+        }
+
+        public SmartHomeBuilder withAddressName(String addressName) {
+            this.addressName = addressName;
+            return this;
+        }
+
+        public SmartHomeBuilder inCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public SmartHomeBuilder inCountry(String country) {
+            this.country = country;
+            return this;
+        }
+
+        // The rest of the methods are omitted for brevity
+        // All follow the same principle
+
+        public SmartHome build() {
+            SmartHome smartHome = new SmartHome();
+            smartHome.name = this.name;
+            smartHome.serialNumber = this.serialNumber;
+            smartHome.addressName = this.addressName;
+            smartHome.city = this.city;
+            smartHome.country = this.country;
+            smartHome.postalCode = this.postalCode;
+            smartHome.light1PortNum = this.light1PortNum;
+            smartHome.light2PortNum = this.light2PortNum;
+            smartHome.door1PortNum = this.door1PortNum;
+            smartHome.door2PortNum = this.door2PortNum;
+            smartHome.microwavePortNum = this.microwavePortNum;
+            smartHome.tvPortNum = this.tvPortNum;
+            smartHome.waterHeaterPortNum = this.waterHeaterPortNum;
+
+            return smartHome;
+        }
+    }
+}
+
+Please note that above created user object does not have any setter method, so it’s state can not be 
+changed once it has been built. This provides the desired immutability.
+
+Sometimes developers may forget to add support for a new attribute to the builder when they add that 
+attribute to the User class. To minimize this, we should enclose the builders inside the class 
+(as in above example) that they build so that it’s more obvious to the developer that there is a 
+relevant builder that needs to be updated too.
+
+Sometimes I think there should be a Destroyer pattern (opposite to builder) which should tear down 
+certain attributes from a complex object in systematic manner. What do you think?
+
+Existing implementations in JDK
+===========================================
+
+All implementations of java.lang.Appendable are infact good example of use of Builder pattern in java. e.g.
+
+java.lang.StringBuilder#append() [Unsynchronized class]
+
+java.lang.StringBuffer#append() [Synchronized class]
+
+java.nio.ByteBuffer#put() (also on CharBuffer, ShortBuffer, IntBuffer, LongBuffer, FloatBuffer and DoubleBuffer)
+
+Another use can be found in javax.swing.GroupLayout.Group#addComponent().
+
+Look how similar these implementations look like what we discussed above.
+
+StringBuilder builder = new StringBuilder("Temp");
+String data = builder.append(1)
+                .append(true)
+                .append("friend")
+                .toString();
+System.out.println(data);
+Output:
+Temp1truefriend
+
+Benefits and Advantages of Builder Pattern
+=================================================
+Undoubtedly, the number of lines of code increase at least to double in builder pattern, but the effort 
+pays off in terms of design flexibility and much more readable code. The parameters to the constructor 
+are reduced and are provided in highly readable method calls.
+
+Builder pattern also helps minimizing the number of parameters in constructor and thus there is no need to
+ pass in null for optional parameters to the constructor. It’s really attracts me.
+
+Another advantage is that Object is always instantiated in a complete state rather than sitting in an 
+incomplete state until the developer calls (if ever calls) the appropriate “setter” method to set additional fields.
+
+And I finally I can build immutable objects without much complex logic in object building process.
+
+Costs and Disadvantages of Builder Pattern
+=================================================
+Though Builder pattern reduce some line of code buy eliminating the need of setter methods, still in double up total
+ lines by introducing the Builder object. Furthermore, although client code is more readable, the client code is also
+ more verbose. Though for me, readability weighs more than lines of code.

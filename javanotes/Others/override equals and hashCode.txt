@@ -1,0 +1,166 @@
+Java – How to override equals and hashCode
+
+The Contract Between equals() and hashcode()
+If two objects are equal according to the equals(Object) method, then calling the hashcode() method on each of the two objects must
+ produce the same integer result
+
+1) HashMap handles collision by using a linked list to store map entries ended up in same array location or bucket location.
+
+2) From Java 8 onwards, HashMap, ConcurrentHashMap, and LinkedHashMap will use the balanced tree in place of linked list to
+ handle frequently hash collisions. The idea is to switch to the balanced tree once the number of items in a hash bucket 
+ grows beyond a certain threshold. This will improve the worst-case get() method performance from O(n) to O(log n).
+
+3) By switching from linked list to balanced tree for handling collision, the iteration order of HashMap will change. 
+This is Ok because HashMap doesn't provide any guarantee on iteration order and any code which depends upon that are likely to break.
+
+4) Legacy class Hashtable which exists in JDK from Java 1 will not use the balanced binary tree to handle frequent hash 
+collision to keep its iteration order intact. This was decided to avoid breaking many legacy Java application which 
+depends upon iteration order of Hashtable.
+
+5) Apart from Hashtable, WeakHashMap and IdentityHashMap will also continue to use the linked list for handling collision 
+even in the case of frequent collisions.
+
+6) Collision in HashMap is possible because hash function uses hashCode() of key object and equals() and hashCode() 
+contract doesn't guarantee different hashCode for different objects. Remember, they guarantee same hash code for the 
+equal object but not the vice-versa.
+
+7) A collision will occur on Hashtable or HashMap when hashCode() method of two different key objects will return same values.
+
+
+Some Java examples to show you how to override equals and hashCode.
+
+1. POJO
+To compare two Java objects, we need to override both equals and hashCode (Good practice).
+
+User.java
+public class User {
+    private String name;
+    private int age;
+    private String passport;
+
+	//getters and setters, constructor
+}
+User user1 = new User("mkyong", 35, "111222333");
+    User user2 = new User("mkyong", 35, "111222333");
+
+    System.out.println(user1.equals(user2)); // false
+
+ 
+2. Classic Way
+The 17 and 31 hash code idea is from the classic Java book – effective Java : item 9
+
+User.java
+public class User {
+    private String name;
+    private int age;
+    private String passport;
+
+	//getters and setters, constructor
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        return user.name.equals(name) &&
+                user.age == age &&
+                user.passport.equals(passport);
+    }
+
+    //Idea from effective Java : Item 9
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + age;
+        result = 31 * result + passport.hashCode();
+        return result;
+    }
+
+}
+
+ 
+2. JDK 7
+For JDK 7 and above, you can use the new Objects class to generate the equals and hash code values.
+
+User.java
+import java.util.Objects;
+
+public class User {
+    private String name;
+    private int age;
+    private String passport;
+
+	//getters and setters, constructor
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return age == user.age &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(passport, user.passport);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, passport);
+    }
+
+}
+3. Apache Commons Lang
+Alternatively, you can use the Apache Commons Lang EqualsBuilder and HashCodeBuilder function.
+
+User.java
+import org.apache.commons.lang3.builder;
+
+public class User {
+    private String name;
+    private int age;
+    private String passport;
+
+	//getters and setters, constructor
+
+     @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        return new EqualsBuilder()
+                .append(age, user.age)
+                .append(name, user.name)
+                .append(passport, user.passport)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(age)
+                .append(passport)
+                .toHashCode();
+    }
+
+}
+4. Test again
+After overrides both equals and hashCode.
+
+User user1 = new User("mkyong", 35, "111222333");
+    User user2 = new User("mkyong", 35, "111222333");
+ 
+    System.out.println(user1.equals(user2)); // true

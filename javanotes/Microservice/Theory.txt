@@ -1,0 +1,16 @@
+Microservices:
+
+Why we need Microservices / drawbacks of monolithic architecture?
+1. monolithic architecture application are large and complex in size.
+2. It blocks quick development because of size of application
+3. It blocks continuous development.
+4. It is unscalable. We can't scale any single component, we have to create the instance for entire application.
+5. Change in any  particular component needs to stop entire application.
+
+Microservice: It is an architectural style that structures an application as an collection of small autonomous services, modelled around business domain.
+In this architecture, each service is self contained and single business capability.
+
+Features of Microservices:
+1. small focused: 
+2. Loosely coupled
+3. Language neutral

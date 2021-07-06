@@ -1,0 +1,179 @@
+How do JSON Web Tokens work?
+---------------------------------
+
+A JSON web token consists of three components: a header, a payload, and a signature.
+The header
+---------------
+The header section of a JSON web token identifies the algorithm used to generate the signature. 
+It is a base64url encoded string of a JSON blob like this:
+{
+ "alg" : "HS256",
+ "typ" : "JWT"
+}
+base64url encoded string: eyBhbGcgOiBIUzI1NiwgdHlwIDogSldUIH0K
+(Base64url encoding is a modified version of base64 for the URL format. It is similar to base64, but uses 
+different non-alphanumeric characters and omits padding. )
+The most common algorithms used are HMAC and RSA algorithms.
+
+The payload
+---------------
+The payload section contains the information that is actually used for access control. This section,
+ too, is base64url encoded before being used in the token.
+{
+ "user_name" : "admin",
+}
+base64url encoded string: eyB1c2VyX25hbWUgOiBhZG1pbiB9Cg
+
+The signature
+-----------------
+The signature is the part that is used to validate that the token has not been tampered with. It is calculated 
+by concatenating the header with the payload, then signing with the algorithm specified in the header.
+signature = HMAC-SHA256(base64urlEncode(header) + '.' + base64urlEncode(payload), secret_key)
+// Let's just say the value of secret_key is "key".
+-> signature function returns 4Hb/6ibbViPOzq9SJflsNGPWSk6B8F6EqVrkNjpXh7M
+For this specific token, the string “eyBhbGcgOiBIUzI1NiwgdHlwIDogSldUIH0K.eyB1c2VyX25hbWUgOiBhZG1pbiB9Cg” 
+is signed with the HS256 algorithm with the secret key “key”. The resulting string is 4Hb/6ibbViPOzq9SJflsNGPWSk6B8F6EqVrkNjpXh7M.
+
+The complete token
+--------------------
+You get the complete token by concatenating each section (header, payload, and signature) with a “.” in between each section.
+eyBhbGcgOiBIUzI1NiwgdHlwIDogSldUIH0K.eyB1c2VyX25hbWUgOiBhZG1pbiB9Cg.4Hb/6ibbViPOzq9SJflsNGPWSk6B8F6EqVrkNjpXh7M
+
+Ways to bypass JSON Web Token controls
+------------------------------------------
+When implemented correctly, JSON web tokens provide a secure way to identify the user since the data contained in 
+the payload section cannot be tampered with. (Since the user does not have access to the secret key, she cannot sign the token herself.)
+But if implemented incorrectly, there are ways that an attacker can bypass the security mechanism and forge arbitrary tokens.
+
+Change up the algorithm type
+------------------------------------
+One of the ways that attackers can forge their own tokens is by tampering with the alg field of the header. 
+If the application does not restrict the algorithm type used in the JWT, an attacker can specify which algorithm 
+to use, which could compromise the security of the token.
+
+None algorithm
+------------------
+JWT supports a “none” algorithm. If the alg field is set to “none”, any token would be considered valid if their 
+signature section is set to empty. For example, the following token would be considered valid:
+eyAiYWxnIiA6ICJOb25lIiwgInR5cCIgOiAiSldUIiB9Cg.eyB1c2VyX25hbWUgOiBhZG1pbiB9Cg.
+It is simply the base64url encoded versions of these two blobs, and no signature is present.
+{
+ "alg" : "none",
+ "typ" : "JWT"
+}
+{
+ "user" : "admin"
+}
+This feature was originally used for debugging purposes. But if not turned off in a production environment, 
+it would allow attackers to forge any token they want by setting the alg field to “none”. They can then 
+impersonate anyone on the site by using the forged tokens.
+
+2. HMAC algorithm
+--------------------
+The two most common types of algorithms used for JWTs are HMAC and RSA. With HMAC, the token would be signed 
+with a key, then later verified with the same key. As for RSA, the token would first be created with a private 
+key, then verified with the corresponding public key.
+
+HMAC -> signed with a key, verified with the same key
+RSA -> signed with a private key, verified with the corresponding public key
+
+It is critical that the secret key for HMAC tokens and the private key for RSA tokens are 
+kept a secret since they are used to sign the tokens.
+Now let’s say that there is an application that was originally designed to use RSA tokens. 
+The tokens are signed with a private key A, which is kept a secret from the public. Then the tokens are 
+verified with public key B, which is available to anyone. This is okay as long as the tokens are always treated as RSA tokens.
+
+Token signed with key A -> Token verified with key B (RSA scenario)
+Now if the attacker changes the alg to HMAC, she might be able to create valid tokens by signing the forged tokens with the RSA public key B.
+This is because originally when the token is signed with RSA, the program verifies it with the RSA public key B. 
+When the signing algorithm is switched to HMAC, the token is still verified with the RSA public key B, but this time, 
+the token can be signed with the same public key B (since it’s using HMAC).
+Token signed with key B -> Token verified with key B (HMAC scenario)
+
+Provide a non-valid signature
+---------------------------------
+It is also possible that the signature of the token is never verified after it arrives at the application. 
+This way an attacker could simply bypass the security mechanism by providing an invalid signature.
+
+Bruteforce the secret key
+------------------------------
+It could also be possible to brute force the key used to sign a JWT.
+The attacker has a lot of information to start with: she knows the algorithm used to sign the token, 
+the payload that was signed and the resulting signature. If the key used to sign the token is not complex enough, 
+she might be able to brute force it easily.
+
+Leak the secret key
+------------------------
+If an attacker is not able to brute force the key, she might try leaking the secret key instead. 
+If another vulnerability (like a directory traversal, XXE, SSRF) exists that allows the attacker to read
+ the file where the key value is stored, the attacker can steal the key and sign arbitrary tokens.
+
+KID manipulation
+---------------------
+KID stands for “Key ID”. It is an optional header field in JWTs, and it allows developers to specify the 
+key to be used for verifying the token. The proper usage of a KID parameter looks like this:
+{
+ "alg" : "HS256",
+ "typ" : "JWT",
+ "kid" : "1"       // use key number 1 to verify the token 
+}
+Since this field is controlled by the user, it can be manipulated by attackers and lead to dangerous consequences.
+
+Directory traversal
+--------------------------
+Since the KID is often used to retrieve a key file from the file system, if it is not sanitized before use, 
+it can lead to a directory traversal attack. When this is the case, the attacker would be able to specify any 
+file in the file system as the key to be used to verify the token.
+“kid”: “../../public/css/main.css” 
+// use the publicly available file main.css to verify the token
+For example, the attacker can force the application into using a publicly available file as the key, and sign an HMAC token using that file.
+
+2. SQL injection
+---------------------
+The KID could also be used to retrieve the key from a database. In this case, it might be possible to 
+utilize SQL injection to bypass JWT signing.
+If SQL injection is possible on the KID parameter, the attacker can use this injection to return any value she wants.
+“kid”: "aaaaaaa' UNION SELECT 'key';--"
+// use the string "key" to verify the token
+For example, this above injection will cause the application to return the string “key” 
+(since the key named “aaaaaaa” doesn’t exist in the database). The token will then be verified with the string “key” as the secret key.
+
+Header parameter manipulation
+-----------------------------------
+In addition to a key ID, JSON web token standards also provide developers with the ability to specify keys via a URL.
+JKU header parameter
+JKU stands for “JWK Set URL”. It is an optional header field used to specify a URL that points to a set of keys that 
+are used to verify the token. If this field is allowed and not properly restricted, an attacker could host their own 
+key file and specify that the application uses it to verify tokens.
+jku URL -> file containing JWK set -> JWK used to verify the token
+
+2. JWK header parameter
+
+The optional JWK (JSON Web Key) header parameter allows attackers to embed the key used to verify the token directly in the token.
+
+3. X5U, X5C URL manipulation
+Similar to the jku and jwk headers, the x5u and x5c header parameters allow attackers to specify the
+ public key certificate or certificate chain used to verify the token. x5u specifies the information 
+ in the URI form while x5c allows the certificate values to be embedded in the token.
+
+Other JWT security issues
+There are also other JWT issues that arise when they are not correctly implemented. These are not very common, 
+but definitely worth looking out for:
+
+Information leak
+------------------
+Since JSON web tokens are used for access control, they often contain information about the user.
+If the token is not encrypted, anyone can base64 decode the token and read the token’s payload. 
+So if the token contains sensitive information, it might become a source of information leaks. A properly implemented 
+signature section of the JSON web token provides data integrity, not confidentiality.
+
+Command injection
+---------------------
+Sometimes when the KID parameter is passed directly into an insecure file read operation, it is possible to inject 
+commands into the code flow.
+One of the functions that could allow this type of attack is the Ruby open() function. This function allows attackers 
+to execute system commands by simply tacking the command onto the input after the KID file name:
+“key_file” | whoami;
+This is just one example. Theoretically, vulnerabilities like this can happen whenever an application passes any of the
+ header parameters unsanitized into any function resembling system(), exec(), etc.
+Ultimately, JSON web tokens are just another form of user input. They should always be handled with skepticism and sanitized rigorously.

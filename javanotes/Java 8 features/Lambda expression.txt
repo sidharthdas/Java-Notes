@@ -1,0 +1,9 @@
+Lambda Expression:
+-----------------------
+a-> To enable functional programming.
+b-> To use API's very easily and effectively
+c-> write more readable, maintainable and concise code.
+d-> To enable parallel processing
+
+Functional programming is a paradigm that allows programming using expressions i.e. 
+declaring functions, passing functions as arguments and using functions as statements (rightly called expressions in Java8). 

@@ -1,0 +1,89 @@
+How to use ConcurrentHashMap in Java - Example Tutorial and Working
+-------------------------------------------------------------------------------
+ 
+ConcurrentHashMap in Java is introduced as an alternative of Hashtable in Java 1.5 as part of Java concurrency package. 
+Prior to Java 1.5 if you need a Map implementation, which can be safely used in a concurrent and multi-threaded Java program, 
+then, you only have Hashtable or synchronized Map because HashMap is not thread-safe. With ConcurrentHashMap, now you have a 
+better choice; because not only it can be safely used in the concurrent multi-threaded environment but also provides better
+ performance over Hashtable and synchronizedMap. ConcurrentHashMap performs better than earlier two because it only locks a
+ portion of Map, instead of whole Map, which is the case with Hashtable and synchronized Map. CHM allows concurred read operations and 
+ the same time maintains integrity by synchronizing write operations. We have seen basics of ConcurrentHashMap on Top 5 
+ Java Concurrent Collections from JDK 5 and 6 and in this Java tutorial, we will learn:
+
+ConcurrentHashMap is introduced as an alternative of Hashtable and provided all functions supported by Hashtable with an 
+additional feature called "concurrency level", which allows ConcurrentHashMap to partition Map. ConcurrentHashMap allows multiple
+ readers to read concurrently without any blocking. This is achieved by partitioning Map into different parts based on concurrency 
+ level and locking only a portion of Map during updates. Default concurrency level is 16, and accordingly Map is divided into 16 part
+ and each part is governed with a different lock. This means, 16 thread can operate on Map simultaneously until they are operating on 
+ different part of Map. This makes ConcurrentHashMap high performance despite keeping thread-safety intact.  Though, it comes with a caveat. 
+ Since update operations like put(), remove(), putAll() or clear() is not synchronized, concurrent retrieval may not reflect most recent change on Map.
+
+In case of putAll() or clear(), which operates on whole Map, concurrent read may reflect insertion and removal of only some entries. 
+Another important point to remember is iteration over CHM, Iterator returned by keySet of ConcurrentHashMap are weekly consistent and they 
+only reflect state of ConcurrentHashMap and certain point and may not reflect any recent change. Iterator of ConcurrentHashMap's keySet area 
+also fail-safe and doesn’t throw ConcurrentModificationExceptoin..
+
+Default concurrency level is 16 and can be changed, by providing a number which make sense and work for you while creating ConcurrentHashMap. 
+Since concurrency level is used for internal sizing and indicate number of concurrent update without contention, 
+so, if you just have few writers or thread to update Map keeping it low is much better. ConcurrentHashMap also uses ReentrantLock 
+to internally lock its segments.
+
+Internal implementation of ConcurrentHashMap in Java
+
+ConcurrentHashMap putifAbsent example in Java
+ConcurrentHashMap examples are similar to Hashtable examples, we have seen earlier,  but worth knowing is the use of putIfAbsent() method.
+ Many times we need to insert entry into Map if it's not present already, and we wrote following kind of code:
+
+synchronized(map){
+  if (map.get(key) == null){
+      return map.put(key, value);
+  } else{
+      return map.get(key);
+  }
+}
+
+Though this code will work fine in HashMap and Hashtable, This won't work in ConcurrentHashMap; because, during put operation whole map is not locked, 
+and while one thread is putting value, other thread's get() call can still return null which result in one thread overriding
+ value inserted by other thread. Ofcourse, you can wrap whole code in synchronized block and make it thread-safe but that will 
+ only make your code single threaded. ConcurrentHashMap provides putIfAbsent(key, value) which does same thing but atomically 
+ and thus eliminates above race condition. 
+
+ConcurrentHashMap putIfAbsent() example in Java
+
+When to use ConcurrentHashMap in Java
+============================================
+ConcurrentHashMap is best suited when you have multiple readers and few writers. If writers outnumber reader, or writer is equal to reader,
+ than performance of ConcurrentHashMap effectively reduces to synchronized map or Hashtable. Performance of CHM drops, because you got to 
+ lock all portion of Map, and effectively each reader will wait for another writer, operating on that portion of Map. ConcurrentHashMap 
+ is a good choice for caches, which can be initialized during application start up and later accessed my many request processing threads. 
+ As javadoc states, CHM is also a good replacement of Hashtable and should be used whenever possible, keeping in mind, that CHM provides
+ slightly weeker form of synchronization than Hashtable.
+
+Summary
+Now we know What is ConcurrentHashMap in Java and when to use ConcurrentHashMap, it’s time to know and revise some important points about CHM in Java.
+
+1. ConcurrentHashMap allows concurrent read and thread-safe update operation.
+
+2. During the update operation, ConcurrentHashMap only locks a portion of Map instead of whole Map.
+
+3. The concurrent update is achieved by internally dividing Map into the small portion which is defined by concurrency level.
+
+4. Choose concurrency level carefully as a significantly higher number can be a waste of time and space and the lower number may introduce thread 
+contention in case writers over number concurrency level.
+
+5. All operations of ConcurrentHashMap are thread-safe.
+
+6. Since ConcurrentHashMap implementation doesn't lock whole Map, there is chance of read overlapping with update operations like put() and remove(). 
+In that case result returned by get() method will reflect most recently completed operation from there start.
+
+7. Iterator returned by ConcurrentHashMap is weekly consistent, fail-safe and never throw ConcurrentModificationException. In Java.
+
+8. ConcurrentHashMap doesn't allow null as key or value.
+
+9. You can use ConcurrentHashMap in place of Hashtable but with caution as CHM doesn't lock whole Map.
+
+10. During putAll() and clear() operations, the concurrent read may only reflect insertion or deletion of some entries.
+
+That’s all on What is ConcurrentHashMap in Java and when to use it. We have also seen little bit about internal working of ConcurrentHashMap and
+ how it achieves it’s thread-safety and better performance over Hashtable and synchronized Map. Use ConcurrentHashMap in Java program, 
+ when there will be more reader than writers and it’s a good choice for creating cache in Java as well.

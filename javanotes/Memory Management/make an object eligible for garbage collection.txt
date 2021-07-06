@@ -1,0 +1,149 @@
+Ways to make an object eligible for garbage collection:
+
+Please note that the object can not become a candidate for garbage collection until all references to it are discarded.
+
+==> Object created inside a method : When a method is called it goes inside the stack frame. 
+When the method is popped from the stack, all its members dies and if some objects were created 
+inside it then these objects becomes unreachable or anonymous after method execution and thus 
+becomes eligible for garbage collection
+
+/* Java program to demonstrate that  
+objects created inside a method will becomes 
+eligible for gc after method execution terminate */
+  
+class Test 
+{ 
+      
+    // to store object name 
+    String obj_name; 
+      
+    public Test(String obj_name)  
+    { 
+        this.obj_name = obj_name; 
+    } 
+      
+    static void show() 
+    { 
+        //object t1 inside method becomes unreachable when show() removed 
+        Test t1 = new Test("t1");  
+        display(); 
+          
+    } 
+    static void display() 
+    { 
+        //object t2 inside method becomes unreachable when display() removed 
+        Test t2 = new Test("t2");  
+    } 
+      
+    // Driver method 
+    public static void main(String args[]) 
+    { 
+        // calling show() 
+        show(); 
+          
+        // calling garbage collector 
+        System.gc(); 
+    } 
+      
+    @Override
+    /* Overriding finalize method to check which object 
+    is garbage collected */
+    protected void finalize() throws Throwable  
+    { 
+        // will print name of object 
+        System.out.println(this.obj_name + " successfully garbage collected"); 
+    } 
+} 
+Output:
+
+t2 successfully garbage collected
+t1 successfully garbage collected
+
+Note : If a method returns the object created inside it and we store this object reference by using a reference-type 
+variable than it is no longer eligible for garbage collection.
+
+==> Reassigning the reference variable: When reference id of one object is referenced to reference id of some other object 
+then the previous object has no any longer reference to it and becomes unreachable and thus becomes eligible for garbage collection.
+
+/* Java program to demonstrate gc 
+ when one object referred to other object */
+  
+class Test 
+{ 
+    // to store object name 
+    String obj_name; 
+      
+    public Test(String obj_name)  
+    { 
+        this.obj_name = obj_name; 
+    } 
+      
+    // Driver method 
+    public static void main(String args[]) 
+    { 
+        Test t1 = new Test("t1"); 
+        Test t2 = new Test("t2"); 
+          
+        //t1 now referred to t2 
+        t1 = t2; 
+          
+        // calling garbage collector 
+        System.gc(); 
+    } 
+      
+    @Override
+    /* Overriding finalize method to check which object 
+     is garbage collected */
+    protected void finalize() throws Throwable  
+    { 
+        // will print name of object 
+        System.out.println(this.obj_name + " successfully garbage collected"); 
+    } 
+} 
+Output:
+
+t1 successfully garbage collected
+
+==> Nullifying the reference variable : When all the reference variables of an object are changed to NULL, it becomes unreachable 
+and thus becomes eligible for garbage collection.Example:
+
+/* Java program to demonstrate gc 
+ when object reference changed to NULL */
+  
+class Test 
+{ 
+    // to store object name 
+    String obj_name; 
+      
+    public Test(String obj_name)  
+    { 
+        this.obj_name = obj_name; 
+    } 
+      
+    // Driver method 
+    public static void main(String args[]) 
+    { 
+        Test t1 = new Test("t1"); 
+           
+        /* t1 being used for some purpose in program */
+   
+        /* When there is no more use of t1, make the object 
+           referred by t1 eligible for garbage collection */        
+        t1 = null; 
+   
+        // calling garbage collector 
+        System.gc(); 
+    } 
+      
+    @Override
+    /* Overriding finalize method to check which object 
+     is garbage collected */
+    protected void finalize() throws Throwable  
+    { 
+        // will print name of object 
+        System.out.println(this.obj_name + " successfully garbage collected"); 
+    } 
+} 
+Output:
+
+t1 successfully garbage collected

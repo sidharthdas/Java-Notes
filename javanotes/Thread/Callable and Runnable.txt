@@ -1,0 +1,36 @@
+Difference between Callable and Runnable in Java
+
+1. Checked Exception : Callable's call() method can throw checked exception while  Runnable run() method can  not throw checked exception.
+
+2. Return value : Return type of Runnable run() method is void , so it can not return any value.
+while Callable can return the Future object, which represents the life cycle of a task and provides methods to check if the task has been completed 
+or canceled.
+   
+3. Implementation : Callable needs to implement call() method while Runnable needs to implement run() method. 
+
+public interface Runnable {
+    void run();
+}
+public interface Callable<V> {
+    V call() throws Exception;
+}
+
+
+
+4. Availability : Runnable is available in java right from JDK 1.0 while Callable was later added to JDK 5.
+
+5. Execution :  Limitation of Callable interface lies in java is that one can not pass it to Thread as one pass the Runnable instance. 
+There is no constructor defined in the Thread class which accepts a Callable interface. 
+
+Callable vs Runnable
+Similarities between Callable and Runnable in Java
+
+1. Executor Framework : Callable and Runnable interface both can be used with Executors framework introduced in java 5.
+
+2. Single Abstract Method : Both Callable and Runnable interface have a single abstract method, which means they can be used in lambda expressions in java 8.
+
+Callable	Runnable
+Checked Exception	throw Checked Exception	Does not throw Checked Exception
+Return value	Yes	No
+Implementation method	call() 	run()
+Availability	Java 5	Since jdk 1.0 i.e from beginning

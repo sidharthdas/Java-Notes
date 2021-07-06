@@ -1,0 +1,73 @@
+Composition and aggregation
+================================
+
+Another example of Composition is Car and it's part e.g. engines, wheels, etc. 
+Individual parts of the car can not function when a car is destroyed.  
+While in the case of Aggregation, including object that can exist without being part 
+of the main object like a Player which is part of a Team, can exist without a team and 
+can become part of other teams as well.
+
+Composition and aggregation are two types of association which is used to represent relationships between two classes. 
+
+In Aggregation , parent and child entity maintain Has-A relationship but both can also exist independently.
+We can use parent and child entity independently. Any modification in the parent entity will not impact the 
+child entity or vice versa. In the UML diagram, aggregation is denoted by an empty diamond, which shows their
+ obvious difference in terms of strength of the relationship.
+
+In Composition, parent owns child entity so child entity can’t exist without parent entity. We can’t directly 
+or independently access child entity. In the UML diagram, composition is denoted by a filled diamond. 
+
+1. Composition: 
+Since Engine is-part-of Car, the relationship between them is Composition. Here is how they are implemented between Java classes.
+
+public class Car {
+    //final will make sure engine is initialized
+    private final Engine engine;  
+       
+    public Car(){
+       engine  = new Engine();
+    }
+}
+
+class Engine {
+    private String type;
+}
+
+
+2. Aggregation: 
+Since Organization has Person as employees, the relationship between them is Aggregation. Here is how they look like in terms of Java classes
+
+public class Organization {
+    private List employees;
+}
+
+public class Person {
+    private String name;   
+}
+
+Differences :
+===============
+1 Basic 
+
+Composition(mixture) is a way to wrap simple objects or data types into a single unit
+Aggregation(collection) differs from ordinary composition in that it does not imply ownership
+
+2 Relationship 
+
+In composition , parent entity owns child entity.
+In Aggregation , parent Has-A relationship with child entity
+
+3 UML Notation 
+
+Composition - It is denoted by a filled diamond. 
+Aggregation - It is denoted by an empty diamond. 
+
+4. Life cycle 
+
+Composition - Child doesn’t have their own life time 
+Aggregation - Child can have their own life time 
+
+5. Association 
+
+Composition -It is a strong association 
+Aggregation - It is a weak association 

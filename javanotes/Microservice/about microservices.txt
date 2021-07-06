@@ -1,0 +1,85 @@
+What are microservices?
+
+Let’s start our discussion by setting a foundation of what microservices are. Microservices are a way of breaking 
+large software projects into loosely coupled modules, which communicate with each other through simple Application Programming Interfaces (APIs).
+
+Microservices have become increasingly popular over the past few years. They are an example of the modular architectural style, 
+based on the philosophy of breaking large software projects into smaller, independent, and loosely coupled parts, which has 
+gained prominence among developers for its dynamic and agile qualities in API management and execution of highly defined and discrete tasks.
+
+Simply stated, microservices are really nothing more than another architectural solution for designing complex – mostly web-based – 
+applications. Microservices have gained prominence as an evolution from SOA (Service Oriented Architecture), an approach that was 
+designed to overcome the disadvantages of traditional monolithic architectures. In this blog post, we’ll explore the evolution of 
+development from monolithic architectures toward microservices and its underlying justifications, as well as the pros and cons of microservices.
+
+The history of microservices
+Let’s start with a simple example: Suppose I need to build a classic web application using Java. The first thing I will do is design
+ a Presentation Layer (the user interface), followed by an Application Layer, which handles all of the business logic. This is followed
+ by an Integration Layer to enable loose coupling between various components of the Application Layer. Finally, I will design a Database
+ Layer that will be accessible to the underlying persistence system.
+
+To run the entire application, I will create either a EAR or WAR package and deploy it on an application server 
+(like JBoss, Tomcat, or WebLogic). Because I have packaged everything as an EAR/WAR, my application becomes 
+monolithic in nature, which means that even though we have separate and distinguishable components, all are packaged together.
+
+You may already be familiar with the characteristics of monolithic applications depending on your development experience. 
+However, this example also stands to illustrate some of the challenges developers and architects face with this kind of design.
+
+Here are the flaws:
+
+As the application grows, so does the associated code base, which can overload your development environment each time it loads 
+the application, reducing developer productivity.
+Because the application has been packaged in one EAR/WAR, changing the technology stack of the application becomes a difficult task.
+ With this kind of architecture, refactoring the code base becomes difficult because it’s hard to predict how it will impact application functionality.
+If any single application function or component fails, then the entire application goes down. Imagine a web application with separate 
+functions including payment, login, and history. If a particular function starts consuming more processing power, the entire 
+application’s performance will be compromised.
+Scaling monolithic applications such as the one described in the example can only be accomplished by deploying the same EAR/WAR packages 
+in additional servers, known as horizontal scaling. Each copy of the application in additIonal servers will utilize the same amount of 
+underlying resources, which is inefficient in its design.
+Monolithic architecture impacts both the development and application deployment stage. As applications increase in size, it’s even more 
+important that developers be able to break their applications down into smaller components. Because everything in the monolithic approach 
+is tied together, developers cannot work independently to develop or deploy their own modules and must remain totally dependent on others, 
+increasing overall development time.
+With these thoughts in mind, let’s explore the value of microservices and how they can be used to provide the flexibility that’s lacking 
+in monolithic architectures.
+
+
+Advantages of microservices
+==================================
+Improved fault isolation: Larger applications can remain mostly unaffected by the failure of a single module.
+
+Eliminate vendor or technology lock-in: Microservices provide the flexibility to try out a new technology stack on an 
+individual service as needed. There won’t be as many dependency concerns and rolling back changes becomes much easier. 
+With less code in play, there is more flexibility.
+
+Ease of understanding: With added simplicity, developers can better understand the functionality of a service.
+
+Smaller and faster deployments: Smaller codebases and scope = quicker deployments, which also allow you to start to explore 
+the benefits of Continuous Deployment.
+
+Scalability: Since your services are separate, you can more easily scale the most needed ones at the appropriate times, as 
+opposed to the whole application. When done correctly, this can impact cost savings.
+
+Disadvantages of microservices
+===================================
+Microservices may be a hot trend, but the architecture does have drawbacks. In general, the main negative of microservices is the
+ complexity that any distributed system has.
+
+Communication between services is complex: Since everything is now an independent service, you have to carefully handle requests 
+traveling between your modules. In one such scenario, developers may be forced to write extra code to avoid disruption. Over time, 
+complications will arise when remote calls experience latency.
+
+More services equals more resources: Multiple databases and transaction management can be painful.
+
+Global testing is difficult: Testing a microservices-based application can be cumbersome. In a monolithic approach, we would just need 
+to launch our WAR on an application server and ensure its connectivity with the underlying database. With microservices, each dependent 
+service needs to be confirmed before testing can occur.
+
+Debugging problems can be harder: Each service has its own set of logs to go through. Log, logs, and more logs.
+
+Deployment challengers: The product may need coordination among multiple services, which may not be as straightforward as deploying a 
+WAR in a container.
+
+Large vs small product companies: Microservices are great for large companies, but can be slower to implement and too complicated for small 
+companies who need to create and iterate quickly, and don’t want to get bogged down in complex orchestration.

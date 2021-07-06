@@ -1,0 +1,600 @@
+1)  How Java achieves platform independence?
+Answer : When we say Java is platform independent which means Java programs are not dependent on any platform, architecture or 
+operating system like windows or Linux. Java achieve this by using Java virtual machine, when Java programs are compiled they are 
+converted to .class file which is collection of byte code and directly understandable  by JVM. So the same Java program can run on 
+any operating system only JVM can differ according to OS but all JVM can understand converted byte code that's how Java achieve 
+platform independence. For a more detailed answer of this question, see here.
+
+
+2)  What is ClassLoader in Java?
+Answer : This was one of advanced question few years ago, but in span of two to three years, this has become very common. 
+When a Java program is converted into .class file by Java compiler  which is collection of byte code  class loader is responsible to 
+load that class file from file system,network or any other location. This class loader is nothing but also a class from which location 
+they are loading the class according to that class loaders are three types :
+  1.Bootstrap
+  2.Extension
+  3.System class loader .
+to learn more classloaders in Java, see my article how classloader works in Java.
+
+
+3)  Write a Java program to check if a number is Even or Odd?
+Answer : This question is not particularly related to Java and also asked on other programming interviews e.g. C, C++ or C#. 
+I have included this in my list of frequently asked questions from Java interviews because I have seen it more often than not.
+
+import java.util.Scanner;
+
+class TestEvenOdd {
+ public static void main(String arg[]){
+   int num;
+   //Read a number
+   Scanner input = new Scanner(System.in);
+   System.out.println("Enter a number to check its Even or Odd");
+   num = input.nextInt();
+   // Conditional operator
+   System.out.println((num%2)==0 ? "even number":"odd number");
+  }
+}
+
+
+4)  Difference between ArrayList and HashSet in Java?
+Answer : If I say that this is one of the most most frequently asked question to Java programmers, then it would not be wrong.
+ Along with questions like ArrayList vs LinkedList and ArrayList vs Vector, this question is most common on various Java interviews.
+ Here are some important differences between these two classes :
+
+ArrayList implements List interface while HashSet implements Set interface in Java.
+ArrayList is an ordered collection and maintains insertion order of elements while HashSet is an unordered collection and doesn't maintain any order.
+ArrayList allow duplicates while HashSet doesn't allow duplicates.
+ArrayList is backed by an Array while HashSet is backed by an HashMap instance.
+One more difference between HashSet and ArrayList is that its index based you can retrieve object by calling get(index) or remove objects
+ by calling remove(index) while HashSet is completely object based. HashSet also doesn't provide get() method.
+
+
+
+5)  What is double checked locking in Singleton?
+Answer : Interviewer will never stop asking this question. It's mother of all frequently asked question in Java. 
+Singleton means we can create only one instance of that class,in term of singleton DCL is the way to  ensure that at any 
+cost only  one instance is created in multi-threaded environment its possible that simultaneously two thread trying to 
+create instance of singleton class in that situation we cant sure that only one instance is created so avoid this situation 
+using double checked locking by using synchronized block where we creating the object.
+
+Code Example :
+class SingletonClass {
+  private DCL dcl = null;
+  public DCL getDCL() {
+    if (dcl == null) {
+      synchronized {
+        if (dcl == null)
+          dcl = new DCL();
+      }
+    }
+    return dcl;
+  }
+}
+To learn more about why double checked locking was broken before Java 1.5, see this article.
+
+6)  How do you create thread-safe Singleton in Java?
+Answer : This is usually follow-up of previous Java question. There are more than one ways to do it. 
+You can create thread safe Singleton class in Java by creating the one and only instance during class loading. 
+static fields are initialized during class loading and Classloader will guarantee that instance will not be visible until its fully created.
+
+
+7)  When to use volatile variable in Java?
+Answer : Volatile keyword is used with only variable  in Java and it guarantees that value of volatile variable will always be read 
+from main memory and not from Thread's local cache. So we can use volatile to achieve synchronization because its guaranteed that 
+all reader thread will see updated value of volatile variable once write operation completed, without volatile keyword different 
+reader thread may see different values. Volatile modifier also helps to prevent reordering of code by compiler and offer visibility
+ guarantee by happens-before relationship. See this article to learn more about volatile in Java.
+
+
+8)  When to use transient variable in Java?
+Answer : Transient in Java is  used to indicate that the variable should not be serialized. Serialization is a process of saving an 
+object's state in Java. When we want to persist and object's state by default all instance variables in the object is stored. 
+In some cases, if you want to avoid persisting some variables because we don’t have the necessity to transfer across the network.
+ So, declare those variables as transient. If the variable is declared as transient, then it will not be persisted. 
+This is the main purpose of the transient keyword, to learn more about transient variable in Java, see this tutorial.
+
+
+9)  Difference between transient and volatile variable in Java?
+Answer : This is again follow-up of previous two Java questions. You will see this question on top 10 on any list of Java 
+frequently asked question. Here are some of the important difference between them.
+Transient variable : transient keyword is used with those instance variable which will not participate in serialization process.
+we cannot use static with transient variable as they are part of instance variable.
+Volatile variable : volatile keyword is used with only variable  in Java and it guarantees that value of volatile variable 
+will always be read from main memory and not from Thread's local cache, it can be static.
+to learn more differences and answer this question in detail, see here.
+
+
+10) Difference between Serializable and Externalizable in Java?
+Answer : If I say this is one of the most frequently asked Java question on both face-to-face and telephonic interview
+ then it would be an exaggeration. Serialization is a default process of  serializing or persisting  any object's state in Java. 
+It's triggered by implementing Serializable interface which is a marker interface (an interface without any method). 
+While Externalizable is used to customize and control default serialization process which is implemented by application. 
+Main difference between these two is that Externalizable interface provides complete control to the class implementing the 
+interface whereas Serializable interface normally uses default implementation to handle the object serialization process.
+Externalizable interface has two method writeExternal(ObjectOutput) and readExternal(ObjectInput) method which are used to 
+handle customized object serialize process and in terms of performance its good because everything is under control. 
+to learn more about this classical question, see this answer as well.
+
+
+11) Can we override private method in Java?
+Answer : No, we cannot override private methods in Java as if we declare any variable ,method as private that variable or 
+method will be visible for that class only and also if we declare any method as private than they are bonded with class
+ at compile time not in run time so we cant reference those method using any object so we cannot override private method in Java.
+
+
+12) Difference between Hashtable and HashMap in Java?
+Answer : This is another frequently asked question from Java interview. Main difference between HaspMap and Hashtable are following :
+
+HashMap allows null values as key and value whereas Hashtable doesn't allow nulls.
+Hashtable is thread-safe and can be shared between multiple threads whereas HashMap cannot be shared between multiple threads 
+without proper synchronization.
+Because of synchronization, Hashtable is considerably slower than HashMap, even in case of single threaded application.
+Hashtable is a legacy class, which was previously implemented Dictionary interface. It was later retrofitted into Collection
+ framework by implementing Map interface. On the other hand, HashMap was part of framework from it's inception.
+You can also make your HashMap thread-safe by using Collections.synchronizedMap() method. It's performance is similar to Hashtable.
+See here to learn more and understand when to use Hashtable and HashMap in Java. 
+
+
+
+13 - Differnce between list and set?
+List is a type of ordered collection that maintains the elements in insertion order while Set is a type of unordered collection so elements are not maintained any order.
+
+List allows duplicates while Set doesn't allow duplicate elements . All the elements of a Set should be unique if you try to insert the duplicate element in Set it would replace the existing value.
+
+List permits any number of null values in its collection while Set permits only one null value in its collection.
+
+New methods are defined inside List interface . But, no new methods are defined inside Set interface, so we have to use Collection interface methods only with Set subclasses .
+
+List can be inserted in in both forward direction and backward direction using Listiterator while Set can be traversed only in forward direction with the help of iterator
+
+
+14) Difference between ArrayList and Vector in Java
+Answer : 
+		ArrayList								Vector
+1) ArrayList is not synchronized.	
+   Vector is synchronized.
+2) ArrayList increments 50% of current array size if the number of elements exceeds from its capacity.	
+   Vector increments 100% means doubles the array size if the total number of elements exceeds than its capacity.
+3) ArrayList is not a legacy class. It is introduced in JDK 1.2.	
+   Vector is a legacy class.
+4) ArrayList is fast because it is non-synchronized.	
+   Vector is slow because it is synchronized, i.e., in a multithreading environment, it holds the other threads in runnable or non-runnable state until current thread 
+   releases the lock of the object.
+5) ArrayList uses the Iterator interface to traverse the elements.	
+   A Vector can use the Iterator interface or Enumeration interface to traverse the elements.
+
+
+15) Difference between Hashtable and ConcurrentHashMap in Java?
+Answer : Both Hashtable and ConcurrentHashMap is used in multi-threaded environment because both are therad-safe but main difference
+ is on performance Hashtable's performance become poor if the size of Hashtable become large because it will be locked for long time
+ during iteration but in case of concurrent HaspMap  only specific part is locked because concurrent HaspMap works on segmentation 
+and other thread can access the element without iteration to complete. To learn more about how ConcurrentHashMap achieves it's 
+thread-safety, scalability using lock stripping and non blocking algorithm, see this article as well.
+
+
+16) Which two methods you will override for an Object to be used as Key in HashMap?
+Answer : equals() and hashCode() methods needs to be override for an object to be used as key in HaspMap. In Map objects are 
+stored as key and value.  put(key ,value) method is used to store objects in HashMap at this time hashCode() method is used 
+to calculate the hash-code of key object and both key and value object is stored as map.entry.if two key objects have same 
+hash-code then only value object is stored in that same bucket location but as a linked list value is stored and if hash code
+ is different then another bucket location is created. While retrieving get(key) method is used at this time hash code of key
+ object is calculated and then equals() method is called to compare value object. to learn more about how get() method of 
+HashMap or Hashtable works, see that article.
+
+
+17) Difference between wait and sleep in Java?
+Answer:  Here are some important differences between wait and sleep in Java
+
+wait() method release the lock when thread is waiting but sleep() method hold the lock when thread is waiting.
+wait() is a instance method and sleep is a static method .
+wait method is always called from synchronized block or method but for sleep there is no such requirement.
+waiting thread can be awake by calling notify() and notifyAll() while sleeping thread can not be awaken by calling notify method.
+wait method is condition based while sleep() method doesn't require any condition. It is just used to put current thread on sleep.
+wait() is defined in java.lang.Object class while sleep() is defined in java.lang.Thread class
+
+
+18) Difference between notify and notifyAll in Java?
+Answer : main difference between notify and notifyAll is notify method will wake up  or notify only one thread and 
+notifyall will notify all threads. If you are sure that more than one thread is waiting on monitor and you want all 
+of them to give equal chance to compete for CPU, use notifyAll method. See here more differences between notify vs notifyAll.
+
+
+19) What is load factor of HashMap means?
+Answer : HashMap's performance depends on two things first initial capacity and second load factor whenever we create HashMap
+ initial capacity number of bucket is created initially and load factor is criteria to decide when we have to increase the size
+ of HashMap when its about to get full.
+
+
+20) Difference between PATH and Classpath in Java?
+Answer : PATH is a environment variable in Java which is used to help Java program to compile and run.To set the PATH variable 
+we have to include JDK_HOME/bin directory in PATH environment variable and also we cannot override this variable. On the other hand, 
+ClassPath variable is used by class loader to locate and load compiled Java codes stored in .class file. 
+We can set classpath we need to include all those directory where we have put either our .class file or JAR file which is
+ required by your Java application,also we can override this environment variable.
+
+
+21) Difference between extends Thread and implements Runnable in Java
+This is the 21st frequently asked question in my list. You will see this question as first or second on multi-threading topic.
+ One of the main point to put across while answering this question is Java's multiple inheritance support.
+ You cannot more than one class, but you can implement more than one interface. If you extend Thread class just to override 
+run() method, you lose power of extending another class, while in case of Runnable, you can still implement another interface 
+or another class. One more difference is that Thread is abstraction of independent path of execution, while Runnable is abstraction
+ of independent task, which can be executed by any thread. That's why it's better to implement Runnable than extending Thread class in Java. 
+If you like to dig more, see this answer.
+
+22) can we override static method in java?(Need to explain with logic)
+     
+		No, overriding feature is intended changing the property at runtime....
+		but Static methods cannot be overridden because method overriding only occurs in the context of dynamic (i.e. runtime) lookup of methods. 
+		Static methods (by their name) are looked up statically (i.e. at compile-time).
+		Static methods cannot be overridden because method overriding only occurs in the context of dynamic (i.e. runtime) lookup of methods.
+		Static methods (by their name) are looked up statically (i.e. at compile-time).
+		What is a static method
+
+		It is a method which belongs to the class and not to the object(instance)
+		A static method can be accessed directly by the class name and doesn’t need any object [but it can be called by a reference for e.g. 
+		if Class Person has a static method getName(), then we call it by below two ways:
+		Person.getName();
+		And
+
+		Person p;
+		p.getName();
+		What is Overriding in Java
+
+		Child class can redefine methods of the parent class. This is called function overriding. The signature (return type, parameter type and number 
+		of parameters) is kept same as defined in the parent class. Method overriding is done to achieve Run Time Polymorphism (An overridden method is 
+		called according to the object invoking it, not according to the reference type).
+
+		Can we Override static methods in java?
+		We can declare static methods with same signature in subclass, but it is not considered overriding as there won’t be any run-time polymorphism. 
+		Hence the answer is ‘No’.
+
+23) Java 8 Feature (why we needed).
+    Stream, lamda Expression and functional interface , date and time api, default and static method in interfac0e, Method References, iterable interface.
+	Optional Interface, Specfications etc..
+
+Collection API improvements : some new methods are introduced in java 8
+Method References
+
+24) ArrayList vs LinkedList (In detail).
+ArrayList	LinkedList
+1) ArrayList internally uses a dynamic array to store the elements.
+   LinkedList internally uses a doubly linked list to store the elements.
+2) Manipulation with ArrayList is slow because it internally uses an array.  If any element is removed from the array, all the bits are shifted in memory.
+	Manipulation with LinkedList is faster than ArrayList because it uses a doubly linked list, so no bit shifting is required in memory.
+3) An ArrayList class can act as a list only because it implements List only.	
+	LinkedList class can act as a list and queue both because it implements List and Deque interfaces.
+4) ArrayList is better for storing and accessing data.
+	LinkedList is better for manipulating data.
+
+25) 1)What is Abstraction and Encapsulation.
+
+Abstraction : 
+->process of gathering the important data set for an object and ignoring remaining data is called Abstraction....
+->Data Abstraction is the property by virtue of which only the essential details are displayed to the user.
+  The trivial or the non-essentials units are not displayed to the user. Ex: A car is viewed as a car rather than its individual components.
+
+Encapsulation (data-hiding) :
+
+Process of wrapping the code , variable , methods as a single unit is called Encapsulation...
+the variables of a class will be hidden from other classes, and can be accessed only through the methods of their current class. Therefore, it is also known as data hiding.
+
+
+3)What are co-variant types.
+Ans>
+Before JDK 5.0, it was not possible to override a method by changing the return type. 
+When we override a parent class method, the name, argument types and return type of the overriding method in child class has to be exactly same as that of parent class method. 
+Overriding method was said to be invariant with respect to return type.
+
+			Covariant return types
+
+			Java 5.0 onwards it is possible to have different return type for a overriding method in child class,
+			but child’s return type should be sub-type of parent’s return type. Overriding method becomes variant with respect to return type.
+
+			// Java program to demonstrate that we can have 
+			// different return types if return type in 
+			// overridden method is sub-type 
+
+			// Two classes used for return types. 
+			class A {} 
+			class B extends A {} 
+
+			class Base 
+			{ 
+				A fun() 
+				{ 
+					System.out.println("Base fun()"); 
+					return new A(); 
+				} 
+			} 
+
+			class Derived extends Base 
+			{ 
+				B fun() 
+				{ 
+					System.out.println("Derived fun()"); 
+					return new B(); 
+				} 
+			} 
+
+			public class Main 
+			{ 
+				public static void main(String args[]) 
+				{ 
+				Base base = new Base(); 
+				base.fun(); 
+
+				Derived derived = new Derived(); 
+				derived.fun(); 
+				} 
+			} 
+			Advantages:
+
+					It helps to avoid confusing type casts present in the class hierarchy and thus making the code readable, usable and maintainable.
+					We get a liberty to have more specific return types when overriding methods.
+					Help in preventing run-time ClassCastExceptions on returns
+
+
+26) -> What is Polymorphism? 
+	Polymorphism is the ability of an object to take on many forms. 
+	The most common use of polymorphism in OOP occurs when a parent class reference is used to refer to a child class object.
+    Basicaly there are two type of the Polymorphism, 
+	 1. static 
+	 2. dynamic 
+   static polymorphism :  
+       if we override static method , then it is example of compile time polymorphism....
+   dynamic polymorphism :
+       it  is a process in which a call to an overridden method is resolved at runtime rather than compile-time.
+	   In this process, an overridden method is called through the reference variable of a superclass. The determination of the method to be called is based on the object being referred to by the reference variable.
+
+27) What is a thread? How is a deadlock achieved and how to resolve it?
+Deadlock describes a situation where two or more threads are blocked forever, waiting for each other. Deadlock occurs when multiple threads need the
+ same locks but obtain them in different order. A Java multithreaded program may suffer from the deadlock condition because the synchronized keyword 
+ causes the executing thread to block while waiting for the lock, or monitor, associated with the specified object. Here is an example.
+
+Example
+Live Demo
+public class TestThread {
+   public static Object Lock1 = new Object();
+   public static Object Lock2 = new Object();
+   
+   public static void main(String args[]) {
+      ThreadDemo1 T1 = new ThreadDemo1();
+      ThreadDemo2 T2 = new ThreadDemo2();
+      T1.start();
+      T2.start();
+   }
+   
+   private static class ThreadDemo1 extends Thread {
+      public void run() {
+         synchronized (Lock1) {
+            System.out.println("Thread 1: Holding lock 1...");
+            
+            try { Thread.sleep(10); }
+            catch (InterruptedException e) {}
+            System.out.println("Thread 1: Waiting for lock 2...");
+            
+            synchronized (Lock2) {
+               System.out.println("Thread 1: Holding lock 1 & 2...");
+            }
+         }
+      }
+   }
+   private static class ThreadDemo2 extends Thread {
+      public void run() {
+         synchronized (Lock2) {
+            System.out.println("Thread 2: Holding lock 2...");
+            
+            try { Thread.sleep(10); }
+            catch (InterruptedException e) {}
+            System.out.println("Thread 2: Waiting for lock 1...");
+            
+            synchronized (Lock1) {
+               System.out.println("Thread 2: Holding lock 1 & 2...");
+            }
+         }
+      }
+   } 
+}
+When you compile and execute the above program, you find a deadlock situation and following is the output produced by the program -
+
+Output
+Thread 1: Holding lock 1...
+Thread 2: Holding lock 2...
+Thread 1: Waiting for lock 2...
+Thread 2: Waiting for lock 1...
+The above program will hang forever because neither of the threads in position to proceed and waiting for each other to release the lock, so you can come out of the program by pressing CTRL+C.
+
+Deadlock Solution Example
+Let's change the order of the lock and run of the same program to see if both the threads still wait for each other -
+
+Example
+Live Demo
+public class TestThread {
+   public static Object Lock1 = new Object();
+   public static Object Lock2 = new Object();
+   
+   public static void main(String args[]) {
+      ThreadDemo1 T1 = new ThreadDemo1();
+      ThreadDemo2 T2 = new ThreadDemo2();
+      T1.start();
+      T2.start();
+   }
+   
+   private static class ThreadDemo1 extends Thread {
+      public void run() {
+         synchronized (Lock1) {
+            System.out.println("Thread 1: Holding lock 1...");
+            
+            try {
+               Thread.sleep(10);
+            } catch (InterruptedException e) {}
+            System.out.println("Thread 1: Waiting for lock 2...");
+            
+            synchronized (Lock2) {
+               System.out.println("Thread 1: Holding lock 1 & 2...");
+            }
+         }
+      }
+   }
+   private static class ThreadDemo2 extends Thread {
+      public void run() {
+         synchronized (Lock1) {
+            System.out.println("Thread 2: Holding lock 1...");
+           
+            try {
+               Thread.sleep(10);
+            } catch (InterruptedException e) {}
+            System.out.println("Thread 2: Waiting for lock 2...");
+            
+            synchronized (Lock2) {
+               System.out.println("Thread 2: Holding lock 1 & 2...");
+            }
+         }
+      }
+   } 
+}
+So just changing the order of the locks prevent the program in going into a deadlock situation and completes with the following result 
+
+28) what is the difference between native sql and hql query?
+
+Ans. 
+1. HQL is similar to SQL and is also case insensitive.
+
+2. HQL and SQL both fire queries in a database. In the case of HQL, the queries are in
+
+the form of objects that are translated to SQL queries in the target database.
+
+3. SQL works with tables and columns to manipulate the data stored in it.
+
+4. HQL works with classes and their properties to finally be mapped to a table structure
+
+in a database.
+
+5. HQL supports concepts like polymorphism, inheritance, association, etc. It is a
+
+powerful and easy-to-learn language that makes SQL object oriented.
+
+6. SQL lets you modify the data through insert, update, and delete queries. You can add
+
+tables, procedures, or views to your database. The permissions on these added objects
+
+can be changed.
+
+29) Custom implementation os stack:
+
+package com.app;
+public class StackCustom {
+   
+   int size;
+   int[] arr;
+   int top;
+   
+   public StackCustom(int size) {
+	   this.size = size;
+	   arr = new int[size];
+	   top =-1;
+   }
+	
+   public void push(int data) {
+	   if(!isFull()) {
+		   top++;
+		   arr[top]= data;
+		   System.out.println("Pushed Element is :"+data);
+	   }else {
+		   System.out.println("stack is Full");
+	   }
+
+   }
+   
+   public int peek() {
+	   if(!isEmpty())
+		    return arr[top];
+	   else
+		   System.out.println("stack is Empty");
+	   return -1;
+   }
+   
+   
+   public int pop() {
+	   int popedElement = 0;
+	   if(!isEmpty()) {
+		   popedElement = arr[top];
+		   top -- ;
+		   System.out.println("poped Element is :"+popedElement);
+		   return popedElement;
+	   }else {
+		   System.out.println("stack is Empty");
+		   return -1;	
+		   }   
+   }
+   
+   public boolean search(int data) {
+	   boolean isExist = false;
+	   for(int i=0; i < arr.length ; i++) {
+		    if(data == arr[i]) {
+		    	isExist = true;
+		    }
+	   }
+	   return isExist;
+   }
+   
+   
+   public boolean searchUsingStackConcept(int data) {
+	  
+	   boolean isExist = false;
+	   while( top != -1) {
+		   if(arr[top] == data)
+	        	isExist = true;
+		   top--;
+	  }
+	   return isExist;
+   }
+   
+   public  int maxElementFromStack() {
+	   int max = Integer.MIN_VALUE;
+	    while(top != -1) {
+	        if(arr[top] > max)
+	        	max = arr[top];
+	        
+	        top--;
+	    }
+	   return max;
+   }
+   
+   public boolean isFull() {
+	   return top == arr.length-1;
+   }
+   
+   public boolean isEmpty() {
+	   return top == -1;
+   }
+   
+   public static void main(String[] args) {
+		StackCustom StackCustom = new StackCustom(10);
+		StackCustom.pop();
+		System.out.println("=================");
+		StackCustom.push(10);
+		StackCustom.push(30);
+		StackCustom.push(50);
+		StackCustom.push(40);
+		System.out.println("=================");
+		/*StackCustom.pop();
+		StackCustom.pop();
+		StackCustom.pop(); */
+		System.out.println("=================");
+		System.out.println(StackCustom.search(10));
+		System.out.println("=================");
+		System.out.println(StackCustom.searchUsingStackConcept(10));
+		
+		System.out.println("=================");
+		
+		System.out.println("max Element in stack is :"+StackCustom.maxElementFromStack());
+	}
+}
+
+
+
+
+
+	

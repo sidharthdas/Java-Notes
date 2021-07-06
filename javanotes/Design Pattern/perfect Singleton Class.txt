@@ -1,0 +1,37 @@
+ 
+It is used to provide global point of access to the object. In terms of practical use Singleton patterns 
+are used in logging, caches, thread pools, configuration settings, device driver objects.
+
+
+public class SingletonClass implements Serializable , Cloneable{
+
+    private static volatile SingletonClass sSoleInstance;
+
+    //private constructor.
+    private SingletonClass(){
+
+        //Prevent form the reflection api.
+        if (sSoleInstance != null){
+            throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
+        }
+    }
+
+    public static SingletonClass getInstance() {
+        if (sSoleInstance == null) { //if there is no instance available... create new one
+            synchronized (Test.SingletonClass.class) {
+                if (sSoleInstance == null) sSoleInstance = new SingletonClass();
+            }
+        }
+
+        return sSoleInstance;
+    }
+
+    //Make singleton from serialize and deserialize operation.
+    protected SingletonClass readResolve() {
+        return getInstance();
+    }
+
+    protected Object clone() throws CloneNotSupportedException{
+        return getInstance();
+    }
+}

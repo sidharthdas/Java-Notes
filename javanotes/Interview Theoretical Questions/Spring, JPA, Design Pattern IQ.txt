@@ -1,0 +1,139 @@
+================
+JPA
+=================
+Q - what is difference between get and load.
+Ans. when we use get() to retrieve data that doesn’t exists, it returns null. 
+That makes sense because it try to load the data as soon as it’s called.
+With load(), we are able to print the id but as soon as we try to access other fields, 
+it fires database query and throws org.hibernate.ObjectNotFoundException if there is no record found with the given identifier.
+
+Q - what is diff between update and merge
+Q - Explain Criteria in hibernate
+Q - Have you implemented 2nd level cache in hibernate.
+Q - What is dialect.
+Ans. Dialect class is java class, which contains code to map between java language data type database data type. 
+	All Dialect classes extend the Dialect abstract class. Dialect is used to convert HQL statements to data base specific statements
+	
+Q - What all things need to consider while coding Hibernate so the switching from one database to another database can be done with minimal changes.
+
+
+=====================================================
+Spring
+=====================================================
+
+Q - What is Spring? 
+Q - Why should you use Spring? 
+Q - Internal working of dependency injection annotation.
+Q - Difference between Spring and SpringBoot?
+Q - What is circular dependency, give an example
+Q - How servlet context is created internally. 
+Q - How mvc flows works in your project?
+Q - How have you used annotations in your project?
+Q - How to create class with only two instance(or user based instance)?
+Q - How will you monitor your application server?
+Q - Application server related questions(logs).
+Q - What is dependency injection? 
+Q - What are the advantages of dependency injection 
+Q - Types of dependency injection
+Q - When do u use constructor injection and when do u use setter injection
+Q - How did you implement spring security?
+Q - How you are using security in rest service.
+Q - How maven works ?
+Q - How do you call a procedure from java?
+Q - Transaction Isolation levels?
+Q - Scenario based questions on Transaction Isolations levels?
+    Assume I have table, which is having millions of records. Generally when you pose a select query on such huge table. 
+	It will take few mints to return the result set. What will happen if some pose an update/delete query on the same table, 
+	while the select query is still executing. How do you handle these kind of scenarios in real time projects?
+Q - Class component vs functional component
+Q - how you manage your transaction in spring
+Q - What is difference between @Bean and @Component
+Q - Which error occurs when you try to connect backend and frontend ?
+Q - Explain MVC architecture
+Q - Whats the difference between request and prototype bean scope
+Q - Can we use @component instead using @service or @repository.
+Q - Whats the advantage of @Restcontroller.
+Q - Any testing tool, how do you use mockito.
+Q - Token based authentication system.
+Q - Query level cache. 
+Q - What is application context.
+Q - Difference between state and props.
+Q - Can i replace Web Services with servlet
+Q - How log4js works internally? To log the data.
+Q - handler intercepters in spring?
+Q - diff between @path and @requestMapping
+Q - Difference between path variable and request parameter.
+Q - How does AOP works internally.
+Q - When the bean gets created for the particular class.
+Q - What is datasource.
+
+
+Design pattern :
+---------------------------
+Q - What is singleton design pattern and what are its disadvantages?
+Q - How do you create thread safe singleton ?
+Q - Factory design patterns
+Q - stratagey patteren
+Q - Decorator
+
+
+=================================
+SQL 
+=================================
+
+Q - Sql vs nosql 
+Q - Write a query to find nth highest salary of an employee?
+Q - What is cursor? Why do we need a cursor?
+Q - What is Indexing in SQL.
+Q - What is primary key, will addition of new columns lose primary key 
+Q - Difference between SQL  And nosql.
+Q - Second highest salary from Employee table.
+Q -write a query:- Two tables given below
+	Manager table (mgrid[1, 2, 3], name[mark, sss, san])
+	Employe Table (empid, empname, mgrid)
+Q - Different types of join.	
+Q. find manager who doesn't have emp assigned
+Q - what is the query to find 10th highest salary from employee table?
+
+ select name ,salary from employee e1 where 10-1 = (select count(distinct salary) from employee e2 where e2.salary > e1.salary);\
+ Generallize query : select name ,salary from employee e1 where N-1 = (select count(distinct salary) from employee e2 where e2.salary > e1.salary);
+                     Note : where n is number of Nth highest salary.
+
+Q - Write an SQL query
+  
+Given below is the employee table with salary
+
+EMPID    SALARY
+_ _ _ _ _ _ _ _  _ _ 
+
+101        10000
+102        20000
+103        1400
+...
+...
+OUTPUT:
+
+EMPID    RANK[Based on Salary]
+_ _ _ _ _ _ _ _  _ _ 
+
+102        1
+101        2
+103        3
+...
+...
+[HINT] : RANK OF AN EMPLOYE CAN BE DETERMINED BY THE COUNT OF EMPLOYESS HAVING SALARY GREATER THAN EMPLOYEE
+
+
+=======================
+Others:
+=======================
+
+Q - What is the Best Engineering practice
+Q - Tell me about continuous integration system(eg. Jenkins, travis….)
+Q - How you solve the performance issues in production.
+Q - About Git, how do you use.
+
+======================
+Puzzle 
+======================
+Q - Given two threads and one match stick, each thread takes 30 min to burn completely. You need to calculate 45 min using both threads and single match stick.

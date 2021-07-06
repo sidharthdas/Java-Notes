@@ -1,0 +1,231 @@
+2) What will be the output of this program?
+
+class A
+{
+    int i = 10;
+}
+ 
+class B extends A
+{
+    int i = 20;
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        A a = new B();
+ 
+        System.out.println(a.i);
+    }
+}
+
+Answer :
+10
+
+3) What will be the output of the below program?
+
+class A
+{
+    {
+        System.out.println(1);
+    }
+}
+ 
+class B extends A
+{
+    {
+        System.out.println(2);
+    }
+}
+ 
+class C extends B
+{
+    {
+        System.out.println(3);
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        C c = new C();
+    }
+}
+
+Answer :
+1
+2
+3
+
+
+5) What will be the output of the following program?
+
+class A
+{
+    String s = "Class A";
+}
+ 
+class B extends A
+{
+    String s = "Class B";
+ 
+    {
+        System.out.println(super.s);
+    }
+}
+ 
+class C extends B
+{
+    String s = "Class C";
+ 
+    {
+        System.out.println(super.s);
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        C c = new C();
+ 
+        System.out.println(c.s);
+    }
+}
+
+Answer :
+Class A
+Class B
+Class C
+
+6) What will be the output of this program?
+
+class A
+{
+    static
+    {
+        System.out.println("THIRD");
+    }
+}
+ 
+class B extends A
+{
+    static
+    {
+        System.out.println("SECOND");
+    }
+}
+ 
+class C extends B
+{
+    static
+    {
+        System.out.println("FIRST");
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        C c = new C();
+    }
+}
+
+Answer :
+THIRD
+SECOND
+FIRST
+
+7) What will be the output of the below program?
+
+class A
+{
+    public A()
+    {
+        System.out.println("Class A Constructor");
+    }
+}
+ 
+class B extends A
+{
+    public B()
+    {
+        System.out.println("Class B Constructor");
+    }
+}
+ 
+class C extends B
+{
+    public C()
+    {
+        System.out.println("Class C Constructor");
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        C c = new C();
+    }
+}
+
+Answer :
+Class A Constructor
+Class B Constructor
+Class C Constructor
+
+10)
+
+class M
+{
+    static
+    {
+        System.out.println('A');
+    }
+ 
+    {
+        System.out.println('B');
+    }
+ 
+    public M()
+    {
+        System.out.println('C');
+    }
+}
+ 
+class N extends M
+{
+    static
+    {
+        System.out.println('D');
+    }
+ 
+    {
+        System.out.println('E');
+    }
+ 
+    public N()
+    {
+        System.out.println('F');
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        N n = new N();
+    }
+}
+View Answer
+Answer :
+A
+D
+B
+C
+E
+F

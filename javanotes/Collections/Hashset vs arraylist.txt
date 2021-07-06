@@ -1,0 +1,46 @@
+Difference between HashSet and ArrayList in Java
+
+1. Implementation : HashSet implements Set interface in Java while ArrayList  implements List interface.
+
+2. Internal implementation: HashSet is backed by an HashMap while ArrayList is backed by an Array. 
+
+3. Ordering : HashSet is an unordered collection and doesn't maintain any order while ArrayList maintains the order of the object in which they are inserted.
+
+4. Duplicates : HashSet doesn't allow duplicates though ArrayList allows duplicate values.
+
+5. Index based  :  The fifth difference between HashSet and ArrayList is that ArrayList is index based you can retrieve object by calling get(index) 
+or remove objects by calling remove(index) while HashSet is completely object based.HashSet also doesn't provide get() method.
+
+Example of HashSet and ArrayList in Java
+import java.util.Hashtable;
+
+public class HashSetArrayListExample {
+    
+    public static void main(String[] args) {
+  
+        ArrayList<String> arrlistobj = new ArrayList<String>();
+        arrlistobj.add("1. Alive is awesome");
+        arrlistobj.add("2. Love yourself");
+        System.out.println("ArrayList object output :"+ arrlistobj);
+ 
+        HashSet hashsetobj = new HashSet();
+        hashsetobj.add("Alive is awesome");  
+        hashsetobj.add("Love yourself"); 
+        System.out.println("HashSet object output :"+hashsetobj);   
+ }
+}
+
+Output
+ArrayList object output :[1. Alive is awesome, 2. Love yourself]
+HashSet object output :[Alive is awesome, Love yourself]
+
+Similarities between HashSet and ArrayList 
+
+1. Allows null : Both HashSet and ArrayList allows null.
+
+2. Synchronized : Both HashSet and ArrayList are non synchronized collection class. One needs to avoid using them in multithreading environment.
+
+3. Traversal : Both HashSet and ArrayList can be traversed through iterator in java.
+
+4. Iterator : Both HashSet and ArrayList classes iterator are fail-fast i.e they will throw ConcurrentModificationException as soon as 
+they detect any structural change in ArrayList or HashSet.

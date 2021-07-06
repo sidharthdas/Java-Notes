@@ -1,0 +1,427 @@
+
+1)  What are new features which got introduced in Java 8?
+There are lots of new features which were added in Java 8. Here is the list of important features:
+
+Lambda Expression
+Stream API
+Default methods in the interface
+Functional Interface
+Optional
+Method references
+Date API
+Nashorn, JavaScript Engine
+2) What are main advantages of using Java 8?
+More compact code
+Less boiler plate code
+More readable and reusable code
+More testable code
+Parallel operations
+
+3) What is lambda expression?
+Lambda expression is anonymous function which have set of parameters and a lambda (->) and a function body .You can call it function without name.
+
+Structure of Lambda Expressions
+ 
+(Argument List) ->{expression;} or
+(Argument List) ->{statements;}
+ 
+ Let see a simple example of thread execution:
+public class ThreadSample {
+ 
+ public static void main(String[] args) {
+ 
+  // old way
+  new Thread(new Runnable() {
+ 
+   @Override
+   public void run() {
+    System.out.println("Thread is started");
+   }
+  }).start();
+ 
+  // using lambda Expression
+  new Thread(()->System.out.println("Thread is started")).start();
+ }
+ 
+}
+ 
+You can refer to lambda expression in java for more details.
+
+4) Can you explain the syntax of Lambda expression?
+So we can divide structure of Lambda expression to three parts:
+
+1. Argument list or parameters
+Lambda expression can have zero or more arguments.
+ 
+()->{System.out.println("Hello")}; //Without argument, will print hello 
+(int a)->{System.out.println(a)} //; One argument, will print value of a
+(int a,int b)-> {a+b};//two argument, will return sum of these two integers
+ 
+
+You can choose to not declare type of arguments as it can be inferred from context.
+(a,b)->{a+b};//two argument, will return sum of these two numbers
+ 
+
+you can not declare one argument’s type and do not declare type for other argument.
+(int a,b)->{a+b};//Compilation error
+ 
+
+When there is a single parameter, if its type is inferred, it is not mandatory to use parentheses
+ 
+a->{System.out.println(a)}; // Will print value of number a
+
+2. Array token (->)
+3. Body
+
+Body can have expression or statements.
+If there is only one statement in body,curly brace is not needed and return type of the anonymous function is same as of  body expression
+If there are more than one statements, then it should be in curly braces and return type of anonymous function is same as value return from code block,
+ void if nothing is returned.
+
+5) What are functional interfaces?
+Functional interfaces are those interfaces which can have only one abstract method.It can have static method, 
+default methods or can override Object’s class methods.
+
+There are many functional interfaces already present in java such as Comparable, Runnable.
+As we have only one method in Runnable, hence it is considered as functional interface.
+
+6) How lambda expression and functional interfaces are related?
+Lambda expressions can only be applied to abstract method of functional interface.
+For example
+
+Runnable has only one abstract method called run, so it can be used as below:
+ 
+// Using lambda expression
+Thread t1=new Thread(
+()->System.out.println("In Run method")
+);
+ 
+Here we are using Thread constructor which takes Runnable as parameter. As you can see we did not specify any function name here, 
+as Runnable has only one abstract method, java will implicitly create anonymous Runnable and execute run method.
+It will be as good as below code.
+Thread t1=new Thread(new Runnable() { 
+   @Override
+   public void run() {
+    System.out.println("In Run method");
+   }
+  });
+ 
+7) Can you create your own functional interface?
+Yes, you can create your own functional interface. Java can implicitly identify functional interface but you can also annotate it with @FunctionalInterface.
+Example:
+Create interface named "Printable" as below
+package org.arpit.java2blog;
+ 
+public interface Printable {
+ 
+    void print();
+    default void printColor()
+    {
+        System.out.println("Printing Color copy");
+    }
+}
+ 
+Create main class named "FunctionalIntefaceMain"
+package org.arpit.java2blog.constructor;
+ 
+public class FunctionalIntefaceMain {
+ 
+    public static void main(String[] args)
+    {
+        FunctionalIntefaceMain pMain=new FunctionalIntefaceMain();
+        pMain.printForm(() -> System.out.println("Printing form"));
+    }
+ 
+    public void printForm(Printable p)
+    {
+        p.print();
+    }
+}
+ 
+When you run above program, you will get below output:
+
+Printing form
+As you can see, since Printable has only one abstract method called print(), we were able to call it using lambda expression.
+
+8) What is method reference in java 8?
+Method reference is used refer method of functional interface. It is nothing but compact way of lambda expression.
+You can simply replace lambda expression with method reference.
+Syntax:
+class::methodname
+
+9) What is Optional? Why and how can you use it?
+Java 8 has introduced new class Called Optional. This class is basically introduced to avoid NullPointerException in java.
+Optional class encapsulates optional value which is either present or not.
+It is a wrapper around object and can be use to avoid NullPointerExceptions.
+
+11) What is the difference between Predicate and Function?
+Both are functional interfaces.
+Predicate<T> is single argument function and either it returns true or false.This can be used as the assignment target for a 
+lambda expression or method reference.
+
+Function<T,R> is also single argument function but it returns an Object.Here T denotes type of input to the function and R denotes type of Result.
+
+This can also be used as the assignment target for a lambda expression or method reference.
+
+12) Are you aware of Date and Time API introduced in Java 8? What the issues with Old Date and time API?
+Issues with old Date and TIme API:
+
+Thread Safety: You might be already aware that java.util.Date is mutable and not thread safe. Even java.text.SimpleDateFormat 
+is also not Thread-Safe. New Java 8 date and time APIs are thread safe.
+
+Performance: Java 8 ‘s new APIs are better in performance than old Java APIs.
+
+More Readable: Old APIs such Calendar and Date are poorly designed and hard to understand. Java 8 Date and Time APIs are 
+easy to understand and comply with ISO standards.
+
+13) Can you provide some APIs of Java 8 Date and TIme?
+LocalDate, LocalTime, and LocalDateTime are the Core API classes for Java 8. As the name suggests, these classes are local to context of observer. 
+It denotes current date and time in context of Observer.
+
+14) How will you get current date and time using Java 8 Date and TIme API?
+You can simply use now method of LocalDate to get today’s date.
+ 
+LocalDate currentDate = LocalDate.now();
+System.out.println(currentDate);
+ 
+It will give you output in below format:
+
+You can use now method of LocalTime to get current time.
+LocalTime currentTime = LocalTime.now();
+System.out.println(currentTime);
+ 
+It will give you output in below format:
+23:17:51.817
+
+15) Do we have PermGen in Java 8? Are you aware of MetaSpace?
+Until Java 7, JVM used an area called PermGen to store classes. It got removed in Java 8 and replaced by MetaSpace.
+Major advantage of MetaSpace over permgen:
+PermGen was fixed in term of mazimum size and can not grow dynamically but Metaspace can grow dynamically and do not have any size constraint.
+
+16) Given a list of employees, you need to filter all the employee whose age is greater than 20 and print the employee names.(Java 8 APIs only)
+Answer:
+You can simply do it using below statement.
+
+List<String> employeeFilteredList = employeeList.stream()
+                  .filter(e->e.getAge()>20)
+                  .map(Employee::getName)
+                  .collect(Collectors.toList());
+ 
+Complete main program for above logic.
+
+17) Given the list of employees, count number of employees with age 25?
+Answer:
+You can use combination of filter and count to find this.
+List<Employee> employeeList = createEmployeeList();
+long count = employeeList.stream()
+.filter(e->e.getAge()>25)
+.count();
+System.out.println("Number of employees with age 25 are : "+count); 
+
+18) Given the list of employees, find the employee with name “Mary”.
+Answer:
+It is again very simple logic, change the main function in above class as following.
+
+List<Employee> employeeList = createEmployeeList();
+        Optional<Employee> e1 = employeeList.stream()
+                  .filter(e->e.getName().equalsIgnoreCase("Mary")).findAny();
+ 
+        if(e1.isPresent())
+            System.out.println(e1.get());
+ 
+
+19)Given a list of employee, find maximum age of employee?
+Answer:
+It is again very simple logic, change the main function in above class as following.
+List<Employee> employeeList = createEmployeeList();
+        OptionalInt max = employeeList.stream().
+                          mapToInt(Employee::getAge).max();
+ 
+        if(max.isPresent())
+            System.out.println("Maximum age of Employee: "+max.getAsInt());
+ 
+
+20) Given a list of employees, sort all the employee on the basis of age? Use java 8 APIs only
+You can simply use sort method of list to sort the list of employees.
+  List<Employee> employeeList = createEmployeeList();
+        employeeList.sort((e1,e2)->e1.getAge()-e2.getAge());
+        employeeList.forEach(System.out::println);
+ 
+
+21) Join the all employee names with “,” using java 8?
+Answer:
+  List<Employee> employeeList = createEmployeeList();
+        List<String> employeeNames = employeeList
+                                     .stream()
+                                     .map(Employee::getName)
+                                     .collect(Collectors.toList());
+        String employeeNamesStr = String.join(",", employeeNames);
+        System.out.println("Employees are: "+employeeNamesStr);
+ 
+Output:
+
+Employees are: John,Martin,Mary,Stephan,Gary
+
+22) Given the list of employee, group them by employee name?
+Answer:
+You can use Collections.groupBy() to group list of employees by employee name.
+ 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+ 
+public class MaximumUsingStreamMain {
+    public static void main(String args[])
+    {
+        List<Employee> employeeList = createEmployeeList();
+        Map<String, List<Employee>> map = employeeList.stream()
+                                              .collect(Collectors.groupingBy(Employee::getName));
+        map.forEach((name,employeeListTemp)->System.out.println("Name: "+name+" ==>"+employeeListTemp));
+    }
+ 
+    public static List<Employee> createEmployeeList()
+    {
+        List<Employee> employeeList=new ArrayList<>();
+ 
+        Employee e1=new Employee("John",21);
+        Employee e2=new Employee("Martin",19);
+        Employee e3=new Employee("Mary",31);
+        Employee e4=new Employee("Mary",18);
+        Employee e5=new Employee("John",26);
+ 
+        employeeList.add(e1);
+        employeeList.add(e2);
+        employeeList.add(e3);
+        employeeList.add(e4);
+        employeeList.add(e5);
+ 
+        return employeeList;
+    }
+}
+ 
+Output:
+
+Name: John ==>[Employee Name: John age: 21, Employee Name: John age: 26]
+Name: Martin ==>[Employee Name: Martin age: 19]
+Name: Mary ==>[Employee Name: Mary age: 31, Employee Name: Mary age: 18]
+
+23) Difference between Intermediate and terminal operations in Stream?
+Answer:
+Java 8 Stream supports both intermediate and terminal operation.
+
+Intermediate operations are lazy in nature and do not get executed immediately. Terminal operations are not lazy, 
+they are executed as soon as encountered. Intermediate operation is memorized and is called when terminal operation is called.
+
+All Intermediate operations return stream as it just transforms stream into another and terminal operation don’t.
+
+Example of Intermediate operations are:
+
+filter(Predicate)
+map(Function)
+flatmap(Function)
+sorted(Comparator)
+distinct()
+limit(long n)
+skip(long n)
+Example of terminal operations are :
+
+forEach
+toArray
+reduce
+collect
+min
+max
+count
+anyMatch
+allMatch
+noneMatch
+findFirst
+findAny
+
+24) Given the list of numbers, remove the duplicate elements from the list.
+Answer:
+You can simply use stream and then collect it to set using Collections.toSet() method.
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+ 
+public class RemoveDuplicatesFromListMain {
+    public static void main(String[] args)
+    {
+        Integer[] arr=new Integer[]{1,2,3,4,3,2,4,2};
+        List<Integer> listWithDuplicates = Arrays.asList(arr);
+ 
+        Set<Integer> setWithoutDups = listWithDuplicates.stream().collect(Collectors.toSet());
+        setWithoutDups.forEach((i)->System.out.print(" "+i));
+    }
+}
+ 
+You can use distinct as well to avoid duplicates as following.
+change main method of above program as below.
+
+Integer[] arr=new Integer[]{1,2,3,4,3,2,4,2};
+        List<Integer> listWithDuplicates = Arrays.asList(arr);
+List<Integer> listWithoutDups = listWithDuplicates.stream().distinct().collect(Collectors.toList());
+        listWithoutDups.forEach((i)->System.out.print(" "+i));
+ 
+
+25) Difference between Stream’s findFirst() and findAny()?
+findFirst will always return the first element from the stream whereas findAny is allowed to choose any element from the stream.
+findFirst has deterministic behavior whereas findAny is nondeterministic behavior.
+
+
+26) Given a list of numbers, square them and filter the numbers which are greater 10000 and then find average of them.( Java 8 APIs only)
+Answer:
+You can use the map function to square the number and then filter to avoid numbers which are less than 10000.We will use average
+ as terminating function in this case.
+package org.arpit.java2blog;
+ 
+import java.util.Arrays;
+import java.util.List;
+import java.util.OptionalDouble;
+ 
+public class RemoveDuplicatesFromListMain {
+    public static void main(String[] args)
+    {
+        Integer[] arr=new Integer[]{100,24,13,44,114,200,40,112};
+        List<Integer> list = Arrays.asList(arr);
+        OptionalDouble average = list.stream()
+                                 .mapToInt(n->n*n)
+                                 .filter(n->n>10000)
+                                 .average();
+ 
+        if(average.isPresent())
+            System.out.println(average.getAsDouble());
+ 
+    }
+}
+ 
+output:
+
+21846.666666666668
+
+27) What is use of Optional in Java 8?
+Answer:
+Java 8 optional can be used to avoid NullPointerException.You can read about the detailed tutorial.
+
+Read Java 8 optional
+
+28) What is predicate function interface?
+Answer:
+Predicate is single argument function which returns true or false. It has test method which returns boolean.
+When we are using filter in above example, we are actually passing Predicate functional interface to it.
+
+Read Java 8 predicate
+
+29) What is consumer function interface?
+Answer:
+Consumer is single argument functional interface which does not return any value.
+When we are using foreach in above example, we are actually passing Consumer functional interface to it.
+
+Read Java 8 consumer
+
+30) What is supplier function interface?
+Answer:
+Supplier is function interface which does not take any parameter but returns the value using get method.

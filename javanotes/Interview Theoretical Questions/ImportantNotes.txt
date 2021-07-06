@@ -1,0 +1,1486 @@
+1)Instance Block
+	
+class A
+{
+     int i;
+ 
+     {
+          System.out.println("First IIB Block");
+     }
+ 
+     {
+          System.out.println("Second IIB Block");
+     }
+ 
+     A(int j)
+     {
+          this();
+          System.out.println("First Constructor");
+     }
+ 
+     A()
+     {
+          System.out.println("Second Constructor");
+     }
+
+}
+ 
+class MainClass
+{
+     public static void main(String[] args)
+     {
+          A a = new A(50);
+     }
+}
+For the above code, both the IIBs are executed only once. You are creating an object through First constructor. 
+It has this() statement as first statement. It is nothing but the calling statement to second constructor.
+ IIBs will not be executed in first constructor. They will be executed only in second constructor. 
+If you execute above program, output will be,
+
+First IIB Block
+Second IIB Block
+Second Constructor
+First Constructor,
+
+2)Only public, protected and private keywords are allowed before a constructor name.
+ If you keep any other keyword before a constructor name, it gives compile time error.
+
+class A
+{
+     final A()
+     {
+         //Constructor can not be final
+     }
+     static A()
+     {
+         //Constructor can not be static
+     }
+     abstract A()
+     {
+        //Constructors can not be abstract
+     }
+}
+3)First statement in a constructor must be either super() or this(). 
+If you put any other statements you will get compile time error.If you don’t include these statements, 
+by default compiler will keep super() calling statement. 
+super() – It is a calling statement to default constructor of super class. 
+this()- it is a calling statement to constructor of the same class.
+
+class A
+{
+     A()
+     {
+          //By Default, Compile will keep super() calling statement here.
+          System.out.println("First Constructor");
+     }
+     A(int i)
+     {
+          //Compiler will not keep any statement here
+          super();
+          System.out.println("Second Constructor");
+     }
+     A(int i, int j)
+     {
+          //Compiler will not keep any statement here
+          this();
+          System.out.println("Third Constructor");
+     }
+     A(int i, int j, int k)
+     {
+          System.out.println("Fourth Constructor");
+          // super(); It will give error if you keep super() here
+     }
+}
+4)Recursive constructor calling is not allowed.
+
+class A
+{
+     A()
+     {
+          this();
+          // It gives compile time error
+     }
+}
+
+5)No Cylic calling of constructors.
+
+class A
+{
+     A()
+     {
+          this(10);
+          // It gives compile time error
+     }
+     A(int i)
+     {
+          this();
+          // It gives compile time error
+     }
+}
+
+6) If the global variables are not initialized explicitly, they get default value at the time of object creation. 
+But final global variables don’t get default value and they must be explicitly initialized at the time of object creation.
+ Uninitialized final field is called Blank Final Field.
+
+class A
+{
+    int i;   //Non-final global variable, no need to initialize them
+ 
+    final int j;         //Blank Final Field
+ 
+    A()
+    {
+        j=20;    
+ 
+        //final global variable must get a value at the time of object creation.
+    }
+}
+ 
+public class UseOfFinalKeyword
+{
+    public static void main(String[] args)
+    {
+        A a = new A();
+    }
+}
+7) final non-static global variable must be initialized at the time of declaration or in all constructors or in any one of IIBs – Instance Initialization Blocks.
+
+class A
+{
+    final int i;  //Final non-static global variable may be initialized here  OR
+ 
+    //may be initialized in any one of IIB's,
+    // because while object creation, all IIBs are called.  OR
+ 
+    {
+        i = 30;
+    }
+ 
+    {
+        //i = 40;
+    }
+ 
+    //must be initialized in all constructors.
+    //because while object creation, only one constructor is called 
+ 
+    A()
+    {
+        //i=20;
+    }
+ 
+    A(int j)
+    {
+       // i=j;
+    }
+ 
+    A(int j, int k)
+    {
+       // i = 50;
+    }
+}
+
+8) Can you create an object without using new operator in Java?
+
+Yes, We can create an object without using new operator. There are some other ways to create objects other than
+ using new operator. But, 95% of object creation in java is done through new operator only.
+
+a) Using newInstance() Method
+
+Class c = Class.forName("packageName.MyClass");
+ 
+MyClass object = (MyClass) c.newInstance();
+b) Using clone() method.
+
+MyClass object1 = new MyClass();
+ 
+MyClass object2 = object1.clone();
+c) Using object deserialization
+
+
+ObjectInputStream inStream = new ObjectInputStream(anInputStream );
+ 
+MyClass object = (MyClass) inStream.readObject();
+d) Creating string and array objects :
+
+
+String s = "string object";
+ 
+int[] a = {1, 2, 3, 4};
+9) What is constructor chaining?
+
+Constructor Chaining is a technique of calling another constructor from one constructor. this() is used to call same class constructor where as
+ super() is used to call super class constructor.
+
+class SuperClass
+{
+    public SuperClass(int i)
+    {
+        System.out.println("Super Class Constructor");
+    }
+}
+ 
+class SubClass extends SuperClass
+{
+    public SubClass()
+    {
+        this(10);      //Calling same class constructor
+    }
+ 
+    public SubClass(int i)
+    {
+        super(i);      //Calling super class constructor
+    }
+}
+
+10) Can we call sub class constructor from super class constructor?
+
+No. There is no way in java to call sub class constructor from a super class constructor.
+
+
+ 
+11) What happens if you keep return type for a constructor?
+
+It will be treated as a normal method. But compiler gives a warning saying that method has a constructor name.
+
+class MyClass
+{
+    int MyClass()
+    {
+        return 0;    //No Compile time error but just a warning
+    }
+}
+
+12) What is the use of private constructor?
+
+Private constructors are used to restrict the instantiation of a class. When a class needs to prevent other classes from 
+creating it’s objects then private constructors are suitable for that. Objects to the class which has only 
+private constructors can be created within the class. A very good use of private constructor is in singleton pattern. This ensures only one instance of a class exist at any point of time. Here is an example of singleton pattern using private constructor.
+
+class MyClass
+{
+    private static MyClass object = null;
+ 
+    private MyClass()
+    {
+        //private constructor
+    }
+ 
+    public MyClass getObject()
+    {
+        if(object == null)
+        {
+            object = new MyClass();   //Creating object using private constructor
+        }
+ 
+        return object;
+    }
+}
+
+13) Can we use this() and super() in a method?
+
+No, We can’t use this() and super() in a method.
+
+14)Constructors, SIB – Static Initialization Block and IIB – Instance Initialization Block of super class will not be 
+inheriting to its sub class. But they are executed while creating an object to sub class. For example,
+class A
+{
+	int i;
+
+	static
+	{
+		System.out.println("Class A SIB");
+	}
+
+	{
+		System.out.println("Class A IIB");
+	}
+
+	A()
+	{
+		System.out.println("Class A Constructor");
+	}
+}
+
+class B extends A
+{
+	int j;
+}
+
+class MainClass
+{
+	public static void main(String[] args)
+	{
+		B b = new B();
+	}
+}
+In the above example, Class B is extending Class A. In the MainClass, We are creating an object to Class B. 
+While creating this object, SIB, IIB and constructor of Class A are also executed. The output of the above program 
+will be,
+
+Output :
+Class A SIB
+Class A IIB
+Class A Constructor
+
+15) Static members of super class are inheriting to sub class as static members and non-static members are inheriting as 
+non-static members only.
+Try to compile the following program,
+class A
+{
+	int i;
+
+	A(int i)
+	{
+		System.out.println("Class A Constructor");
+	}
+}
+
+class B extends A
+{
+	int j;
+}
+
+You will get a compile time error saying implicit default constructor A() is undefined for Class A. Compiler will force you to write constructor in Class B. Because, we are not defining constructor for Class B. So, compiler will be providing default constructor. In that default constructor, first statement is super() – it is a calling statement to default constructor of Class A. But it is not defined in Class A. Therefore you will get a compile time error. To avoid this error, write the constructor for sub class. From that constructor call super class constructor explicitly. See the below code,
+
+class A
+{
+    int i;
+ 
+    A(int i)
+    {
+        System.out.println("Class A Constructor");
+    }
+}
+ 
+class B extends A
+{
+    int j;
+ 
+    public B()
+    {
+        super(10);     //Explicitly Calling Class A constructor
+        System.out.println("Class B Constructor");
+    }
+}
+
+16) Are static members inherited to sub classes?
+
+Yes, Static members are also inherited to sub classes.
+
+class A
+{
+    static int i = 10;
+ 
+    static void method()
+    {
+        System.out.println("Static Method");
+    }
+}
+ 
+class B extends A
+{
+ 
+}
+ 
+public class StaticInitializers
+{
+    public static void main(String[] args)
+    {
+        B.method();       //Calling inherited static method     
+ 
+        System.out.println(B.i);    //printing inherited static field.
+    }
+}
+
+17) What will be the output of this program?
+
+class A
+{
+    int i = 10;
+}
+ 
+class B extends A
+{
+    int i = 20;
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        A a = new B();
+ 
+        System.out.println(a.i);
+    }
+}
+
+output- 10
+
+18) You know that compiler will keep super() calling statement implicitly as a first statement in every constructor. 
+What happens i0f we write this() as a first statement in our constructor?
+
+View Answer
+Answer :
+Compiler will not keep super() if you are writing this() as a first statement in your constructor.
+
+19)
+class M
+{
+    static
+    {
+        System.out.println('A');
+    }
+ 
+    {
+        System.out.println('B');
+    }
+ 
+    public M()
+    {
+        System.out.println('C');
+    }
+}
+ 
+class N extends M
+{
+    static
+    {
+        System.out.println('D');
+    }
+ 
+    {
+        System.out.println('E');
+    }
+ 
+    public N()
+    {
+        System.out.println('F');
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        N n = new N();
+    }
+}
+View Answer
+Answer :
+A
+D
+B
+C
+E
+F
+
+20)
+public class A
+{
+    public A()
+    {
+        super();
+ 
+        this(10);
+    }
+ 
+    public A(int i)
+    {
+        System.out.println(i);
+    }
+}
+View Answer
+Answer :
+A constructor can have either super() or this() but not both
+
+21)
+
+class A
+{
+    static String s = "AAA";
+ 
+    static
+    {
+        s = s + "BBB";
+    }
+ 
+    {
+        s = "AAABBB";
+    }
+}
+ 
+class B extends A
+{
+    static
+    {
+        s = s + "BBBAAA";
+    }
+ 
+    {
+        System.out.println(s);
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        B b = new B();
+    }
+}
+View Answer
+Answer :
+AAABBB
+
+
+23) Can we declare a class as protected.?
+
+We can’t declare an outer class as protected. But, we can declare an inner class (class as a member of another class)
+ as protected.
+
+24) A class can not be declared with synchronized keyword. Then, why we call classes like Vector, 
+StringBuffer are synchronized classes.?
+
+Any classes which have only synchronized methods and blocks are treated as synchronized classes. Classes 
+like Vector, StringBuffer have only synchronized methods. That’s why they are called as synchronized classes.
+
+25)Two types of modifiers are there in java. They are,
+
+a) Access Modifiers
+
+b) Non-access Modifiers (final,static,synchronized,abstract)
+
+26) Overloaded methods may have same return types or different return types. It does not effect method overloading.
+
+27)Overloaded methods may have same access modifiers or different access modifiers. It also does not effect method 
+overloading.
+
+28)Overloaded methods may be static or non-static. This also does not effect method overloading.
+
+29) Return Type Of Overrided Method :
+The return type of the overrided method must be compatible with super class method. If super class method has primitive data type as its return type, 
+then overrided method must have same return type in sub class also. If super class method has derived or user defined data type as its return type,
+ then return type of sub class method must be of same type or its sub class. For example,
+
+class SuperClass
+{
+    void firstMethodOfSuperClass()
+    {
+        System.out.println("From Super Class");
+    }
+ 
+    double secondMethodOfSuperClass()
+    {
+        return 0.0;
+    }
+ 
+    Object thirdMethodOfSuperClass()
+    {
+        return new Object();
+    }
+}
+ 
+class SubClass extends SuperClass
+{
+    int firstMethodOfSuperClass()
+    {
+        //Compile time error, return type must be void not int
+    }
+ 
+    void secondMethodOfSuperClass()
+    {
+        //Complie time error, return type must be double not void
+    }
+ 
+    String thirdMethodOfSuperClass()
+    {
+        //No Compile time error,
+        //return type is compatible with super class method, because
+        //String is sub class of Object class
+        return new String();
+    }
+}
+
+30) Visibility Of Overrided method :
+You can keep same visibility or increase the visibility of overrided method but you can’t reduce the visibility of overrided methods in the subclass. For example, default method can be overided as default or protected or public method but not as private.For example,
+
+class SuperClass
+{
+    protected void methodOfSuperClass()
+    {
+        System.out.println("From Super Class");
+    }
+}
+ 
+class SubClass extends SuperClass
+{
+    private void methodOfSuperClass()
+    {
+        //Compile time error, can't reduce visibility of overrided method
+        //here, visibility must be protected or public but not private or default
+    }
+}
+Note : Visibility goes on decreasing from public to protected to default to private members.
+
+31)Can we overload main() method?
+
+Yes, we can overload main() method. A class can have any number of main() methods but execution starts from public static void main(String[] args) only.
+
+32) Can we declare overloaded methods as final?
+
+Yes, we can declare overloaded methods as final.
+
+33) Can we override static methods?
+
+No, Static methods can not be overridden. If we try to override them they will be hidden in the sub class.
+
+34)abstract class AbstractClass
+{
+    private abstract void abstractMethodOne();
+    //Compile time error, abstract method can not be private.
+}
+
+35)Constructors and fields can not be declared as abstract.
+
+abstract class AbstractClass
+{
+    abstract int i;
+    //Compile time error, field can not be abstract
+ 
+    abstract AbstractClass()
+    {
+        //Compile time error, constructor can not be abstract
+    }
+}
+
+36) Abstract methods can not be static.
+
+37) SIB – Static Initialization Block and IIB – Instance Initialization Block are not allowed in interfaces.
+
+interface InterfaceClassOne
+{
+    static
+    {
+        //compile time error
+        //SIB's are not allowed in interfaces
+    }
+ 
+    {
+        //Here also compile time error.
+        //IIB's are not allowed in interfaces
+    }
+ 
+    void methodOne();  //abstract method
+}
+
+abstract class AbstractClass
+{
+    static abstract void abstractMethod();
+    //Compile time error, abstract methods can not be static
+}
+
+38) Does an interface extend Object class in java.?
+
+You may have come across this question while reading about interfaces in java.
+ You may also know that only classes in java are inherited from java.lang.Object class. 
+Interfaces in java don’t inherit from Object class. They don’t have default parent like classes in java. 
+But, following two cases may surprise you.
+ 
+Case 1 :
+
+If an interface does not extend Object class, then why we can call methods of Object class on interface variable
+like below.
+
+interface A
+{    
+ 
+}
+ 
+class InterfaceAndObjectClass
+{
+    public static void main(String[] args)
+    {
+        A a = null;
+ 
+        a.equals(null);
+ 
+        a.hashCode();
+ 
+        a.toString();
+    }
+}
+Case 2 :
+
+If an interface does not extend Object class, then why the methods of Object class are visible in interface.?
+
+interface A
+{
+    @Override
+    public boolean equals(Object obj);
+ 
+    @Override
+    public int hashCode();
+ 
+    @Override
+    public String toString();
+}
+Explanation :
+ 
+This is because, for every public method in Object class, there is an implicit abstract and public method declared in
+ every interface which does not have direct super interfaces. This is the standard Java Language Specification which 
+states like this,
+
+“If an interface has no direct superinterfaces, then the interface implicitly declares a public abstract member 
+method m with signature s, return type r, and throws clause tcorresponding to each public instance method m 
+with signature s, return type r, and throws clause t declared in Object, unless a method with the same signature, 
+same return type, and a compatible throws clause is explicitly declared by the interface.”
+
+39) Default Methods In Java
+
+Before Java 8, interfaces could have only abstract methods. The implementation of these methods has to be provided 
+in a separate class. So, if a new method is to be added in an interface then its implementation code has to be provided
+ in the class implementing the same interface. To overcome this issue, Java 8 has introduced the concept of 
+default methods which allow the interfaces to have methods with implementation without affecting the classes that
+ implement the interface.
+
+// A simple program to Test Interface default
+// methods in java
+interface TestInterface
+{
+    // abstract method
+    public void square(int a);
+ 
+    // default method
+    default void show()
+    {
+      System.out.println("Default Method Executed");
+    }
+}
+ 
+class TestClass implements TestInterface
+{
+    // implementation of square abstract method
+    public void square(int a)
+    {
+        System.out.println(a*a);
+    }
+ 
+    public static void main(String args[])
+    {
+        TestClass d = new TestClass();
+        d.square(4);
+ 
+        // default method executed
+        d.show();
+    }
+}
+
+Output:
+
+ 16
+ Default Method Executed
+
+The default methods were introduced to provide backward comparability so that existing intefaces can use the lambda expressions without implementing the methods in the implementation class. Default methods are also known as defender methods or virtual extension methods.
+
+Static Methods:
+The interfaces can have static methods as well which is similar to static method of classes.
+
+// A simple Java program to TestClassnstrate static
+// methods in java
+interface TestInterface
+{
+    // abstract method
+    public void square (int a);
+ 
+    // static method
+    static void show()
+    {
+        System.out.println("Static Method Executed");
+    }
+}
+ 
+class TestClass implements TestInterface
+{
+    // Implementation of square abstract method
+    public void square (int a)
+    {
+        System.out.println(a*a);
+    }
+ 
+    public static void main(String args[])
+    {
+        TestClass d = new TestClass();
+        d.square(4);
+ 
+        // Static method executed
+        TestInterface.show();
+    }
+}
+
+Output:
+
+ 16
+ Static Method Executed
+
+40) Can we use “abstract” keyword with constructor, Instance Initialization Block and Static Initialization Block?
+
+No. Constructor, Static Initialization Block, Instance Initialization Block and variables can not be abstract.
+
+41) Can we declare abstract methods as static?
+
+No, abstract methods can not be static.
+
+42) Can a class contain an abstract class as a member?
+
+Yes, a class can have abstract class as it’s member.
+
+43) Abstract classes can be nested. True or false?
+
+True. Abstract classes can be nested i.e an abstract class can have another abstract class as it’s member.
+
+44) Can we declare abstract methods as synchronized?
+
+No, abstract methods can not be declared as synchronized. But methods which override abstract methods can be declared as synchronized.
+
+45) Can abstract method declaration include throws clause?
+
+Yes. Abstract methods can be declared with throws clause.
+
+45) Can interfaces have constructors, SIB and IIB?
+ 
+No. Interfaces can’t have constructors, SIB and IIB. They show 100% abstractness.
+
+46) Can we re-assign a value to a field of interfaces?
+
+No. The fields of interfaces are static and final by default. They are just like constants.
+ You can’t change their value once they got.
+
+47) Can we declare an Interface with “abstract” keyword?
+
+Yes, we can declare an interface with “abstract” keyword. But, there is no need to write like that. 
+All interfaces in java are abstract by default.
+
+48)Local inner class in java is non-static nested class which is declared inside a method or a block.
+
+49) Anonymous inner class, the name itself suggest that it is a class without a name. Anonymous inner class in java 
+is an inner class or non-static nested class without a name.
+
+Consider the below class definition.
+
+class SuperClass
+{
+    void methodOne()
+    {
+        System.out.println("From SuperClass");
+    }
+ 
+    void methodTwo()
+    {
+        System.out.println("From SuperClass");
+    }
+}
+
+Let’s consider that we have a requirement in which the above class ‘SuperClass’ has to be re-used with little
+ modification to the ‘methodOne()’. To do this, we have to create a subclass to ‘SuperClass’ and override the ‘methodOne()’ method. Let’s implement this.
+
+
+class SubClass extends SuperClass
+{
+    @Override
+    void methodOne()
+    {
+        System.out.println("From Sub Class");
+    }
+}
+To use the methodOne(), we have to create an object of ‘SubClass’ type and call ‘methodOne()’ from that object.
+
+
+public class InnerClasses
+{
+    public static void main(String args[])
+    {
+        SubClass subclass = new SubClass();
+        subclass.methodOne();
+    }
+}
+This method of implementing is little bit lengthy. There is one more method of implementing this requirement
+ which takes less time than this and you need to write only few lines of code to implement this requirement. 
+That is called Anonymous Inner Class.
+
+Let’s implement this requirement with anonymous inner class.
+
+public class InnerClasses
+{
+    public static void main(String args[])
+    {
+        SuperClass superclass = new SuperClass()
+        {
+            @Override
+            void methodOne()
+            {
+                System.out.println("From Anonymous Inner Class");
+            }
+        };
+        superclass.methodOne();
+    }
+}
+That’s it. You just have to create an object reference variable of type ‘SuperClass’ and override the method 
+which needs modification in the curly brackets and end with semicolon. No need to create sub class separately. 
+This method is easier than the above method. isn’t it?. 
+Let’s discuss some of features of anonymous inner class.
+
+Anonymous inner classes don’t have name. They are nameless.
+You can create only one object to anonymous inner class. If you want to create another object, 
+you have to write the whole class again.
+
+
+50) Enums in java are mainly used for grouping similar kind of constants as a one unit. constants means static and final.
+ Enums are introduced in JDK 1.5 onward. Before that similar kind of constants are grouped by declaring them as static and final in one class.
+ Below example shows how the constants will look without enums.
+
+class ConstantsWithoutEnums
+{
+    public static final String north = "NORTH";
+    public static final String south = "SOUTH";
+    public static final String east = "EAST";
+    public static final String west = "WEST";
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        System.out.println(ConstantsWithoutEnums.north);
+        System.out.println(ConstantsWithoutEnums.south);
+        System.out.println(ConstantsWithoutEnums.east);
+        System.out.println(ConstantsWithoutEnums.west);
+    }
+}
+Above constatnts can be defined with enums as below,
+enum Directions
+{
+    NORTH, SOUTH, EAST, WEST;
+}
+ 
+public class EnumsExample
+{
+    public static void main(String[] args)
+    {
+        Directions d1 = Directions.EAST;
+        System.out.println(d1);
+ 
+        Directions d2 = Directions.NORTH;
+        System.out.println(d2);
+ 
+        System.out.println(Directions.SOUTH);
+ 
+        System.out.println(Directions.WEST);
+    }
+}
+
+51) Enums can have any number of fields. methods and constructors and Each constant will have their own copy of fields and methods.
+
+enum enums
+{
+    A, B, C;
+ 
+    int i;  //enums can have fields
+ 
+    private enums()
+    {
+        //enums can have Constructor
+    }
+ 
+    void methodOfEnum()
+    {
+        //enums can have methods
+    }
+}
+ 
+public class EnumsExample
+{
+    public static void main(String[] args)
+    {
+        enums en = enums.A;
+        System.out.println(en.i);  //Constant A has field i
+        en.methodOfEnum();         //Constant A has methodOfEnum()
+ 
+        enums en1 = enums.B;
+        System.out.println(en1.i);  //Constant B has field i
+        en1.methodOfEnum();         //Constant B has methodOfEnum()
+ 
+        enums en2 = enums.C;
+        System.out.println(en2.i);   //Constant C has field i
+        en2.methodOfEnum();          //Constant C has methodOfEnum()
+    }
+}
+
+52)If enum has only constants, then semicolon (;) at the end of constant declaration is not mandatory. But, if enum has other members, then semicolon is mandatory.
+
+enum enums
+{
+    A, B, C, D     //semicolon at the end of this statement is not mandatory
+}
+ 
+enum enums
+{
+    A, B, C;    //semocolon at the end of this statement is mandatory, because it has other members
+ 
+    int i;  //enums has a field
+ 
+    void methodOfEnum()
+    {
+        //enums has a method
+    }
+}
+
+53)Enums can be declared inside a class. If declared inside a class, they are static by default and can be accessed directly by Class name.
+
+class ClassContainingEnum
+{
+    enum enums
+    {
+        A, B, C
+    }
+}
+ 
+public class MainClass
+{
+    public static void main(String[] args)
+    {
+        System.out.println(ClassContainingEnum.enums.A);  //Accessing enums directly using class name
+    }
+}
+
+54) Auto-Boxing :
+
+From JDK 1.5 onwards, Auto-Boxing is introduced. According to this feature, you need not to explicitly wrap the primitive content into an object. 
+Just assign primiive data to corresponding wrapper class reference variable, java automatically wraps primitive data into corresponding wrapper object.
+
+public class WrapperClasses
+{
+    public static void main(String[] args)
+    {
+        byte b = 10;    //Primitive byte data
+        Byte B = b;    //Auto-Boxing of byte data
+ 
+        short s = 15;     //Primitive short data
+        Short S = s;     //Auto-Boxing of short data
+ 
+        int i = 20;       //Primitive int Data
+        Integer I = i;    //Auto-Boxing of int data
+ 
+        long l = 25;    //Primitive long data
+        Long L = l;     //Auto-Boxing of long data
+ 
+        float f = 12;     //Primitive float data
+        Float F = f;     //Auto-Boxing of float data
+ 
+        double d = 18.58;     //Primitive double data
+        Double D = d;        //Auto-Boxing of double data
+ 
+        boolean bln = true;    //Primitive boolean data
+        Boolean BLN = bln;     //Auto-Boxing of boolean data
+ 
+        char c = 'C';          //Primitive char data
+        Character C = c;     //Auto-Boxing of char data
+    }
+}
+Unboxing :
+
+All wrapper classes have methods to unwrap the object to corresponding primitive data. Go through the following example, it shows unboxing i.e unwrapping wrapper object into corresponding primitive data.
+
+public class WrapperClasses
+{
+    public static void main(String[] args)
+    {
+        Byte B = new Byte((byte) 10);   //Byte Object
+        byte b = B.byteValue();         //Unwrapping Byte object to byte data
+ 
+        Short S = new Short((short) 20);   //Short Object
+        short s = S.shortValue();          //Unwrapping Short object to short data
+ 
+        Integer I = new Integer(15);    //Integer Object
+        int i = I.intValue();           //Unwrapping Integer object to int data
+ 
+        Long L = new Long(50);     //Long Object
+        long l = L.longValue();    //Unwrapping Long object to long data
+ 
+        Float F = new Float(20);      //Float Object
+        float f = F.floatValue();    //Unwrapping Float object to float data
+ 
+        Double D = new Double(20.5);   //Double Object
+        double d = D.doubleValue();    //Unwrapping Double object to double data
+ 
+        Boolean BLN = new Boolean(true);      //Boolean Object
+        boolean bln = BLN.booleanValue();    //Unwrapping Boolean object to boolean data
+ 
+        Character C = new Character('C');    //Character Object
+        char c = C.charValue();              //Unwrapping Character object to char data
+    }
+}
+
+55)NaN : This constant holds Not-a-Number value of specified type. It represents mathematically
+ undefined or unrepresentable number such as number obtained by dividing zero by zero or square root of 
+a negative number.
+
+This method returns true, if the specified number is Not-a-Number i.e mathematically undefined or 
+unrepresentable number. Otherwise it returns false. Both, Double and Float wrapper classes have this method.
+
+56)
+java.lang.Error :
+
+java.lang.Error is the super class for all types of errors in java. You can follow the documentation of 
+Error class here. Some of the common errors are,
+
+java.lang.VirtualMachineError : The most common virtualMachineErrors are StackOverFlowError and OutOfMemoryError.
+java.lang.AssertionError
+java.lang.LinkageError  : The common LinkageError are NoClassDefFoundError and subclasses of 
+IncompatibleClassChangeError. The most frequent IncompatibleClassChangeErrors are NoSuchMethodError, 
+NoSuchFieldError, AbstractMethodError, IllegalAccessError and InstantiationError.
+All sub classes of Error class are unchecked type of exceptions. i.e They occur during run time only.
+
+57)java.lang.Exception :
+
+java.lang.Exception is the super class for all types of Exceptions in java. You can follow the documentation 
+of Exception class here. All sub classes of Exception class except sub classes of RunTimeException are 
+checked type of exceptions. Some of the common sub classes of Exception are,
+
+java.lang.RunTimeException
+All sub classes of RunTimeException are unchecked type of exceptions. i.e They occur during run time only.
+ Some common RunTimeException are ArithmeticException, NumberFormatException, NullPointerException,
+ ArrayIndexOutOfBoundsException and ClassCastException.
+
+java.lang.InterruptedException
+java.lang.IOException
+java.lang.SQLException
+java.lang.ParseException
+
+58)
+If super class method is not throwing any exceptions, then it can be overrided with any unchecked type 
+of exceptions, but can not be overrided with checked type of exceptions.
+
+59)If a super class method is throwing unchecked exception, then it can be overrided in the sub class with 
+same exception or any other unchecked exceptions but can not be overrided with checked exceptions.
+
+60)If super class method is throwing checked type of exception, then it can be overrided with same exception 
+or with it’s sub class exceptions i.e you can decrease the scope of the exception, but can not be overrided 
+with it’s super class exceptions i.e you can not increase the scope of the exception.
+
+61)
+
+What Is String Intern? :
+
+String intern or simply intern refers to string object in the String Constant Pool. Interning is the process of creating a 
+string object in String Constant Pool which will be exact copy of string object in heap memory
+
+62)
+What is the use of interning the string?
+
+To Save The memory Space :
+
+Using interned string, you can save the memory space. If you are using lots of string objects with same content 
+in your code, than it is better to create an intern of that string in the pool. Use that intern string whenever 
+you need it instead of creating a new object in the heap. It saves the memory space.
+
+For Faster Comparison :
+
+Assume that there are two string objects s1 and s2 in heap memory and you need to perform comparison of 
+these two objects more often in your code. Then using s1.intern() == s2.intern() will be more
+ fast then s1.equals(s2). Because, equals() method performs character by 
+character comparison where as “==” operator just compares references of objects.
+
+63)How To Convert String To Integer In Java?
+
+There are two methods available in java to convert string to integer. One is Integer.parseInt() method and another one is Integer.valueOf() method. Both these methods are static methods of java.lang.Integer class. Both these methods throw NumberFormatException if input string is not a valid integer. The main difference between Integer.parseInt() and Integer.valueOf() method is that parseInt() method returns primitive int where as valueOf() method returns java.lang.Integer object.
+
+Java Program To Convert String To Integer Using Integer.parseInt() method :
+
+public class StringToInteger
+{
+    public static void main(String[] args) 
+    {
+        String s = "2015";
+         
+        int i = Integer.parseInt(s);
+         
+        System.out.println(i);          //Output : 2015
+    }
+}
+Java Program To Convert String To Integer Using Integer.valueOf() method :
+
+public class StringToInteger
+{
+    public static void main(String[] args) 
+    {
+        String s = "2015";
+         
+        int i = Integer.valueOf(s);
+         
+        System.out.println(i);          //Output : 2015
+    }
+}
+How To Convert Integer To String In Java?
+
+You are also often need to do the reverse conversion i.e converting from integer to string. Java provides couple of methods to do that also. one is Integer.toString() method and another one is String.valueOf() method. Both these methods return string representation of the given integer.
+
+Java Program To Convert Integer To String Using Integer.toString() Method :
+public class IntegerToString
+{
+    public static void main(String[] args) 
+    {
+        int i = 2015;
+         
+        String s = Integer.toString(i);
+         
+        System.out.println(s);     //Output : 2015
+    }
+}
+Java Program To Convert Integer To String Using String.valueOf() method :
+
+public class IntegerToString
+{
+    public static void main(String[] args) 
+    {
+        int i = 2015;
+         
+        String s = String.valueOf(i);
+         
+        System.out.println(s);     //Output : 2015
+    }
+}
+
+64)Which is the final class in these three classes – String, StringBuffer and StringBuilder?
+
+All three are final.
+
+equals() and hashCode() Methods :
+
+In StringBuffer and StringBuilder classes, equals() and hashCode methods are not overrided.
+ Where as in String class they are overrided.
+
+toString() Method :
+
+toString() method is overrided in all three classes. You can also convert StringBuffer and 
+StringBuilder objects to String type by calling toString() method on them.
+
+65) Where exactly string constant pool is located in the memory?
+
+
+Inside the heap memory. JVM reserves some part of the heap memory to store string objects created 
+using string literals.
+
+66) What is string intern?
+
+String object in the string constant pool is called as String Intern. 
+You can create an exact copy of heap memory string object in string constant pool. 
+This process of creating an exact copy of heap memory string object in the string constant pool is
+ called interning. intern() method is used for interning
+
+67)
+What is the similarity and difference between String and StringBuffer class?
+
+The main similarity between String and StringBuffer class is that both are thread safe. 
+The main difference between them is that String objects are immutable where as StringBuffer objects are mutable.
+
+68)Differences Between ArrayList And LinkedList In Java:
+
+			ArrayList	LinkedList
+Structure :
+	ArrayList is an index based data structure where each element is associated with an index.
+
+	Elements in the LinkedList are called as nodes, where each node consists of three things – 
+	Reference to previous element, Actual value of the element and Reference to next element.
+
+Insertion And Removal: 
+
+	Insertions and Removals in the middle of the ArrayList are very slow. 
+	Because after each insertion and removal, elements need to be shifted.	
+
+	Insertions and Removals from any position in the LinkedList are faster than the ArrayList. 
+	Because there is no need to shift the elements after every insertion and removal. Only references of previous and next elements are to be changed.
+
+Retrieval(Searching or getting an element)"
+	Retrieval of elements in the ArrayList is faster than the LinkedList . Because all elements in ArrayList are index based.	
+	Retrieval of elements in LinkedList is very slow compared to ArrayList. Because to retrieve an element, 
+	you have to traverse from beginning or end (Whichever is closer to that element) to reach that element.
+
+Memory Occupation	
+	ArrayList requires less memory compared to LinkedList. Because ArrayList holds only actual data and it’s index.	
+	LinkedList requires more memory compared to ArrayList. Because, each node in LinkedList holds data and
+	 reference to next and previous elements.
+
+When To Use	
+	If your application does more retrieval than the insertions and deletions, then use ArrayList.	
+	If your application does more insertions and deletions than the retrieval, then use LinkedList.
+
+69) HashSet
+	HashSet doesn’t maintain any order. The order of the elements will be largely unpredictable. 
+	And it also doesn’t guarantee that order will remain constant over time.
+
+	HashSet offers constant time performance for insertion, removal and retrieval operations.
+
+	HashSet class is not synchronized. If you want synchronized HashSet, use 
+	
+	HashSet class uses HashMap internally to store the objects. The keys of that HashMap object 
+	will be the elements of HashSet and their values will be a constant.	
+
+	HashSet does not allow duplicate elements. If you try to insert a duplicate element, older element will be overwritten.
+
+70) ListArrayList
+
+	Elements of the lists are ordered using Zero based index.
+
+	You can access the elements of lists using an integer index.
+
+	Elements can be inserted at a specific position using integer index. 
+	Any pre-existing elements at or beyond that position are shifted right.
+
+	Elements can be removed from a specific position. The elements beyond that position are shifted left.
+
+	A list may contain duplicate elements.
+
+	A list may contain multiple null elements.
+
+71) Differences Between HashMap And HashTable In Java :
+
+1) Thread Safe
+
+HashTable is internally synchronized. Therefore, it is very much safe to use HashTable in multi threaded applications.
+ Where as HashMap is not internally synchronized. Therefore, it is not safe to use HashMap in multi threaded applications
+ without external synchronization. You can externally synchronize HashMap using Collections.synchronizedMap() method.
+
+2) Inherited From
+
+Though both HashMap and HashTable implement Map interface, but they extend two different classes. HashMap extends AbstractMap 
+class where as HashTable extends Dictionary class which is the legacy class in java.
+
+3) Null Keys And Null Values
+
+HashMap allows maximum one null key and any number of null values. Where as HashTable doesn’t allow even a single null key and null value.
+
+4) Traversal
+
+HashMap returns only Iterators which are used to traverse over the elements of HashMap. HashTable returns Iterator as well as 
+Enumeration which can be used to traverse over the elements of HashTable.
+
+
+6) Performance
+
+As HashTable is internally synchronized, this makes HashTable slightly slower than the HashMap.
+
+7) Legacy Class
+
+HashTable is a legacy class. It is almost considered as due for deprecation. Since JDK 1.5, ConcurrentHashMap is considered 
+as better option than the HashTable.
+
+72)   Synchronization Method :
+
+    HashMap can be synchronized by using    
+    synchronizedMap(HashMap)  method .  By using this  
+
+    method we get a HashMap object which is equivalent 
+    to the HashTable object . So every modification  is performed    
+    on  Map is locked on Map object.
+
+
+import java.util.*;
+
+public class HashMapSynchronization {
+    public static void main(String[] args) {
+        // create map
+        Map<String,String> map = new HashMap<String,String>();
+        
+        // populate the map
+        map.put("1","ALIVE ");
+        map.put("2","IS");
+        map.put("3","AWESOME");
+        
+        // create a synchronized map
+        Map<String,String> syncMap = Collections.synchronizedMap(map);
+        
+        System.out.println("Synchronized map :"+syncMap);
+    }
+}
+
+   ConcurrentHashMap synchronizes or locks on the certain portion of the Map . To optimize
+   the performance of ConcurrentHashMap , Map is divided into different partitions depending
+   upon the Concurrency level . So that we do not need to synchronize the whole Map Object.
+
+72)
+
+ HashMap<String, Integer> map = new HashMap<String, Integer>();
+         
+        //Inserting key-value pairs to map using put() method
+         
+        map.put("ONE", 1);
+         
+        map.put("TWO", 2);
+         
+        map.put("THREE", 3);
+         
+        map.put("FOUR", 4);
+         
+        map.put("FIVE", 5);
+         
+        //Printing key-value pairs 
+         
+        Set<Entry<String, Integer>> entrySet = map.entrySet();
+         
+        for (Entry<String, Integer> entry : entrySet) 
+        {
+            System.out.println(entry.getKey()+" : "+entry.getValue());
+        }
+         
+73) Types Of JDBC Drivers :
+
+There are 4 types of JDBC drivers. They are,
+
+1) Type 1 JDBC Driver / JDBC-ODBC Bridge Driver
+
+2) Type 2 JDBC Driver / Native API Driver
+
+3) Type 3 JDBC Driver / Network Protocol Driver
+
+4) Type 4 JDBC Driver / Native Protocol Driver
+
+1) Type 1 JDBC Driver / JDBC-ODBC Bridge Driver
+
+Type 1 JDBC Drivers provide the bridge between JDBC and ODBC API and hence the name ‘JDBC-ODBC Bridge Drivers’. 
+This type of drivers translate all JDBC calls into ODBC calls and sends them to ODBC driver which interacts with the database. 
+These types of drivers are slowest of all types. Because, all JDBC calls will go to the ODBC driver through the bridge and then to database. 
+So it is time consuming and raises the performance issues. This type of drivers are not recommended for high transaction java applications.
+ And also this driver is not entirely written in java language. It causes the portability issues.
+
+Below diagram shows how JDBC-ODBC bridge driver is used to interact with the database.
+
+types of jdbc drivers
+ 
+2) Type 2 JDBC Driver / Native API Driver
+
+Type 2 JDBC Driver translates all JDBC method calls into database specific calls using native API of the database. 
+Its performance is slightly better than the Type 1 driver as communication layer is reduced in this driver. But, like Type 1 
+Driver, it is also not entirely written in java language. This causes the portability issues. And also this driver is database 
+specific. So once you switch from one database to another, you have to change the driver. That is also one of the disadvantage of this driver.
+
+Below diagram shows how Native API Driver works.
+
+types of jdbc drivers
+
+3) Type 3 JDBC Drivers / Network Protocol Driver
+
+Type 3 JDBC Drivers make use of middle ware or application server that translates all JDBC calls into database specific calls.
+
+ One of the main advantage of this driver is that it is entirely written in java language. So no portability issues. 
+But it is costly as extra application server or middle ware component has to be maintained.
+
+Below diagram shows how Network Protocol Driver works.
+
+types of jdbc drivers
+
+4) Type 4 JDBC Drivers / Native Protocol Drivers
+
+Type 4 JDBC Driver is also called Thin Driver as it directly converts JDBC calls into database specific calls. 
+This driver is most popular among all 4 type of JDBC drivers. This driver is preferred over Type 3 Driver as it 
+removes extra layer of communication (Application Server / Middle ware) and this makes it faster than the Type 3 JDBC Driver. 
+And also, like Type 3 JDBC Driver, It is also entirely written in java language and hence portable.

@@ -1,0 +1,113 @@
+Height of given tree:
+
+
+package com.manoj;
+
+public class BinaryTreeNode {
+
+	BinaryTreeNode left;
+	BinaryTreeNode right;
+	int data;
+	
+	public BinaryTreeNode(int data) {
+		this.data=data;
+		left=null;
+		right=null;
+	}
+	public BinaryTreeNode getLeft() {
+		return left;
+	}
+	public void setLeft(BinaryTreeNode left) {
+		this.left = left;
+	}
+	public BinaryTreeNode getRight() {
+		return right;
+	}
+	public void setRight(BinaryTreeNode right) {
+		this.right = right;
+	}
+	public int getData() {
+		return data;
+	}
+	public void setData(int data) {
+		this.data = data;
+	}
+	
+}
+
+
+------------------------------------------
+
+package com.manoj;
+
+public class BinaryTreeHeight {
+
+BinaryTreeNode root;
+	
+	public void insert(int data) {
+		root=add(root,data);
+	}
+	
+	public BinaryTreeNode add(BinaryTreeNode node,int data) {
+		
+		if(node==null) {
+			node=new BinaryTreeNode(data);
+			
+		}else {
+			if(node.getRight()==null) {
+				node.right=add(node.right,data);
+			}else {
+				node.left=add(node.left,data);
+			}
+		}
+		
+		return node;
+	}
+	
+	public int heightOfTree() {
+		return heightOfTree(root);
+	}
+	
+	private int heightOfTree(BinaryTreeNode node) 
+	    {
+	        if (node == null)
+	            return 0;
+	        else
+	        {
+	            int leftHeight = heightOfTree(node.left);
+	            int rightHeight = heightOfTree(node.right);
+	  
+	            if (leftHeight > rightHeight) {
+	            	int count=leftHeight + 1;
+	                return count;
+	            }
+	             else {
+	            	 int count=rightHeight + 1;
+	                return count;
+	             }
+	        }
+	    }
+}
+
+
+--------------------------------------------------------
+
+package com.manoj;
+
+public class BinaryTreeHeightMain {
+
+	public static void main(String[] args) {
+		BinaryTreeHeight bth=new BinaryTreeHeight();
+		bth.insert(10);
+		bth.insert(20);
+		bth.insert(30);
+		bth.insert(40);
+		bth.insert(50);
+		bth.insert(60);
+		bth.insert(70);
+		bth.insert(80);
+		System.out.println("Height="+bth.heightOfTree());
+
+	}
+
+}

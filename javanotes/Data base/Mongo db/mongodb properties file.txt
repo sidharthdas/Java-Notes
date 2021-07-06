@@ -1,0 +1,13 @@
+# MONGODB (MongoProperties)
+spring.data.mongodb.repositories.enabled=true # if spring data repository support is enabled
+spring.data.mongodb.host= 192.168.252.108
+spring.data.mongodb.port=27017
+spring.data.mongodb.uri=mongodb://192.168.252.108:27017/?replicaSet=rs1&readPreference=secondaryPreferred # connection URL
+spring.data.mongodb.database= qoedb
+fetch.delay=100000000
+status.buffer.time = 600000
+notifiacation.interval = 600000000
+#spring.data.mongodb.authentication-database=
+#spring.data.mongodb.grid-fs-database=
+#spring.data.mongodb.username=
+#spring.data.mongodb.password=

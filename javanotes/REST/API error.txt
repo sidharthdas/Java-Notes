@@ -1,0 +1,36 @@
+﻿Use HTTP status codes
+
+The HTTP standard provides over 70 status codes to describe the return values. We don’t need them all, 
+but  there should be used at least a mount of 10.
+
+200 – OK – Everything is working
+201 – OK – New resource has been created
+204 – OK – The resource was successfully deleted
+
+3xx Redirection
+------------------------
+he client must take additional action to complete the request.
+
+This class of status code indicates that further action needs to be taken by the user agent in order 
+to fulfil the request. The action required may be carried out by the user agent without interaction 
+with the user if and only if the method used in the second request is GET or HEAD. A user agent should
+not automatically redirect a request more than five times, since such redirections usually indicate an infinite loop.
+
+304 – Not Modified – The client can use cached data
+
+4xx Client Error
+-----------------------
+400 – Bad Request – The request was invalid or cannot be served. The exact error should be explained in the error payload. E.g. „The JSON is not valid“
+401 – Unauthorized – The request requires an user authentication
+403 – Forbidden – The server understood the request, but is refusing it or the access is not allowed.
+404 – Not found – There is no resource behind the URI.
+422 – Unprocessable Entity – Should be used if the server cannot process the entity, e.g. if an image cannot be formatted or mandatory fields are
+      missing in the payload.
+415 - Unsupported Media Type . The server is refusing to service the request because the entity of the request is in a format 
+	  not supported by the requested resource for the requested method.
+
+5xx Server Error
+--------------------
+500 – Internal Server Error – API developers should avoid this error. If an error occurs in the global catch blog, the stracktrace should be logged 
+      and not returned as response. 
+504 - Forbidden gateway timeout error

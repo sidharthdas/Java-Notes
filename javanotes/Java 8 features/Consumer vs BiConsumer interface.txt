@@ -1,0 +1,59 @@
+Consumer vs BiConsumer interface
+=======================================
+A Consumer interface is a predefined functional interface that can be used when creating 
+lambda expressions or method references. This interface represents an operation that accepts 
+a single input parameter and doesn't return anything. It contains only one method named accept(). 
+The BiConsumer interface is similar to a Consumer interface and accepts two input parameters and doesn’t return anything.
+
+Syntax
+@FunctionalInterface
+public interface Consumer<T>
+
+@FunctionalInterface
+public interface BiConsumer<T, U>
+Example
+import java.util.*;
+import java.util.function.*;
+
+public class ConsumerBiConsumerTest {
+   public static void main(String[] args) {
+      Consumer<String> c = (x) -> System.out.println(x.toLowerCase());  // lambda expression
+      c.accept("Raja");
+ 
+      Consumer<Integer> con = (x) -> {  // lambda expression
+         System.out.println(x + 10);
+         System.out.println(x - 10);
+      };
+      con.accept(10);
+
+      BiConsumer<Strng, String> bc = (x, y) -> { System.out.println(x + y);};
+      bc.accept("1", "2");
+
+      List<Person> plist = Arrays.asList(new Person("RAJA"), new Person("ADITHYA"));
+      acceptAllEmployee(plist, p -> System.out.println(p.name));
+      acceptAllEmployee(plist, p -> {p.name = "unknown";});
+      acceptAllEmployee(plist, p -> System.out.println(p.name));
+   }
+   public static void acceptAllEmployee(List<Person> plist, Consumer<P> con) {
+      for(Person p : plist) {
+         con.accept(p);
+      }
+   }
+}
+
+// Person class
+class Person {
+   public String name;
+   public Person(String name) {
+      this.name = name;
+   }
+}
+Output
+raja
+20
+0
+12
+RAJA
+ADITHYA
+unknown
+unknown

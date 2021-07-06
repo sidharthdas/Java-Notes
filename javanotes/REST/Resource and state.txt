@@ -1,0 +1,22 @@
+Resource : a component that exist on server , such as file, connection, device.
+
+Let take example:
+In Banking all nouns will be considered as Resource.
+Customer
+Account
+Manager
+
+/Customer    --- single resource
+/Customers   --- multiple resource
+
+Customer having account
+/Customer/1/Account/9008
+
+Each resource is identified as URI
+
+Representation:
+
+Each is resource has represenation. We can represent resource using xml or json.
+
+State : the information about the resource accessible to a program at a given point in time.
+It respresent the data of resource.

@@ -1,0 +1,133 @@
+SQL Query:
+------------
+
+a. to find duplicates records:
+==============================================
+
+SELECT *
+FROM fruits
+WHERE (fruit_name, color) IN
+    (SELECT fruit_name,
+        color
+    FROM fruits
+    GROUP BY fruit_name,
+        color
+    HAVING COUNT(*) > 1
+    )
+ORDER BY fruit_name, color;
+
+
+b. to delete duplicates record:
+===============================================
+
+DELETE FROM
+  fruits
+WHERE
+  fruit_id NOT IN
+  (
+    SELECT
+      MAX(fruit_id)
+    FROM
+      fruits
+    GROUP BY
+      fruit_name,
+      color
+  );
+
+c. Highest Salary in each department
+===================================================
+  
+The following query will omit duplicate values
+
+SELECT DEPTNO, MAX(SAL) FROM EMP GROUP BY DEPTNO;
+
+but if we want print name then
+
+This questions become more interesting if Interviewer will ask you to print department name instead of department id, 
+in that case you need to join Employee table with Department using foreign key DeptID, make sure you do LEFT or 
+RIGHT OUTER JOIN to include departments without any employee as well.  Here is the query
+
+SQL Query:
+
+SELECT DeptName, MAX(Salary) FROM Employee e RIGHT JOIN Department d ON e.DeptId = d.DeptID GROUP BY DeptName;
+
+d. what is the query to find 10th highest salary from employee table?
+===========================================================================
+
+approach 1-
+ select name ,salary from employee e1 where 10-1 = (select count(distinct salary) from employee e2 where e2.salary > e1.salary);\
+ Generallize query : select name ,salary from employee e1 where N-1 = (select count(distinct salary) from employee e2 where e2.salary > e1.salary);
+                     Note : where n is number of Nth highest salary.
+
+approach 2-					 
+2nd highest salary in Oracle using ROW_NUMBER
+
+Here is the SQL query to find the second highest salary in Oracle using row_number() function:
+select * from (
+select e.*, row_number() over (order by salary desc) as row_num from Employee e
+) where row_num = 2;
+
+Output:
+NAME    SALARY  ROW_NUM
+Mr. B    5000     2
+
+The problem with this approach is that if you have duplicate rows (salaries) then 2nd and 3rd maximum both will be same.
+
+approach 3-	
+2nd maximum salary in Oracle using RANK
+select * from (
+select e.*, rank() over (order by salary desc) as rank from Employee e
+) where rank = 2;
+
+e. - Write an SQL query
+===============================
+  
+Given below is the employee table with salary
+
+EMPID    SALARY
+_ _ _ _ _ _ _ _  _ _ 
+
+101        10000
+102        20000
+103        1400
+...
+...
+OUTPUT:
+
+EMPID    RANK[Based on Salary]
+_ _ _ _ _ _ _ _  _ _ 
+
+102        1
+101        2
+103        3
+...
+...
+[HINT] : RANK OF AN EMPLOYE CAN BE DETERMINED BY THE COUNT OF EMPLOYESS HAVING SALARY GREATER THAN EMPLOYEE
+
+Ans-
+select e.*, rank() over (order by salary desc) as rank from Employee e
+
+
+f. how to get second highest salary department wise without using analytical functions?
+========================================================================================
+
+select t.deptno, max(t.salary) as maxs
+from table t
+where t.salary < (select max(salary)
+                  from table t2
+                  where t2.deptno = t.deptno
+                 )
+group by t.deptno;
+You can then use this to get the employee:
+
+select t.*
+from table t join
+     (select t.deptno, max(t.salary) as maxs
+      from table t
+      where t.salary < (select max(salary)
+                        from table t2
+                        where t2.deptno = t.deptno
+                       )
+      group by t.deptno
+     ) tt
+     on t.deptno = tt.deptno and t.salary = tt.maxs;

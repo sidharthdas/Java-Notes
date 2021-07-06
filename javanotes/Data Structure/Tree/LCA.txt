@@ -1,0 +1,49 @@
+Node lca(Node node, int n1, int n2) 
+    {
+        if (node == null)
+            return null;
+   
+        // If both n1 and n2 are smaller than root, then LCA lies in left
+        if (node.data > n1 && node.data > n2)
+            return lca(node.left, n1, n2);
+   
+        // If both n1 and n2 are greater than root, then LCA lies in right
+        if (node.data < n1 && node.data < n2) 
+            return lca(node.right, n1, n2);
+   
+        return node;
+    }
+	
+	Time Complexity: O(h).
+The time Complexity of the above solution is O(h), where h is the height of the tree.
+Space Complexity: O(1).
+If recursive stack space is ignored, the space complexity of the above solution is constant.
+
+
+-------------------
+
+static Node lca(Node root, int n1, int n2) 
+{ 
+    while (root != null) 
+    { 
+        // If both n1 and n2 are smaller 
+        // than root, then LCA lies in left 
+        if (root.data > n1 && 
+            root.data > n2) 
+        root = root.left; 
+  
+        // If both n1 and n2 are greater 
+        // than root, then LCA lies in right 
+        else if (root.data < n1 && 
+                 root.data < n2) 
+        root = root.right; 
+  
+        else break; 
+    } 
+    return root; 
+} 
+
+Time Complexity: O(h).
+The Time Complexity of the above solution is O(h), where h is the height of the tree.
+Space Complexity: O(1).
+The space complexity of the above solution is constant.

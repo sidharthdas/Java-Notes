@@ -1,0 +1,98 @@
+What is class level lock & why it is needed?
+
+Object level locking
+------------------------
+Object level locking is mechanism when you want to synchronize a non-static method or non-static code block such that only one thread will be
+ able to execute the code block on given instance of the class. This should always be done to make instance level data thread safe. This can be 
+ done as below :
+
+public class DemoClass
+{
+    public synchronized void demoMethod(){}
+}
+ 
+or
+ 
+public class DemoClass
+{
+    public void demoMethod(){
+        synchronized (this)
+        {
+            //other thread safe code
+        }
+    }
+}
+ 
+or
+ 
+public class DemoClass
+{
+    private final Object lock = new Object();
+    public void demoMethod(){
+        synchronized (lock)
+        {
+            //other thread safe code
+        }
+    }
+}
+
+Class level locking
+-----------------------
+Class level locking prevents multiple threads to enter in synchronized block in any of all available instances on runtime. This means if in runtime 
+there are 100 instances of  DemoClass, then only one thread will be able to execute demoMethod() in any one of instance at a time, and all other 
+instances will be locked for other threads. This should always be done to make static data thread safe.
+
+public class DemoClass
+{
+    public synchronized static void demoMethod(){}
+}
+ 
+or
+ 
+public class DemoClass
+{
+    public void demoMethod(){
+        synchronized (DemoClass.class)
+        {
+            //other thread safe code
+        }
+    }
+}
+ 
+or
+ 
+public class DemoClass
+{
+    private final static Object lock = new Object();
+    public void demoMethod(){
+        synchronized (lock)
+        {
+            //other thread safe code
+        }
+    }
+}
+Some Important notes
+=======================
+Synchronization in java guarantees that no two threads can execute a synchronized method which requires same lock simultaneously or concurrently.
+
+synchronized keyword can be used only with methods and code blocks. These methods or blocks can be static or non-static both.
+
+When ever a thread enters into java synchronized method or block it acquires a lock and whenever it leaves java synchronized method or block it 
+releases the lock. Lock is released even if thread leaves synchronized method after completion or due to any Error or Exception.
+
+java synchronized keyword is re-entrant in nature it means if a java synchronized method calls another synchronized method which requires same lock
+ then current thread which is holding lock can enter into that method without acquiring lock.
+ 
+Java Synchronization will throw NullPointerException if object used in java synchronized block is null. For example, in above code sample if lock 
+is initialized as null, the synchronized (lock) will throw NullPointerException.
+
+Synchronized methods in Java put a performance cost on your application. So use synchronization when it is absolutely required. Also, consider
+ using synchronized code blocks for synchronizing only critical section of your code.
+ 
+It’s possible that both static synchronized and non static synchronized method can run simultaneously or concurrently because they lock on
+ different object.
+ 
+According to the Java language specification you can not use java synchronized keyword with constructor it’s illegal and result in compilation error.
+
+Do not synchronize on non final field on synchronized block in Java. because reference of non final field may change any time and then different thread
+ might synchronizing on different objects i.e. no synchronization at all. Best is to use String class, which is already immutable and declared final.

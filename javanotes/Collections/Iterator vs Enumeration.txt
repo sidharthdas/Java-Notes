@@ -1,0 +1,33 @@
+Iterator vs Enumeration
+-----------------------------
+
+difference between iterator and enumeration in java
+
+Enumeration is older and its there from JDK1.0,
+ while iterator was introduced later. Iterator can be used with ArrayList, HashSet and other collection classes.  
+Another similarity between Iterator and Enumeration in Java is that  functionality of Enumeration interface is duplicated by the Iterator interface.
+
+ 
+Only major difference between Enumeration and iterator is Iterator has a remove() method while Enumeration doesn't. 
+Enumeration acts as Read-only interface, because it has the methods only to traverse and fetch the objects, 
+where as by using Iterator we can manipulate the objects like adding and removing the objects from collection e.g. Arraylist.
+
+Also Iterator is more secure and safe as compared to Enumeration because it  does not allow other thread to modify the 
+collection object while some thread is iterating over it and throws ConcurrentModificationException. 
+This is by far most important fact for me for deciding between Iterator vs Enumeration in Java.
+
+In Summary both Enumeration and Iterator will give successive elements, but Iterator is new and improved version 
+where method names are shorter, and has new method called remove. Here is a short comparison:
+
+Enumeration
+hasMoreElement()
+nextElement()
+N/A
+
+
+Iterator
+hasNext()
+next()
+remove()
+
+So Enumeration is used when ever we want to make Collection objects as Read-only.

@@ -1,0 +1,22 @@
+static int countNode(Node head) 
+{ 
+    if (head == null) 
+    return 0;; 
+  
+    // Create a hash table insert head 
+    HashSet<Integer>s = new HashSet<>(); 
+    s.add(head.data); 
+  
+    // Traverse through remaining nodes  
+    int count = 0; 
+    for (Node curr=head.next; curr != null; curr=curr.next)  
+    { 
+        if (s.contains(curr.data)) 
+            count++;  
+  
+        s.add(curr.data); 
+    } 
+  
+    // Return the count of duplicate nodes 
+    return count; 
+} 

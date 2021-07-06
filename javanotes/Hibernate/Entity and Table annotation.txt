@@ -1,0 +1,137 @@
+Difference between Entity and Table annotation
+-------------------------------------------------------------
+
+Every bound persistent POJO class is an entity bean and is declared using the @Entity annotation (at the class
+level).
+
+@Table is set at the class level; it allows you to define the table, catalog, and schema names for your entity bean
+mapping. If no @Table is defined the default values are used: the unqualified class name of the entity.
+
+The @Table element also contains a schema and a catalog attributes, if they need to be defined. You can also
+define unique constraints to the table using the @UniqueConstraint annotation in conjunction with @Table (for
+a unique constraint bound to a single column, refer to @Column).
+
+Entity is object-oriented and table is relation-oriented. You can only use the entity name in the HQL (Hibernate Query Language) 
+to query objects, and the table name in the native SQL.
+
+The @UniqueConstraint annotation is for annotating multiple unique keys at the table level, 
+which is why you get an error when applying it to a field.
+
+@Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"username"})})
+public class SomeEntity {
+    @Column(name = "username")
+    public String username;
+}
+
+
+@javax.persistence.Entity:Specifies that the class is an entity. This annotation is applied to the entity class.
+@javax.persistence.Table:Specifies the primary table for the annotated entity. Additional tables may be specified 
+using SecondaryTable or SecondaryTables annotation. If no Table annotation is specified for an entity class, the 
+default values apply.
+
+Difference between @Entity and @Table
+@Entity(name = "someName") : this name will be used to name the Entity
+@Table(name = "otherName") : this name will be used to name a table in DB
+There will be only two valid scenario. Let's understand this with examples. 
+
+Message.java
+@Data
+@NoArgsConstructor
+@Entity
+public class Message {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private Long id;
+ 
+  @Column(name = "MESSAGE")
+  private String message;
+ 
+  public Message(String message) {
+    this.message = message;
+  }
+}
+We will have both properties <property name="hbm2ddl.auto">create-drop</property> and 
+<property name="show_sql">true</property> in hibernate.cfg.xml file. You can refer this from here. 
+So that every time we run Hibernate application table will deleted if it exists in DB and create new 
+one in DB and sql queries will print on console.
+
+Scenario 1: Only @Entity annotation used
+----------------------------------------------
+Scenario 1.1: When only @Entity annotation used on persistence class
+
+Message.java
+@Entity
+public class Message {
+    .............
+    .............
+}
+If you don't use name element then table and entity name will be same as default; name of persistence class.
+
+Hibernate Query: create table Message (ID bigint not null auto_increment, MESSAGE varchar(255), primary key (ID)) engine=InnoDB
+
+Scenario 1.2: When @Entity annotation used with name element on persistence class
+--------------------------------------------------------------------------------------------
+Message.java
+@Entity(name = "message")
+public class Message {
+    .............
+    .............
+}
+If you use name element then table and entity name will be same as value of name element.
+
+Hibernate Query: create table message (ID bigint not null auto_increment, MESSAGE varchar(255),
+ primary key (ID)) engine=InnoDB
+In this case table and entity will have the same name, that will allow you to access your table 
+with the same name as the entity while writing HQL or JPQL.
+
+Scenario 2: Both @Entity and @Table annotations used
+Scenario 2.1: @Entity and @Table annotations used on persistence class
+
+Message.java
+@Entity
+@Table
+public class Message {
+    .............
+    .............
+}
+This is same as scenario 1.1.
+
+Hibernate Query: create table Message (ID bigint not null auto_increment, MESSAGE varchar(255), primary key (ID)) engine=InnoDB
+
+Scenario 2.2: @Entity(name = "MESSAGE") and @Table annotations used on persistence class
+-------------------------------------------------------------------------------------------------
+Message.java
+@Entity(name = "MESSAGE")
+@Table
+public class Message {
+    .............
+    .............
+}
+Hibernate Query: create table MESSAGE (ID bigint not null auto_increment, MESSAGE varchar(255), primary key (ID)) engine=InnoDB
+
+Scenario 2.3: @Entity and @Table(name = "text_message") annotations used on persistence class
+-------------------------------------------------------------------------------------------------------
+Message.java
+@Entity
+@Table(name = "text_message")
+public class Message {
+    .............
+    .............
+}
+Hibernate Query: create table text_message (ID bigint not null auto_increment, MESSAGE varchar(255), primary key (ID)) engine=InnoDB
+
+Scenario 2.4: @Entity(name = "MESSAGE") and @Table(name = "text_message") annotations used on persistence class
+-------------------------------------------------------------------------------------------------------------------
+Message.java
+@Entity(name = "MESSAGE")
+@Table(name = "text_message")
+public class Message {
+    .............
+    .............
+}
+Hibernate Query: create table text_message (ID bigint not null auto_increment, MESSAGE varchar(255), primary key (ID)) engine=InnoDB
+
+In this case, while writing queries you have to use the name given in @Entity and the name given in 
+@Table will be used to name the table in the DB. So the entity name you use in your JPQL will refer to otherName in the DB.

@@ -1,0 +1,61 @@
+
+Yes, static variable will be serialized if it is initialized at the time of declaration.
+
+For example,
+
+case 1 : without initialization at the time of declaration
+
+class Person implements Serializable{
+
+  public String firstName;
+
+  static  String lastName;  
+}
+
+public class Employee {
+
+  public static void main(String[] args) {
+
+      Person p = new Person();
+      p.firstName="abc";
+      p.lastName="xyz";
+      //to do serialization
+
+  }
+
+}
+output :
+
+//after deserialization
+
+ firstName= abc
+
+ lastName= null
+case 2 : with initialization at the time of declaration
+
+class Person implements Serializable{
+
+  public String firstName=="abc";
+
+  static  String lastName="pqr";  
+}
+
+public class Employee {
+
+  public static void main(String[] args) {
+
+      Person p = new Person();
+      p.firstName="abc";
+      p.lastName="xyz";
+      //to do serialization
+
+  }
+
+ }
+output :
+
+//after deserialization
+
+firstName= abc
+
+lastName= pqr

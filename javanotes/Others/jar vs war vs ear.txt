@@ -1,0 +1,10 @@
+Jar vs war vs ear
+---------------------
+
+Jar - java archived file. Jar is a group of .class files.
+
+War - web archived file. It will be combinations of html, jsp, servlets, java script files, images. 
+this overall things is needs to convert into zip which is compressed so that project deployment, trasportation
+and delivery will become easier. no one is going to keep as folder structure. a war file represents one enterprise application.
+
+Ear - enterprise archived . it represent an enterprise application which can contains j2ee component.

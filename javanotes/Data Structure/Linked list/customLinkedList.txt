@@ -1,0 +1,109 @@
+Custom Linked List:
+
+package com.manoj;
+
+public class Node {
+
+	Node next;
+	String data;
+	public Node(Node next, String data) {
+		super();
+		this.next = next;
+		this.data = data;
+	}
+	
+
+
+}
+
+----------------------------------------------
+
+package com.manoj;
+
+public class CustomLinkedList {
+
+	Node current;
+	Node head;
+	Node tail;
+	
+	public void add(String data) {
+		if(current!=null) {
+			Node newNode=new Node(current.next,data);
+			current.next=newNode;
+			tail=current=newNode;
+			
+		}else {
+			Node newNode=new Node(null,data);
+			head=tail=current=newNode;
+		}
+	}
+	
+	public void print() {
+	current=this.head;
+	while(current!=null) {
+		System.out.println(current.data+" ");
+		current=current.next;
+	}
+	}
+	
+	public void delete(int index) {
+		Node temp=this.head;
+		int i=0;
+		while(temp!=null && i<index-1) {
+			System.out.println(temp.data);
+			i++;
+			temp=temp.next;
+		}
+		if (temp != null && temp.next != null) {
+	        temp.next = temp.next.next;
+	    }
+	    current = head;
+	}
+			
+	
+}
+
+
+----------------------------------------------------------------
+
+package com.manoj;
+
+public class CustomLinkedListMain {
+
+	public static void main(String[] args) {
+		CustomLinkedList customLinkedList=new CustomLinkedList();
+		customLinkedList.add("A");
+		customLinkedList.add("B");
+		customLinkedList.add("C");
+		customLinkedList.add("D");
+		customLinkedList.add("E");
+		customLinkedList.print();
+		customLinkedList.delete(2);
+		System.out.println("");
+		customLinkedList.print();
+		
+	}
+
+}
+
+
+-----------------------------------------
+
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class LinkedListDeletion {
+
+	public static void main(String[] args) {
+		
+		List<Integer> numberList=new LinkedList<>();
+		numberList.add(0);
+		numberList.add(7);
+		numberList.add(7);
+		numberList.remove(7);
+		System.out.println(numberList);
+
+	}
+
+}

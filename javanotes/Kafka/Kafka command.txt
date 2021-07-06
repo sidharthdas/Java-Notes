@@ -1,0 +1,43 @@
+ 
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties 
+first run zookeeper
+
+.\bin\windows\kafka-server-start.bat .\config\server.properties 
+kafka
+.\bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 2 --partitions 3 --topic test 
+create topic
+consumer
+ 
+ 
+.\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic PocTopic 
+producer
+.\bin\windows\kafka-console-consumer.bat --bootstrap-server 192.168.6.209:9092 --topic AppToCloud 
+send message from consumer
+*producer
+and check on consumer
+for testing
+
+
+Download any binary version(I've downloaded kafka_2.11-0.10.2.0) of Kafka from https://kafka.apache.org/downloads
+Extract it to any folder(I've extracted to "C:\Kafka")
+Open Command Prompt
+Go to the folder that you extract Kafka(C:\Kafka\kafka_2.11-0.10.2.0)
+Run this command to start Zookeeper
+ .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+Run this command  to start Kafka
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+
+ 
+ .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+ .\bin\windows\kafka-server-start.bat .\config\server.properties
+ 
+ 
+ 
+ creaing topic
+ kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic EventLog
+ 
+ console producer:
+ kafka-console-producer.bat --broker-list localhost:9092 --topic Events
+
+ 
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic Eventmmm --from-beginning

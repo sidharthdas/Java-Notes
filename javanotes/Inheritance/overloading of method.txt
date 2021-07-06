@@ -1,0 +1,25 @@
+package com.company.string;
+
+public class OverloadedMethod {
+    public static void main(String[] args) {
+        OverloadedMethod object=new OverloadedMethod();
+        object.print(null);
+    }
+
+    public  void print(Object obj){
+        System.out.println("object");
+    }
+    public  void print(StringBuilder obj){     line -12
+        System.out.println("StringBuilder");
+    }
+/*    public  void print(String obj){       line- 15
+        System.out.println("String");
+    }*/
+}
+
+
+If u uncomment line 15, complitaion error will occur. 
+If u comment line 15, answer will be StringBuilder.
+If u comment line 12, answer will be String.
+
+Whenever there's Method Overloading, the JVM will search for the method from the most specific type to least specific type

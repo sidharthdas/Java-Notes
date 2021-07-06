@@ -1,0 +1,135 @@
+﻿Fail Fast And Fail Safe Systems :
+---------------------------------------
+A system is called fail-fast if it is shut down immediately when an error occurred. These systems don’t carry on with the errors. 
+They immediately stop operating when a fault is occurred in the system. The errors in the fail-fast systems are immediately exposed.
+ But, fail-safe systems are not like that. They don’t stop operating even when a fault is occurred in the system. 
+They continue the operation by hiding the errors. They don’t expose the errors immediately. They carry on with the errors. 
+
+Iterators in java give us the facility to traverse over the Collection objects. Iterators returned by the Collection are either fail-fast in 
+nature or fail-safe in nature. Fail-Fast iterators immediately throw ConcurrentModificationException if a collection is modified while iterating 
+over it. Where as Fail-Safe iterators don’t throw any exceptions if a collection is modified while iterating over it. Because, they operate on the 
+clone of the collection, not on the actual collection. Let’s see Fail-Fast and Fail-Safe Iterators in detail.
+
+Fail-Fast Iterators In Java :
+Fail-Fast iterators, returned by most of the collection types, doesn’t tolerate any structural modifications to a collection while iterating over it.
+ (Structural modifications means add, remove or updating an element in the collection) They throw ConcurrentModificationException if a collection is 
+structurally modified while iteration is going on the collection. But, they don’t throw any exceptions if the collection is modified by the 
+iterator’s own methods like remove().
+
+How Fail-Fast Iterators Work?
+
+All Collection types maintain an internal array of objects ( Object[] ) to store the elements. Fail-Fast iterators directly fetch the elements 
+from this array. They always consider that this internal array is not modified while iterating over its elements. To know whether the collection
+ is modified or not, they use an internal flag called modCount which is updated each time a collection is modified. Every time when an Iterator 
+calls the next() method, it checks the modCount. If it finds the modCount has been updated after this Iterator has been created, it throws
+ ConcurrentModificationException.
+
+The iterators returned by the ArrayList, Vector, HashMap etc are all Fail-Fast in nature.
+
+import java.util.ArrayList;
+import java.util.Iterator;
+ 
+public class FailFastIteratorExample 
+{       
+    public static void main(String[] args) 
+    {
+        //Creating an ArrayList of integers
+         
+        ArrayList<Integer> list = new ArrayList<Integer>();
+         
+        //Adding elements to list
+         
+        list.add(1452);
+         
+        list.add(6854);
+         
+        list.add(8741);
+         
+        list.add(6542);
+         
+        list.add(3845);
+         
+        //Getting an Iterator from list
+         
+        Iterator<Integer> it = list.iterator();
+         
+        while (it.hasNext())
+        {
+            Integer integer = (Integer) it.next();
+             
+            list.add(8457);      //This will throw ConcurrentModificationException
+        }
+    }    
+}
+Output :
+Exception in thread "main" java.util.ConcurrentModificationException
+    at java.util.ArrayList$Itr.checkForComodification(Unknown Source)
+    at java.util.ArrayList$Itr.next(Unknown Source)
+    at pack1.MainClass.main(MainClass.java:32)
+	
+Fail-Safe Iterators In Java :
+Fail-Safe iterators don’t throw any exceptions if the collection is modified while iterating over it. Because, 
+they iterate on the clone of the collection not on the actual collection. So, any structural modifications done 
+on the actual collection goes unnoticed by these iterators. But, these iterators have some drawbacks. One of them 
+is that it is not always guaranteed that you will get up-to-date data while iterating. Because any modifications to
+ collection after the iterator has been created is not updated in the iterator. One more disadvantage of these iterators
+ is that there will be additional overhead of creating the copy of the collection in terms of both time and memory.
+
+Iterator returned by ConcurrentHashMap is a fail-safe iterator.
+
+
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+ 
+public class FailSafeIteratorExample 
+{       
+    public static void main(String[] args) 
+    {
+        //Creating a ConcurrentHashMap
+         
+        ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<String, Integer>();
+         
+        //Adding elements to map
+         
+        map.put("ONE", 1);
+         
+        map.put("TWO", 2);
+ 
+        map.put("THREE", 3);
+         
+        map.put("FOUR", 4);
+         
+        //Getting an Iterator from map
+         
+        Iterator<String> it = map.keySet().iterator();
+         
+        while (it.hasNext())
+        {
+            String key = (String) it.next();
+             
+            System.out.println(key+" : "+map.get(key));
+             
+            map.put("FIVE", 5);     //This will not be reflected in the Iterator
+        }
+    }    
+}
+Output :
+
+TWO : 2
+FOUR : 4
+ONE : 1
+THREE : 3
+
+Fail Fast Vs Fail Safe Iterators In Java :
+Fail-Fast Iterators	Fail-Safe Iterators
+Fail-Fast iterators doesn’t allow modifications of a collection while iterating over it.	
+Fail-Safe iterators allow modifications of a collection while iterating over it.
+
+These iterators throw ConcurrentModificationException if a collection is modified while iterating over it.	
+These iterators don’t throw any exceptions if a collection is modified while iterating over it.
+
+They use original collection to traverse over the elements of the collection.	
+They use copy of the original collection to traverse over the elements of the collection.
+
+These iterators don’t require extra memory.	These iterators require extra memory to clone the collection.
+Ex : Iterators returned by ArrayList, Vector, HashMap.	Ex : Iterator returned by ConcurrentHashMap.

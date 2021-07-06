@@ -1,0 +1,52 @@
+Difference between inheritance and composition in Java
+============================================================
+The composition is a design technique in which your class can have an instance of another 
+class as a field of your class. Inheritance is a mechanism under which one object can acquire 
+the properties and behavior of the parent object by extending a class.
+
+Composition and Inheritance both provide code reusability by relating class.  We can also get the 
+functionality of inheritance when you use composition. Below are the differences. 
+
+differences of	Inheritance	Composition
+---------------------------------------------
+1 -Basic 
+Inheritance is an "is-a" relationship
+Composition is a "has-a". Relationship 
+
+2 - Code Reuse 
+In Inheritance, a class lass can extend only one interface, therefore, you can reuse your code only in one class only 
+Composition -We can reuse code in multiple class 
+
+3- Scope 
+Inheritance provides its features at compile time
+Composition is easily achieved at runtime 
+4 - Final 
+Inheritance - We can’t reuse code from the final class 
+Composition - It allows code reuse even from final classes
+
+5 - Methods 
+Inheritance - It exposes both public and protected method of the parent class 
+Composition - It doesn’t expose. They interact using public interface.
+
+Example of Inheritance
+-----------------------------
+class Animal{
+   String name="Orio";
+}
+class Dog extends Animal{
+   String type="Dog";
+   public static void main(String args[]){
+      Dog p=new Dog();
+      System.out.println("Name:"+p.name);
+      System.out.println("Type:"+p.type);
+   }
+}
+Example of Composition
+public class Student {
+}
+public class College {
+   private Student student;
+   public College() {
+      this.student = new Student();
+   }
+}

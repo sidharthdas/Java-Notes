@@ -1,0 +1,223 @@
+Java Collection interview Q&As on choosing the right data structure
+==========================================================================
+
+Q2. What do you know about the big-O notation and can you give some examples with respect to different data structures?
+A2. The Big-O notation simply describes how well an algorithm scales or performs in the worst case scenario as the number 
+of elements in a data structure increases. The Big-O notation can also be used to describe other behavior such as memory 
+consumption. At times you may need to choose a slower algorithm because it also consumes less memory. Big-o notation can give 
+a good indication about performance for large amounts of data, but the only real way to know for sure is to have a performance
+ benchmark with large data sets to take into account things that are not considered in Big-O notation like paging as virtual 
+ memory usage grows, etc. Although benchmarks are better, they aren’t feasible during the design process, so Big-O complexity 
+ analysis is the choice.
+
+O(1) Constant
+
+E.g. Map look up by key: map.get(key);
+E.g. Conditional logic: (a == 1) ? true : false;
+
+O(log n) Logarithmic
+Logarithmic means if 10 items takes at most x amount of time, then 100 items takes 2x amount of time, and 1,000 items takes 
+at most 3x, and 10,000 items take 4x, and so on. In O(log n)running time increases logarithmically in proportion to the input size.
+ Items are increasing 10 folds whilst the time is increasing only 2 fold. So, more efficient for larger number of items.
+
+Screen shot 2014-09-01 at 10.19.30 PM
+
+E.g. Binary search: search for 2 in a list of numbers 1,2,3,4,5,6,7 .
+
+Step 1: Sort the data set in ascending order as binary search works on sorted data.
+Step 2: Get the middle element (e.g. 4) of the data set and compare it against the search item (e.g. 2), and if it is 
+equal return that element
+Step 3: If search item value is lower, discard the second half of the data set and use the first half (e.g. 1,2,3). 
+If the search item value is higher, then discard the first half and use the second half (e.g. 5,6,7)
+Step 4: Repeat steps 2 and 3 until the search item is found or the last element is reached and search item is not found.
+
+O(n) – Linear
+
+Running time increases in direct proportion to the input size. if 1 item takes x amount of time, 10 items take 10x, and 1000 items takes 1000x.
+
+E.g. Finding an item in an unsorted array or list — looping through n items in a for loop.
+
+O(n log n) – Super Linear
+
+Running time is midway between a linear algorithm and a polynomial algorithm.
+
+E.g. Merge Sort: Collections.sort is an optimized merge sort which actually guarantees O(n log n). A quicksort is generally 
+considered to be faster than a merge sort but isn’t stable and doesn’t guarantee n log(n) performance. For Merge sort worst 
+case is O(n*log(n)), for Quick sort: O(n^2).
+
+
+Q4. What is the purpose of adding the default method stream() to the Collection interface in Java 8?
+A4. A stream is an infinite sequence of consumable elements (i.e a data structure) for the consumption of an operation or iteration. 
+Any Collection can be exposed as a stream. The operations you perform on a stream can either be
+
+— intermediate (map, filter, sorted, limit, skip,concat, substream, distinct, etc) producing another stream or
+— terminal (forEach, reduce, collect, sum, max, count, matchAny, findFirst, findAny, etc) producing an object that is not a stream.
+
+Basically, you are building a pipeline as in Unix
+ls -l | grep "Dec" | Sort +4n | more 
+stream( ) is a default method added to the Collection interface in Java 8. The stream( ) returns a java.util.Stream interface with 
+multiple abstract methods like filter, map, sorted, collect, etc. DelegatingStream implements these abstract methods.
+
+Q5. Describe typical use cases or examples of common uses for various data structures provided by the Collection framework in Java?
+A5. Use arrays when the amount of data is reasonably small and the amount of data is predictable in advance.
+
+If the initial collection size cannot be determined upfront, the primary implementations like ArrayList, HashMap, or HashSet 
+should do the job unless you require a special usage pattern. Those special usage patterns are like access sequences like FIFO, 
+LIFO, etc, duplicates are allowed or not, ordering needs to be maintained or not, concurrent access is required or not, etc.
+
+Use a List if duplicates are allowed, and a Set if duplicates are not allowed.
+
+Use a stack for Last In First Out (LIFO) access. For example, you may want to track online forms as a user opens them and then be
+ able to back out of the open forms in the reverse order. LIFO stack operations is provided by the Dequeue interface, which stands 
+ for double-ended queue and its implementations.
+
+If you conceptually have a producer-consumer pattern, for example a producer thread produces a list of jobs for a number of consumer 
+threads to pick up, then a Queue (i.e. FIFO) implementation is more appropriate. This of course could be done with a synchronized LinkedList, 
+but a queue will provide a better concurrency optimization by eliminating random access. The BlockingQueue is an efficient implementation 
+of a typical Queue interface. There are other specific implementations like DelayQueue, PriorityQueue, SynchronousQueue, etc. to cater
+ for the variations in the usage.
+
+Use a TreeSet or TreeMap if you like your objects to be in sorted order by using a balanced red-black tree. 
+A red-black tree is a balanced binary tree, meaning a parent node has maximum 2 children and as an entry is inserted, 
+the tree is monitored as to keep it well-balanced. Balanced binary tree ensures fast lookup time of O(log n). 
+A HashSet or a HashMap has a much faster access time of O(1), but won’t maintain the entries in a sorted order.
+
+A WeakHashMap is good to implement canonical maps. If you want to associate some extra information to a particular 
+object that you have a strong reference to, you put an entry in a WeakHashMap with that object as the key, and the 
+extra information as the map value. Then, as long as you keep a strong reference to the object, you will be able to 
+check the map to retrieve the extra information. Once you release the strong reference to the key object, 
+the map entry will be cleared and the memory used by the extra information will be released.
+
+A cache is a memory location where you can store data that is otherwise expensive to obtain frequently from a database, ldap, 
+flat file, or other external systems. A WeakHashMap is not good for caching because a WeakHashMap stores the keys using 
+WeakReference objects that means as soon as the key is not strongly referenced from somewhere else in your program, 
+the entry may be removed and be available for garbage collection. This is not good, and what you really want to have 
+is your cached objects removed from your map only when the JVM is running low on memory. This is where a SoftReference comes in handy. 
+A SoftReference will only be garbage-collected when the JVM is running low on memory and the object that the key is pointing 
+to is not being accessed from any other strong reference. The standard Java library does not provide a Map implementation 
+using a SoftReference, but you can implement your own by extending the AbstractMap class.
+
+Implementing your own cache mechanism is often not a trivial task. Cache needs to be regularly updated, and possibly distributed. 
+A better option would be to use one of the third-party frameworks like OSCache, Ehcache, JCS and Cache4J.
+
+Use an immutable collection (aka unmodifiable collection) if you don’t want to allow accidental addition or removal of elements once created. 
+The objects stored in a collection needs to implement its own immutability if required to be prevented from any accidental modifications. 
+The java.util.concurrent package has a number of classes that allow thread-safe concurrent access.
+
+Q6. What are some of the multi-threading considerations in using the different data structures?
+A6. If accessed by a single thread, synchronization is not required, and Arrays, ArrayLists, HashSets, ArrayDeque, 
+etc can be used as a local variable. If your collections are used as local variables, the synchronization is a complete overkill, 
+and degrades performance considerably. On the contrary, if declaring it as an instance or static variable it is a bad practice to 
+assume that the application is always going to be single threaded. What if the application needs to scale to handle concurrent 
+access from multiple threads in the future? so, code in a thread-safe manner.
+
+If accessed by multiple threads, prefer a concurrent collection like a copy-on-write lists and sets, concurrent maps, 
+etc over a synchronized collection for a more optimized concurrent access. Stay away from the legacy classes like Vectors 
+and HashTables. In a multi-threaded environment, some operations may need to be atomic to produce correct results. 
+This may require appropriate synchronizations (i.e. locks). Improper implementation in a multi-threaded environment 
+can cause unexpected behaviors and results.
+
+Q7. What are some of the performance and memory considerations in regards to data structures?
+A7. The choices you make for a program’s data structures and algorithms affect that program’s memory usage (for data structures) 
+and CPU time (for algorithms that interact with those data structures). Sometimes you discover an inverse relationship between 
+memory usage and CPU time. For example, a one-dimensional array occupies less memory than a doubly linked list that needs to
+ associate links with data items to find each data item’s predecessor and successor. This requires extra memory. 
+ In contrast, a one-dimensional array’s insertion/deletion algorithms are slower than a doubly linked list’s equivalent 
+ algorithms because inserting a data item into or deleting a data item from a one-dimensional array requires data item movement
+ to expose an empty element for insertion or close an element made empty by deletion. Here are some points to keep in mind.
+
+— The most important thing to keep in mind is scalability. Assuming that a collection will always be small is a dangerous thing 
+to do, and it is better to assume that it will be big. Don’t just rely on the general theories (e.g. Big-O theory) and rules. 
+Profile your application to identify any potential memory or performance issues for a given platform and configuration in a 
+production or production-like (aka QA) environment.
+
+— Initialize your collection with an appropriate initial capacity to minimize the number of times it has to grow for lists and sets, 
+and number of times it has to grow and rehash for maps.
+
+List list = new ArrayList(40);
+Map map = new HashMap(40);
+
+List list = new ArrayList(40);
+Map map = new HashMap(40);
+ 
+
+Q9. What are some of the best practices relating to the Java Collection framework?
+A9.
+
+#1. Choose the right type of data structure based on usage patterns like fixed size or required to grow, duplicates allowed or not, 
+ordering is required to be maintained or not, traversal is forward only or bi-directional, inserts at the end only or any arbitrary 
+position, more inserts or more reads, concurrently accessed or not, modification is allowed or not, homogeneous or heterogeneous 
+collection, etc. Also, keep multi-threading, atomicity, memory usage and performance considerations discussed earlier in mind.
+
+#2. Don’t assume that your collection is always going to be small as it can potentially grow bigger with time. So your collection should scale well.
+
+#3. Program in terms of interface not implementation: For example, you might decide a LinkedList is the best choice for some application, 
+but then later decide ArrayList might be a better choice for performance reason.
+
+Bad:
+
+ArrayList<String> list = new ArrayList<String>(100); 
+1
+ArrayList<String> list = new ArrayList<String>(100); 
+Good:
+
+// program to interface so that the implementation can change
+List<String> list = new ArrayList<String>(100);   
+List<String> list2 = new LinkedList<String>(100);
+
+
+// program to interface so that the implementation can change
+List<String> list = new ArrayList<String>(100);   
+List<String> list2 = new LinkedList<String>(100);
+ 
+#4. Return zero length collections or arrays as opposed to returning a null in the context of the fetched list is actually empty. 
+Returning a null instead of a zero length collection is more error prone, since the programmer writing the calling method might 
+forget to handle a return value of null.
+
+List<String> emptyList = Collections.emptyList( );
+Set<Integer> emptySet = Collections.emptySet( );
+
+List<String> emptyList = Collections.emptyList( );
+Set<Integer> emptySet = Collections.emptySet( );
+ 
+#5. Use generics for type safety, readability, and robustness.
+
+#6. Immutable objects should be used as keys for the HashMaps: Generally you use java.lang.Integer or java.lang.String class as the key, 
+which are immutable Java objects. If you define your own key class, then it is a best practice to make the key class an immutable object. 
+If you want to insert a new key, then you will always have to instantiate a new object as you cannot modify an immutable object. 
+If the keys were made mutable, you could accidentally modify the key after adding to a HashMap, which can result in you not being 
+able to access the object later on. The object will still be in the HashMap, but you will not be able to retrieve it as you have the 
+wrong key (i.e. a mutated key).
+
+#7. Use copy-on-write classes and concurrent maps for better scalability. It also prevents ConcurrentModificationException being thrown 
+while preserving thread safety. These classes provide fail-safe iteration as opposed to non-concurrent classes like ArrayList, HashSet, 
+etc use fail-fast iteration leading to ConcurrentModificationException if you try to remove an element while iterating over a collection.
+
+#8. Memory usage and performance can be improved by setting the appropriate initial capacity when creating a collection. For example,
+
+If you are likely to have an ArrayList with say 11 elements, but if you initialize the ArrayList as follows,
+
+List<String> myList = New ArrayList<String>( ); 
+1
+List<String> myList = New ArrayList<String>( ); 
+By default, the capacity is 10. When you add the 11th element to the array list, it will have to resize or grow using the following formula 
+(oldCapacity * 3)/2 + 1. This will be equal to 10*3/2+1=16. So it creates a new array with size of 16 and and copies all the old 10 elements 
+to the new array and adds the 11th element to the new array. The old array with 10 elements become eligible for garbage collection. 
+So resizing too many times can adversely impact performance and memory. So it is a best practice to set the initial capacity to an 
+appropriate value so that the lists don’t have to resize too often. The above declaration for 11 elements can be improved by setting 
+the initial capacity to either 11 or greater.
+
+List<String> myList =  new ArrayList<String>(11); 
+1
+List<String> myList =  new ArrayList<String>(11); 
+Same is true for HashMaps as well. As a general rule, the default load factor of 0.75 offers a good tradeoff between time and space costs. 
+Higher load factor values decrease the space overhead, but increases the lookup cost through methods like get( ), put( ), etc. 
+The expected number of entries in the map and its load factor should be taken into account when setting its initial capacity, 
+so as to minimize the number of rehash operations. If the initial capacity is greater than the maximum number of entries divided by 
+the load factor, no rehash operations will ever occur. This means the load factor should not be changed from 0.75, unless you have 
+some specific optimization you are going to do. Initial capacity is the only thing you want to change, and set it according to 
+number of items you want to store. You should set the initial capacity to (no. of likely items / 0.75) + 1 to ensure that the table
+ will always be large enough, and no rehashing will occur. For 11 items it will be (11/0.75) + 1 = 16.
+
+Map<String> myMap = new  HashMap<String>(16); 
+Map<String> myMap = new  HashMap<String>(16); 

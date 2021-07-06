@@ -1,0 +1,53 @@
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+         Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        map.put(nums[i], i);
+    }
+    for (int i = 0; i < nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement) && map.get(complement) != i) {
+            return new int[] { i, map.get(complement) };
+        }
+    }
+    throw new IllegalArgumentException("No two sum solution");
+    }
+}  
+
+// Java implementation using Hashing
+ 
+class PairSum {
+    static void printpairs(int arr[], int sum)
+    {
+        HashSet<Integer> s = new HashSet<Integer>();
+        for (int i = 0; i < arr.length; ++i) 
+        {
+            int temp = sum - arr[i];
+ 
+            // checking for condition
+            if (s.contains(temp)) {
+                System.out.println(
+                    "Pair with given sum "
+                    + sum + " is (" + arr[i]
+                    + ", " + temp + ")");
+            }
+            s.add(arr[i]);
+        }
+    }
+ 
+    // Driver Code
+    public static void main(String[] args)
+    {
+        int A[] = { 1, 4, 45, 6, 10, 8 };
+        int n = 16;
+        printpairs(A, n);
+    }
+}  
+
+Pair with given sum 16 is (10, 6)
+Complexity Analysis:  
+
+Time Complexity: O(n). 
+As the whole array is needed to be traversed only once.
+Auxiliary Space: O(n). 
+As a hash map has been used to store array elements.

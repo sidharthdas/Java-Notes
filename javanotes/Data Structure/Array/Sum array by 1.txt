@@ -1,0 +1,29 @@
+public class ArraySum1 {
+	public static void main(String[] args) {
+		Vector<Integer> vector=new Vector<Integer>();
+		vector.add(9);
+		vector.add(9);
+		vector.add(9);
+		vector.add(9);
+		int n=vector.size();
+		
+		vector.set(n-1, vector.get(n-1)+1);
+		int carry=vector.get(n-1)/10;
+		vector.set(n-1, vector.get(n-1)%10);
+		
+		for(int i=n-2;i>=0;i--) {
+			
+			if(carry==1) {
+				vector.set(i, vector.get(i)+1);
+				carry=vector.get(i)/10;
+				vector.set(i, vector.get(i)%10);
+			}
+		}
+		
+		if(carry==1) {
+			vector.add(0, 1);
+		}
+		System.out.println(vector);
+
+	}
+}

@@ -1,0 +1,8 @@
+What happens when an Exception occurs in a thread?
+
+In simple words, If not caught thread will die, if an uncaught exception handler is registered then it will get a call back. 
+Thread.UncaughtExceptionHandler is an interface, 
+defined as nested interface for handlers invoked when a Thread abruptly terminates due to an uncaught exception. 
+When a thread is about to terminate due to an uncaught exception the Java Virtual Machine will query the thread for its 
+UncaughtExceptionHandler using Thread.getUncaughtExceptionHandler() and will invoke the handler's uncaughtException() method, 
+passing the thread and the exception as arguments.
